@@ -1,7 +1,6 @@
-from flask import Flask
+#!/usr/bin/env python3
+from flask import Flask, make_response, jsonify
 
-#testing branch management
-#test2
 
 app = Flask(__name__)
 
@@ -11,5 +10,10 @@ def hello_world():
     return 'Hello World!'
 
 
+@app.route('/start')
+def start_service():
+    return make_response(jsonify("Starting Library Web Service"), 201)
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
