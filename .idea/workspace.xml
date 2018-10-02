@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f9e0d546-dcea-40fd-99a4-6a1f4b1758c0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/book.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/book_collection.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/book_note.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/check_out.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/genre.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/subject.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/book-library-web-service-scrumptious.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/book-library-web-service-scrumptious.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/db_routing.py" afterDir="false" />
-    </list>
+    <list default="true" id="f9e0d546-dcea-40fd-99a4-6a1f4b1758c0" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
