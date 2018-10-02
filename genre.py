@@ -9,7 +9,7 @@ class Genre(Enum):
     horror = 4
     humor = 5
     mystery = 6
-    scifi = 7
+    science_fiction = 7
     thriller = 8
     western = 9
 
