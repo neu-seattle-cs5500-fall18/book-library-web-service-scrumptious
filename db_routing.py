@@ -1,18 +1,40 @@
 #!/user/bin/env python3
-from flask import Flask
+from flask import make_response
 from flask_sqlalchemy import SQLAlchemy
+
+dict_fields = {'Book_ID', 'Author_First_Name', 'Author_Last_Name', 'Book_Title', 'Publish_Date', 'Genre', 'Loaned_Out', 'Borrower', 'Book_Notes'}
+
+
+def check_parameters(parameters):
+    # check all parameters agains the dictionary fields.
+    return
+
+
+
+def incorrect_params(parameters):
+    a_list = []
+    for element in parameters:
+        if not dict_fields.__contains__(element):
+            a_list.append(element)
+    print(a_list)
+    return a_list
 
 
 # Function to query by received parameters.
 # returns a dictionary of query results.
 def get_books(parameters):
-    # valid parameters check.
+    # valid parameters check, error code 400
     # string together for valid sql query.
-    return
+    if check_parameters(parameters):
+        print(parameters)
+        return parameters
+    else:
+        response = incorrect_params(parameters)
+        return response
 
 
 # Function to retrieve record of a single book
-def get_books(record):
+def get_books_record(record):
     return
 
 
@@ -22,7 +44,7 @@ def get_users(parameters):
 
 
 # Function to get single user by record number.
-def get_users(record):
+def get_users_record(record):
     return
 
 
