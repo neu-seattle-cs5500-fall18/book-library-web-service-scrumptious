@@ -24,7 +24,7 @@ def incorrect_params(parameters):
 # returns a dictionary of query results.
 def get_books(parameters):
     # valid parameters check, error code 400
-    # string together for valid sql query.
+    # string together for valid sql query
     if check_parameters(parameters):
         print(parameters)
         return parameters
