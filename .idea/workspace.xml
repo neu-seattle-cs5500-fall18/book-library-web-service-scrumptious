@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f9e0d546-dcea-40fd-99a4-6a1f4b1758c0" name="Default Changelist" comment="" />
+    <list default="true" id="f9e0d546-dcea-40fd-99a4-6a1f4b1758c0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +43,13 @@
     <session id="1672725400">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+<<<<<<< HEAD
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+=======
           <entry key="project.open.time.1" value="1" />
           <entry key="project.opened" value="1" />
         </counts>
@@ -67,15 +76,24 @@
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
       <usages-collector id="statistics.js.language.service.starts" />
+>>>>>>> 257d4167dcbf33023e2e0819388a2f17eeb7f88f
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+<<<<<<< HEAD
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/db_routing.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+=======
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_routing.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="14">
               <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+>>>>>>> 257d4167dcbf33023e2e0819388a2f17eeb7f88f
               <folding>
                 <element signature="e#24#47#0" expanded="true" />
               </folding>
@@ -156,7 +174,11 @@
         <entry file="file://$PROJECT_DIR$/library_webservice.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1050">
+<<<<<<< HEAD
+              <caret line="70" column="49" selection-start-line="70" selection-start-column="49" selection-end-line="70" selection-end-column="49" />
+=======
               <caret line="70" column="49" lean-forward="true" selection-start-line="70" selection-start-column="49" selection-end-line="70" selection-end-column="49" />
+>>>>>>> 257d4167dcbf33023e2e0819388a2f17eeb7f88f
               <folding>
                 <element signature="e#25#142#0" expanded="true" />
               </folding>
@@ -275,7 +297,11 @@
     <frame x="39" y="23" width="1241" height="777" extended-state="6" />
     <editor active="true" />
     <layout>
+<<<<<<< HEAD
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25771475" />
+=======
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25354463" />
+>>>>>>> 257d4167dcbf33023e2e0819388a2f17eeb7f88f
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -288,9 +314,15 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+<<<<<<< HEAD
+      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Python Console" order="11" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+=======
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="11" />
       <window_info anchor="bottom" id="Python Console" order="12" />
+>>>>>>> 257d4167dcbf33023e2e0819388a2f17eeb7f88f
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -305,22 +337,36 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/library_webservice.py">
+    <entry file="file://$PROJECT_DIR$/db_routing.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="315">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+          <folding>
+            <element signature="e#24#47#0" expanded="true" />
+=======
         <state relative-caret-position="1050">
           <caret line="70" column="49" lean-forward="true" selection-start-line="70" selection-start-column="49" selection-end-line="70" selection-end-column="49" />
           <folding>
             <element signature="e#25#142#0" expanded="true" />
+>>>>>>> 257d4167dcbf33023e2e0819388a2f17eeb7f88f
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db_routing.py">
+    <entry file="file://$PROJECT_DIR$/library_webservice.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="1050">
+          <caret line="70" column="49" selection-start-line="70" selection-start-column="49" selection-end-line="70" selection-end-column="49" />
+          <folding>
+            <element signature="e#25#142#0" expanded="true" />
+=======
         <state relative-caret-position="14">
           <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
           <folding>
             <element signature="e#24#47#0" expanded="true" />
+>>>>>>> 257d4167dcbf33023e2e0819388a2f17eeb7f88f
           </folding>
         </state>
       </provider>
