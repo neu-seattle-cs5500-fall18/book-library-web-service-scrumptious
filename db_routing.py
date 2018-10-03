@@ -2,35 +2,13 @@
 from flask import make_response
 from flask_sqlalchemy import SQLAlchemy
 
-dict_fields = {'Book_ID', 'Author_First_Name', 'Author_Last_Name', 'Book_Title', 'Publish_Date', 'Genre', 'Loaned_Out', 'Borrower', 'Book_Notes'}
-
-
-def check_parameters(parameters):
-    # check all parameters agains the dictionary fields.
-    return
-
-
-
-def incorrect_params(parameters):
-    a_list = []
-    for element in parameters:
-        if not dict_fields.__contains__(element):
-            a_list.append(element)
-    print(a_list)
-    return a_list
-
 
 # Function to query by received parameters.
 # returns a dictionary of query results.
 def get_books(parameters):
     # valid parameters check, error code 400
     # string together for valid sql query
-    if check_parameters(parameters):
-        print(parameters)
-        return parameters
-    else:
-        response = incorrect_params(parameters)
-        return response
+    return
 
 
 # Function to retrieve record of a single book
