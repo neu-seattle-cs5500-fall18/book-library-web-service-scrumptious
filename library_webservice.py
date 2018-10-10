@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
 from flask import Flask, make_response, jsonify
+from flask_restplus import Resource, Api
 
 app = Flask(__name__)
+api = Api(app)
 
 
 @app.route('/')
-def hello_world():
+def hello_world(Resource):
     return 'Hello World!'
 
 
