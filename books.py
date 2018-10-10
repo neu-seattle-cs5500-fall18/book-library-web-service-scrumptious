@@ -25,9 +25,6 @@ class BooksDao(object):
         self.status = 'active'
 
 
-booklist = []
-
-
 @api.route('/books', endpoint='books')
 class Books(Resource):
     @api.marshal_with(book_model)
@@ -38,9 +35,7 @@ class Books(Resource):
         Gets all books within resource Books.
         :return: Json object of all books within Resource Books.
         """
-        book = BooksDao('1', "Old Man and the Sea", "Ernest", "Hemingway")
-        booklist.append(book)
-        return booklist
+        return "Success", 200
 
     # Add new record to resource- require json receipt
     # 201 status for created
@@ -51,11 +46,9 @@ class Books(Resource):
         Creates a new book record.
         :return: JSON of created record.
         """
-        new_book = api.payload
-        booklist.append(new_book)
         # Query routing function here
         # set response code 201
-        return booklist
+        return "Success", 200
 
 
 @api.route('/books/<book_id>')
@@ -104,6 +97,30 @@ class TimeFrame(Resource):
         return "Books between" + epoch_start + epoch_end, 200
 
 
+@api.route('/books/<subject>')
+@api.doc(params={'subject': 'Subject to search by'})
+class BookSubject(Resource):
+    def get(self, subject):
+        """
+        Query books by subject.
+        :param subject: String value to query by
+        :return: JSON list of books
+        """
+        # query by subject
+        return "Subject: %s" %subject, 200
+
+
+@api.route('/books/<genre>')
+@api.doc(params={'genre': 'Genre to search by'})
+class BooksGenre(Resource):
+    def get(self, genre):
+        """
+        Query books by genre.
+        :param genre: String value to query by
+        :return:  JSON list of books
+        """
+        #query by genre
+        return "Genre %s" %genre, 200
 
 
 

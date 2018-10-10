@@ -7,13 +7,11 @@ from books import Books
 app = Flask(__name__)
 
 
-# Add, remove, update Books in library
+# Add, remove, update Books in library- Done
 # find books by particular author
-# find books published within a date range
+# find books published within a date range - DOne
 # find books on certain subject or genre
 # combine the above
-# mark books as loaned out
-# add remove update notes about a book
 
 # add remove update
 # GET - returns all books - status code 200
