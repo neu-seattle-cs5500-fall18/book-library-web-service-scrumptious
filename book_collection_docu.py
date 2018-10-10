@@ -11,7 +11,7 @@ book_collection = api.model('BookCollections', {
     'title': fields.String('The book title.'),
 })
 
-# This should be a book collection representation
+# This should be a book collection representation.
 class BookCollection(object):
     def __init__(self, collection_id, book_id, title):
         self.collection_id = collection_id
