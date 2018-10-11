@@ -15,7 +15,7 @@ book_model = api.model('BookModel', {
 })
 
 
-class BooksDao(object):
+class Book(object):
     def __init__(self, book_id, title, author_first_name, author_last_name):
         self.book_id = book_id
         self.title = title
@@ -35,7 +35,12 @@ class Books(Resource):
         Gets all books within resource Books.
         :return: Json object of all books within Resource Books.
         """
-        return "Success", 200
+        books = []
+        book = Book(
+            4, "The Old Man and the Sea", "George r.r.", "Martin"
+        )
+        books.append(book)
+        return books
 
     # Add new record to resource- require json receipt
     # 201 status for created
@@ -48,7 +53,7 @@ class Books(Resource):
         """
         # Query routing function here
         # set response code 201
-        return "Success", 200
+        return "Success", 201
 
 
 @api.route('/books/<book_id>')
@@ -93,7 +98,7 @@ class TimeFrame(Resource):
         :param epoch_end: Latest publish date to query by.
         :return: JSON list of books
         """
-        #query by start and end dates
+        # query by start and end dates
         return "Books between" + epoch_start + epoch_end, 200
 
 
@@ -121,7 +126,6 @@ class BooksGenre(Resource):
         """
         #query by genre
         return "Genre %s" %genre, 200
-
 
 
 if __name__ == '__main__':
