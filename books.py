@@ -4,6 +4,7 @@ from flask_restplus import Api, fields, Resource
 app = Flask(__name__)
 api = Api(app)
 
+# Need Parameter Checking, where to store valid parameters, error list.
 # restplus automatically returns json object type.
 # cann annotate fields with readable info
 # response model, any other fields are considered private and not returned
@@ -56,7 +57,9 @@ class Books(Resource):
         return "Success", 201
 
 
-@api.route('/books/<book_id>')
+
+
+@api.route('/books/notes/', endpoint='books')
 @api.doc(params={'book_id': 'A record for a book'})
 class BookRecord(Resource):
     @api.response(404, "Incorrect record")
@@ -88,7 +91,7 @@ class BookRecord(Resource):
         return "Successfully Deleted", 200
 
 
-@api.route('/books/<epoch_start>/<epoch_end>')
+@api.route('/books/collections/', endpoint='books')
 @api.doc(params={'epoch_start': 'Earliest publish date', 'epoch_end': 'Latest publish date'})
 class TimeFrame(Resource):
     def get(self, epoch_start, epoch_end):
@@ -100,32 +103,6 @@ class TimeFrame(Resource):
         """
         # query by start and end dates
         return "Books between" + epoch_start + epoch_end, 200
-
-
-@api.route('/books/<subject>')
-@api.doc(params={'subject': 'Subject to search by'})
-class BookSubject(Resource):
-    def get(self, subject):
-        """
-        Query books by subject.
-        :param subject: String value to query by
-        :return: JSON list of books
-        """
-        # query by subject
-        return "Subject: %s" %subject, 200
-
-
-@api.route('/books/<genre>')
-@api.doc(params={'genre': 'Genre to search by'})
-class BooksGenre(Resource):
-    def get(self, genre):
-        """
-        Query books by genre.
-        :param genre: String value to query by
-        :return:  JSON list of books
-        """
-        #query by genre
-        return "Genre %s" %genre, 200
 
 
 if __name__ == '__main__':
