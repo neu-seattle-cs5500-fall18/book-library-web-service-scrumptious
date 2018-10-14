@@ -1,4 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask
+from flask_restplus import Api
+
+app = Flask(__name__)
+api = Api(app)
+
+
 
 # this allows for a string query
 # GET - returns all users

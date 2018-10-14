@@ -1,16 +1,13 @@
-from flask import Flask
-from flask_restplus import Api, fields, Resource, reqparse
+from flask_restplus import Namespace, fields, Resource, reqparse
 
-app = Flask(__name__)
-api = Api(app)
 
-ns = api.namespace('books', description='Operations involving books resource')
+api = Namespace('books', description='Book operations')
 
 # Need Parameter Checking, where to store valid parameters, error list.
 # restplus automatically returns json object type.
 # cann annotate fields with readable info
 # response model, any other fields are considered private and not returned
-book_model = api.model('BookModel', {
+book = api.model('Book', {
     'book_id': fields.Integer(required=True, description='The book record'),
     'title': fields.String(description='The book title.'),
     'author_first_name': fields.String(description='The author\'s first name.'),
@@ -52,12 +49,12 @@ class Book(object):
         self.status = 'active'
 
 
-@ns.route('/', endpoint='books')
+@api.route('/', endpoint='books')
 class Books(Resource):
     # this ensures arguments are valid and get can receive query params.
     @api.expect(query_parser, validate=True)
     # this generates json object based on same fields specified in model
-    @api.marshal_with(book_model, code=200, description='Successful query.')
+    @api.marshal_with(book, code=200, description='Successful query.')
     def get(self):
         """
         Queries the books resource based on URL query string parameters.
@@ -65,7 +62,7 @@ class Books(Resource):
         """
         return "got a book"
 
-    @api.expect(book_model)
+    @api.expect(book)
     @api.response(400, 'Validation error')
     def post(self):
         """
@@ -79,7 +76,7 @@ class Books(Resource):
         return "Successfully Created ID " + books.pop()
 
 
-@ns.route('/<book_id>')
+@api.route('/<book_id>')
 @api.doc(params={'book_id': 'Record identifier for a book'})
 class BookRecord(Resource):
     def get(self, book_id):
@@ -90,9 +87,9 @@ class BookRecord(Resource):
         """
         return "Successfully got %s " % book_id
 
-    @api.expect(book_model)
+    @api.expect(book)
     @api.response(code=404, description="Incorrect record")
-    @api.marshal_with(book_model, code='200', description='Object amended')
+    @api.marshal_with(book, code='200', description='Object amended')
     def put(self, book_id):
         """
         Updates an existing record  based on book_id.
@@ -113,7 +110,7 @@ class BookRecord(Resource):
 
 
 # will need to update this to account for multiple copies of a book.
-@ns.route('/<book_id>/notes')
+@api.route('/<book_id>/notes')
 @api.doc(params={'book_id': 'A record for a book'})
 class BookNotes(Resource):
     @api.response(code=200, description='Record gotten')
@@ -136,7 +133,7 @@ class BookNotes(Resource):
         return "Successfully edited note for %s" % book_id
 
 
-@ns.route('/<book_id>/notes')
+@api.route('/<book_id>/notes')
 @api.doc(params={'book_id': 'A record for a book.'})
 class BookNotes(Resource):
     def get(self, book_id):
@@ -155,7 +152,7 @@ class BookNotes(Resource):
         :return: Json of created book note id.
         """
 
-@ns.route('/<book_id>/notes/<note_id>')
+@api.route('/<book_id>/notes/<note_id>')
 @api.doc(params={'book_id': 'A record for a book', 'note_id': 'A record for a note about a book'})
 class Note(Resource):
     def get(self, book_id, note_id):
@@ -189,7 +186,7 @@ class Note(Resource):
 
 # probably break this out into its own class.
 
-@ns.route('/<book_id>/collections')
+@api.route('/<book_id>/collections')
 @api.doc(parameters={'book_id': 'Record for a book'})
 class BookCollections(Resource):
     def get(self, book_id):
@@ -200,7 +197,7 @@ class BookCollections(Resource):
         """
         return "List of collections"
 
-@ns.route('/<book_id>/collections/<collection_id>')
+@api.route('/<book_id>/collections/<collection_id>')
 @api.doc(parameters={'book_id': 'Record for a book', 'collection_id': 'Record for a collection'})
 class Collection(Resource):
     def post(self, book_id, collection_id):
@@ -220,6 +217,3 @@ class Collection(Resource):
         :return: ID of deleted collection record.
         """
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
