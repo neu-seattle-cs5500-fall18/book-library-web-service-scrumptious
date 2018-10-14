@@ -1,9 +1,6 @@
-from flask import Flask
-from flask_restplus import Api
+from flask_restplus import Namespace
 
-app = Flask(__name__)
-api = Api(app)
-
+api = Namespace('users', description='User related operations')
 
 
 # this allows for a string query
@@ -12,7 +9,7 @@ api = Api(app)
 # PUT - bulk update user records
 # DELETE - bulk delete users
 # users? <param> = specify query parameters.
-@app.route('/users', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@api.route('/users', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def users():
     # error checking here for valid request.
         parameters = request.args
@@ -23,6 +20,6 @@ def users():
 # POST - N/A
 # PUT - edit user
 # DELETE - remove user
-@app.route('/users/<user>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('/users/<user>', methods=['GET', 'PUT', 'DELETE'])
 def access_user(user):
     json_obj = request.json
