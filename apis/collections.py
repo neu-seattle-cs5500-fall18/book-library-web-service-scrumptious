@@ -1,8 +1,6 @@
-from flask import Flask
-from flask_restplus import Api, fields, Resource
+from flask_restplus import Namespace, Resource
 
-app = Flask(__name__)
-api = Api(app)
+api = Namespace('collections', 'Book collections operations')
 
 # restplus automatically returns json object type.
 book_collection = api.model('BookCollections', {
@@ -34,6 +32,3 @@ class BookCollections(Resource):
         )
         book_col.append(book)
         return book_col
-
-if __name__ == '__main__':
-    app.run(debug=True)
