@@ -9,6 +9,7 @@ user = api.model('User', {
     'email': fields.String(description='The user\'s email address'),
 })
 
+
 class User(object):
     def __init__(self, user_id, user_first, user_last, user_email):
         self.user_id = user_id
@@ -17,7 +18,7 @@ class User(object):
         self.user_email = user_email
 
 
-@api.route('/users', endpoint='users')
+@api.route('/', endpoint='users')
 class Users(Resource):
     @api.marshal_with(user)
     @api.response(200, 'Resource successfully retrieved')
@@ -43,7 +44,7 @@ class Users(Resource):
         return "Successfully Created User with ID: "
 
 
-@api.route('/users/<user_id>', endpoint='users')
+@api.route('/<user_id>')
 @api.doc(params={'user_id': 'An ID'})
 class UserRecord(Resource):
     @api.marshal_with(user, code=200, description='Success')
