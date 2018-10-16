@@ -64,7 +64,6 @@ book5 = Book('4','Burma Days','George', 'Orwell', '1960-06-08', 'Fiction', 'Nove
 
 @api.route('/', endpoint='books')
 @api.response(200, 'Success')
-@api.response(201, 'Created')
 @api.response(400, 'Validation Error')
 class Books(Resource):
     # this ensures arguments are valid and get can receive appropriate query params.
@@ -84,6 +83,7 @@ class Books(Resource):
 
     # This ensures body of request matches book model
     @api.expect(book, validate=True)
+    @api.response(201, 'Created')
     @api.marshal_with(book, code=201)
     def post(self):
         """
@@ -95,7 +95,7 @@ class Books(Resource):
         library.append(book1)
         library.append(book2)
         library.append(new_book)
-        return library
+        return library, 201
 
 
 @api.route('/<book_id>')
@@ -157,7 +157,6 @@ class BookRecord(Resource):
 @api.route('/<book_id>/notes')
 @api.doc(params={'book_id': 'A record for a book.'})
 @api.response(200, 'Success')
-@api.response(201, 'Created Note')
 @api.response(400, 'Validation Error')
 class BookNotes(Resource):
 
@@ -177,6 +176,7 @@ class BookNotes(Resource):
 
     # Need checking here so existing notes aren't written over.
     @api.expect(note, validate=True)
+    @api.response(201, 'Created Note')
     @api.marshal_with(book, code=201)
     def post(self, book_id):
         """
@@ -195,7 +195,7 @@ class BookNotes(Resource):
         for element in library:
             if element.book_id == book_id:
                 element.notes = received_record.get('notes')
-                return element
+                return element, 201
 
     @api.expect(note, validate=True)
     @api.marshal_with(book, code=200)
