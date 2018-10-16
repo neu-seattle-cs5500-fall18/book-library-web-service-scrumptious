@@ -89,7 +89,7 @@ class CheckoutRecord(Resource):
         return "Successfully deleted" % checkout_id
 
 
-@api.route('/reminders/', endpoint='checkouts')
+@api.route('/reminders/')
 @api.response(code=400, description='Validation Error')
 class Reminder(Resource):
     @api.doc(body=checkout, validate=True)
