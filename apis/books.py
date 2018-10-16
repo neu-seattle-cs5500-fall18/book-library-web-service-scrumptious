@@ -63,16 +63,18 @@ book5 = Book('4','Burma Days','George', 'Orwell', '1960-06-08', 'Fiction', 'Nove
 
 
 @api.route('/', endpoint='books')
-@api.response(code=400, description='Validation Error')
+@api.response(200, 'Success')
+@api.response(201, 'Created')
+@api.response(400, 'Validation Error')
 class Books(Resource):
     # this ensures arguments are valid and get can receive appropriate query params.
     @api.doc(body=query_parser, validate=True)
     # this generates json object based on same fields specified in model
-    @api.marshal_with(book, code=200, description='Success')
+    @api.marshal_with(book, code=200)
     def get(self):
         """
         Queries the books resource based on URL query string parameters.
-        :return: Json object of all books that match query parameters. If parameters are empty, all books are returned.
+        :return: List of all books that match query parameters. If parameters are empty, all books are returned.
         """
         library.append(book1)
         library.append(book2)
@@ -81,14 +83,15 @@ class Books(Resource):
         return library
 
     # This ensures body of request matches book model
-    @api.doc(body=book, validate=True)
-    @api.marshal_with(book, code=201, description='Success')
+    @api.expect(book, validate=True)
+    @api.marshal_with(book, code=201)
     def post(self):
         """
         Creates a new book record for a single book.
         :return: Book ID of the created record.
         """
         new_book = request.json
+        print(new_book)
         library.append(book1)
         library.append(book2)
         library.append(new_book)
@@ -97,9 +100,10 @@ class Books(Resource):
 
 @api.route('/<book_id>')
 @api.doc(params={'book_id': 'Record of a book.'})
-@api.response(code=400, description='Validation error')
+@api.response(200, 'Success')
+@api.response(400, 'Validation error')
 class BookRecord(Resource):
-    @api.marshal_with(book, code=200, description='Success')
+    @api.marshal_with(book, code=200)
     def get(self, book_id):
         """
         Gets a specific book record based on book_id.
@@ -113,18 +117,27 @@ class BookRecord(Resource):
             if element.book_id == book_id:
                 return element
 
-    @api.doc(body=book, validate=True)
-    @api.response(code=200, description='Success')
+    @api.expect(book, validate=True)
+    @api.marshal_with(book, code=200)
     def put(self, book_id):
         """
         Updates an existing record  based on book_id.
         :param book_id: Record number to be updated.
-        :return: Json with book_id of updated record.
+        :return: Book_id of updated record.
         """
+        library.append(book1)
+        library.append(book2)
+        library.append(book3)
 
-        return "Successfully updated %s " % book_id
+        request_body = request.json
 
-    @api.marshal_with(book, code=200, description='Book deleted')
+        for element in library:
+            if element.book_id == book_id:
+                element = request_body
+                return element
+
+    @api.response(200, 'Deleted')
+    @api.marshal_with(book, code=200)
     def delete(self, book_id):
         """
         Delete a book record based on book_id.
@@ -143,9 +156,11 @@ class BookRecord(Resource):
 
 @api.route('/<book_id>/notes')
 @api.doc(params={'book_id': 'A record for a book.'})
-@api.response(code=400, description='Validation Error')
+@api.response(200, 'Success')
+@api.response(201, 'Created Note')
+@api.response(400, 'Validation Error')
 class BookNotes(Resource):
-    @api.response(code=200, description='Success')
+
     def get(self, book_id):
         """
         Gets all the book notes for a specific book.
@@ -160,10 +175,9 @@ class BookNotes(Resource):
             if element.book_id == book_id:
                 return element.notes
 
-
     # Need checking here so existing notes aren't written over.
-    @api.doc(body=note, code=200, description = 'Success')
-    @api.marshal_with(book, code=201, description='Created')
+    @api.expect(note, validate=True)
+    @api.marshal_with(book, code=201)
     def post(self, book_id):
         """
         Creates a new note for a book.
@@ -183,8 +197,8 @@ class BookNotes(Resource):
                 element.notes = received_record.get('notes')
                 return element
 
-    @api.doc(body=note, code=200, description='Success')
-    @api.marshal_with(book, code=200, description='Success')
+    @api.expect(note, validate=True)
+    @api.marshal_with(book, code=200)
     def put(self, book_id):
         """
         Edit a specific note for a book.
@@ -200,10 +214,10 @@ class BookNotes(Resource):
         for element in library:
             if element.book_id == book_id:
                 element.notes = received.get('notes')
-        return element
+                return element
 
-    @api.doc(code=200, description="Deleted")
-    @api.marshal_with(book, code=200, description='Deleted')
+    @api.response(200, 'Deleted Note')
+    @api.marshal_with(book, code=200)
     def delete(self, book_id):
         """
         Delete a specific note for a book
@@ -222,7 +236,10 @@ class BookNotes(Resource):
 
 @api.route('/<book_id>/collections')
 @api.doc(parameters={'book_id': 'Record for a book'})
+@api.response(200, 'Success')
+@api.response(400, 'Invalid input')
 class BookCollections(Resource):
+
     def get(self, book_id):
         """
         Gets a list of the collections a book belongs to.
