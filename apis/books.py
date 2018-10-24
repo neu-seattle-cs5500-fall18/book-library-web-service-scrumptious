@@ -1,11 +1,9 @@
 from flask import request
-from library_webservice import db
 from flask_restplus import Namespace, fields, Resource, reqparse
 
 api = Namespace('books', description='Book operations')
 
 # Response model, any other fields are considered private and not returned
-# Need to double check that this is the best perhaps hide some
 book = api.model('Book', {
     'book_id': fields.Integer(required=True, description='The book record'),
     'title': fields.String(description='The book title.'),
@@ -52,17 +50,6 @@ class BookMarshaler():
         self.status = 'active'
 
 
-library = []
-book1 = Book('0','The Great Gatsby', 'Frances Scott', 'Fitzgerald', '1930-07-15', 'Fiction', 'Novel', False,
-             'A book about a Young Millionaire', [1], False)
-book2 = Book('1','1984','George', 'Orwell', '1949-07-08', 'Fiction', 'Novel', False, 'A love story', [4,1], False)
-book3 = Book('2','Software Engineering, 10th Edition', 'Ian', 'Sommerville', '2004-05-06', 'Reference', 'None', False, 'Reference for software engineering', [3,8,4], False)
-book4 = Book('4','Animal Farm','George', 'Orwell', '1952-10-16', 'Fiction', 'Novel', False, 'Really enjoyed the pigs',
-             [4,1], False)
-book5 = Book('4','Burma Days','George', 'Orwell', '1960-06-08', 'Fiction', 'Novel', False, '',
-             [4,2], False)
-
-
 @api.route('/', endpoint='books')
 @api.response(200, 'Success')
 @api.response(400, 'Validation Error')
@@ -76,11 +63,8 @@ class Books(Resource):
         Queries the books resource based on URL query string parameters.
         :return: List of all books that match query parameters. If parameters are empty, all books are returned.
         """
-        library.append(book1)
-        library.append(book2)
-        library.append(book3)
 
-        return library
+        return
 
     # This ensures body of request matches book model
     @api.expect(book, validate=True)
@@ -91,12 +75,7 @@ class Books(Resource):
         Creates a new book record for a single book.
         :return: Book ID of the created record.
         """
-        new_book = request.json
-        print(new_book)
-        library.append(book1)
-        library.append(book2)
-        library.append(new_book)
-        return library, 201
+        return
 
 
 @api.route('/<book_id>')
@@ -111,12 +90,8 @@ class BookRecord(Resource):
         :param book_id: Record of a book.
         :return: JSON of requested book record.
         """
-        library.append(book1)
-        library.append(book2)
-        library.append(book3)
-        for element in library:
-            if element.book_id == book_id:
-                return element
+
+        return
 
     @api.expect(book, validate=True)
     @api.marshal_with(book, code=200)
@@ -126,16 +101,8 @@ class BookRecord(Resource):
         :param book_id: Record number to be updated.
         :return: Book_id of updated record.
         """
-        library.append(book1)
-        library.append(book2)
-        library.append(book3)
 
-        request_body = request.json
-
-        for element in library:
-            if element.book_id == book_id:
-                element = request_body
-                return element
+        return
 
     @api.response(200, 'Deleted')
     @api.marshal_with(book, code=200)
@@ -145,14 +112,7 @@ class BookRecord(Resource):
         :param book_id: Record to be deleted.
         :return: Json of book_id of deleted record.
         """
-        library.append(book1)
-        library.append(book2)
-        library.append(book3)
-
-        for element in library:
-            if element.book_id == book_id:
-                element.is_deleted = True
-                return element
+        return
 
 
 @api.route('/<book_id>/notes')
@@ -167,13 +127,7 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: Notes for a specific book.
         """
-        library.append(book1)
-        library.append(book2)
-        library.append(book3)
-
-        for element in library:
-            if element.book_id == book_id:
-                return element.notes
+        return
 
     # Need checking here so existing notes aren't written over.
     @api.expect(note, validate=True)
@@ -185,18 +139,7 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: Note_ID of created note.
         """
-        library.append(book1)
-        library.append(book2)
-        library.append(book3)
-        library.append(book4)
-        library.append(book5)
-
-        received_record = request.json
-
-        for element in library:
-            if element.book_id == book_id:
-                element.notes = received_record.get('notes')
-                return element, 201
+        return
 
     @api.expect(note, validate=True)
     @api.marshal_with(book, code=200)
@@ -207,15 +150,7 @@ class BookNotes(Resource):
         :return: Book_id of edited record.
         """
 
-        library.append(book1)
-        library.append(book2)
-
-        received = request.json
-
-        for element in library:
-            if element.book_id == book_id:
-                element.notes = received.get('notes')
-                return element
+        return
 
     @api.response(200, 'Deleted Note')
     @api.marshal_with(book, code=200)
@@ -225,14 +160,7 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: Book_id of edited record.
         """
-        library.append(book1)
-        library.append(book2)
-        library.append(book3)
-
-        for element in library:
-            if element.book_id == book_id:
-                element.notes = ""
-                return element
+        return
 
 
 @api.route('/<book_id>/collections')
@@ -248,13 +176,7 @@ class BookCollections(Resource):
         :return: Json list of the collections a book is part of.
         """
 
-        library.append(book1)
-        library.append(book2)
-        library.append(book3)
-
-        for element in library:
-            if element.book_id == book_id:
-                return element.collections
+        return
 
 
 
