@@ -1,3 +1,4 @@
 flask_restplus==0.12.01
 Flask==1.0.2
 gunicorn==19.9.0
+psycopg2==2.7.5

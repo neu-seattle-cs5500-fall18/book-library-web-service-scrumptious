@@ -31,8 +31,8 @@ class Users(Resource):
         user = User(
            1, "Jane", "Doe", "janedoe@me.com"
         )
-        users.append(user)
-        return users
+
+        return get_all_users(), 200
 
     @api.doc(responses={201: 'User successfully created'})
     def post(self):
@@ -41,7 +41,7 @@ class Users(Resource):
         :return: User ID of the created record.
         """
         # Query routing function here
-        return "Successfully Created User with ID: "
+        return create_new_user(), 201
 
 
 @api.route('/<user_id>')
@@ -49,7 +49,8 @@ class Users(Resource):
 class UserRecord(Resource):
     @api.marshal_with(user, code=200, description='Success')
     def get(self, user_id):
-        return "Successfully retrieved User %s" % user_id
+
+        return get_user(user_id)
 
     @api.doc(body=user, validate=True)
     @api.response(code=200, description='Success')
@@ -59,7 +60,9 @@ class UserRecord(Resource):
         :param user_id: Record number to be updated.
         :return: Json with user_id of updated record.
         """
-        return "Successfully updated User %s " % user_id
+
+        record = update_user()
+        return record.user_id
 
     @api.response(code=200, description='User deleted')
     def delete(self, user_id):
@@ -68,5 +71,7 @@ class UserRecord(Resource):
         :param user_id: User to be deleted.
         :return: Json of user_id of deleted record.
         """
-        return "Successfully deleted User %s " % user_id
+
+        delete_record(user_id)
+        return
     
