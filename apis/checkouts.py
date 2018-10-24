@@ -1,4 +1,4 @@
-# adding some reviews to pull from sarah.
+# adding some reviews to pull from sarah for lab3
 
 from flask_restplus import Namespace, fields, Resource, reqparse
 
