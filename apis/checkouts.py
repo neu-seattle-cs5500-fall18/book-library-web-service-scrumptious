@@ -1,3 +1,5 @@
+# adding some reviews to pull from sarah.
+
 from flask_restplus import Namespace, fields, Resource, reqparse
 
 api = Namespace('checkouts', description='Checkouts operations')
@@ -56,7 +58,7 @@ class Checkouts(Resource):
         return "Successfully added checkout" % checkout_id
 
 
-@api.route('/<checkout_id>')
+@api.route('/checkout_id')
 @api.doc(params={'checkout_id': 'Record of a checkout'})
 @api.response(code=400, description='Validation error')
 class CheckoutRecord(Resource):
