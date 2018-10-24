@@ -9,6 +9,7 @@ user = api.model('User', {
     'email': fields.String(description='The user\'s email address'),
 })
 
+# To do: add user_Marshaler and user_DAO classes!
 
 class User(object):
     def __init__(self, user_id, user_first, user_last, user_email):
