@@ -1,4 +1,7 @@
+from flask import request
 from flask_restplus import Namespace, Resource, fields
+from model import UserDAO
+
 
 api = Namespace('users', description='User operations')
 
@@ -7,15 +10,17 @@ user = api.model('User', {
     'user_first_name': fields.String(description='The user\'s first name'),
     'user_last_name': fields.String(description='The user\'s last name'),
     'email': fields.String(description='The user\'s email address'),
+    'is_deleted': fields.Boolean(description='Designates whether a user is deleted'),
 })
 
 
 class UserMarshaler(object):
-    def __init__(self, user_id, user_first, user_last, user_email):
+    def __init__(self, user_id, user_first, user_last, user_email, is_deleted):
         self.user_id = user_id
         self.user_first = user_first
         self.user_last = user_last
         self.user_email = user_email
+        self.is_deleted = is_deleted
 
 
 @api.route('/', endpoint='users')
@@ -27,17 +32,18 @@ class Users(Resource):
         Gets all users
         :return: Json object of all users
         """
-
-        return #get_all_users(), 200
+        return UserDAO.get_all_users(), 200
 
     @api.doc(responses={201: 'User successfully created'})
+    @api.expect(user)
     def post(self):
         """
         Creates a new user record.
         :return: User ID of the created record.
         """
-        # Query routing function here
-        return #create_new_user(), 201
+        info_json = request.get_json()
+        new_user_id = UserDAO.create_new_user(info_json)
+        return new_user_id, 201
 
 
 @api.route('/<user_id>')
@@ -46,7 +52,9 @@ class UserRecord(Resource):
     @api.marshal_with(user, code=200, description='Success')
     def get(self, user_id):
 
-        return #get_user(user_id)
+        user_record = UserDAO.get_user(user_id)
+
+        return user_record, 200
 
     @api.doc(body=user, validate=True)
     @api.response(code=200, description='Success')
@@ -57,8 +65,11 @@ class UserRecord(Resource):
         :return: Json with user_id of updated record.
         """
 
-        #record = update_user()
-        return #record.user_id
+        request_body = request.get_json()
+
+        user_id = UserDAO.update_user(user_id, request_body)
+
+        return user_id
 
     @api.response(code=200, description='User deleted')
     def delete(self, user_id):
@@ -68,6 +79,6 @@ class UserRecord(Resource):
         :return: Json of user_id of deleted record.
         """
 
-        #delete_record(user_id)
-        return
+        id_of_deleted = UserDAO.delete_user(user_id)
+        return id_of_deleted, 200
     
