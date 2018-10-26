@@ -32,7 +32,7 @@ query_parser.add_argument('genre', action='append', required=False)
 query_parser.add_argument('is_deleted', default=False)
 
 
-class BookMarshaler():
+class BookMarshaler(object):
     def __init__(self, book_id, title, author_first_name, author_last_name, publish_date, subject, genre, loaned_out,
                  notes, collections, is_deleted):
         self.book_id = book_id
