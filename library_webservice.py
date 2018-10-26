@@ -8,6 +8,9 @@ app.config['SQLALCHEMY_DATABASE_URI']='postgres://lnvbfbgadkzbcx:ea44d8a7b2eb902
 
 db = SQLAlchemy(app)
 
+from model.User import User
+
+user = User
 db.create_all()
 
 from apis import api
