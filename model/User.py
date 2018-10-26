@@ -6,3 +6,4 @@ class User(db.Model):
     user_first_name: db.Column(db.String, nullable=False)
     user_last_name: db.Column(db.String, nullable=False)
     email: db.column(db.String, nullable=False)
+    is_deleted: db.column(db.Boolean, nullable=False, default=False)
