@@ -15,7 +15,6 @@ def create_new_user(user_info):
     lastname = user_info['user_last_name']
     email = user_info['email']
 
-
     new_user = User(user_first_name=firstname, user_last_name=lastname, email=email)
 
     db.session.add(new_user)
@@ -25,27 +24,28 @@ def create_new_user(user_info):
 
 
 def get_user(user_id):
-    print('Get user %d') %user_id
+    print('Get user')
 
     a_user = User.query.get(user_id)
 
     return a_user
 
 
-def update_user(user_id, info_json):
-    # a_user = User.query.get(user_id)
-    # a_user.user_first_name = info_json['user_first_name']
-    # a_user.user_last_name = info_json['user_last_name']
-    # a_user.email = info_json['email']
-    #
-    # db.session.commit()
-    print('updating user')
+def update_user(user_id, user_info):
+    print('Updating user')
 
-    return 'user updated'
+    a_user = User.query.get(user_id)
+    a_user.user_first_name = user_info['user_first_name']
+    a_user.user_last_name = user_info['user_last_name']
+    a_user.email = user_info['email']
+
+    db.session.commit()
+
+    return a_user.user_id
 
 
 def delete_user(user_id):
-    print('Delete user %d') %user_id
+    print('Delete user')
 
     a_user = User.query.get(user_id)
     a_user.is_deleted = True
