@@ -13,7 +13,7 @@ user = api.model('User', {
     'is_deleted': fields.Boolean(description='Designates whether a user is deleted'),
 })
 
-new_user = api.model('New_User', {
+user_minimal = api.model('User_Minimal', {
     'user_first_name': fields.String(description='The user\'s first name'),
     'user_last_name': fields.String(description='The user\'s last name'),
     'email': fields.String(description='The user\'s email address'),
@@ -34,7 +34,7 @@ class Users(Resource):
         return response
 
     @api.response(201, 'created new user.')
-    #@api.expect(user)
+    @api.expect(user_minimal)
     def post(self):
         """
         Creates a new user record.
@@ -59,7 +59,8 @@ class UserRecord(Resource):
 
         return user_record
 
-    @api.doc(body=user, validate=True)
+    @api.doc(body=user_minimal, validate=True)
+    #@api.expect(user_minimal)
     @api.response(code=200, description='Success')
     def put(self, user_id):
         """
@@ -69,11 +70,11 @@ class UserRecord(Resource):
         """
 
         print('Received PUT on resource /users/<user_id>')
-        #request_body = request.get_json()
+        request_body = request.get_json()
 
-        #user_id = UserDAO.update_user(user_id, request_body)
+        user_id = update_user(user_id, request_body)
 
-        return 'success'
+        return user_id
 
     @api.response(code=200, description='User deleted')
     def delete(self, user_id):
