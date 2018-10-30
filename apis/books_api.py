@@ -1,7 +1,13 @@
 from flask import request
 from flask_restplus import Namespace, fields, Resource, reqparse
+from model.book_marshaller import BookMarshaller
 
 api = Namespace('books', description='Book operations')
+
+note = api.model('Note', {
+    'notes': fields.String(required=True, description='Note about a book.')
+})
+
 
 # Response model, any other fields are considered private and not returned
 book = api.model('Book', {
@@ -18,10 +24,6 @@ book = api.model('Book', {
     'is_deleted': fields.Boolean(description='Field to indicate of a book is deleted or not, for soft delete.')
 })
 
-note = api.model('Note', {
-    'notes': fields.String(required=True, description='Note about a book.')
-})
-
 query_parser = reqparse.RequestParser()
 query_parser.add_argument('title', required=False)
 query_parser.add_argument('author_first_name', required=False)
@@ -32,39 +34,21 @@ query_parser.add_argument('genre', action='append', required=False)
 query_parser.add_argument('is_deleted', default=False)
 
 
-class BookMarshaler(object):
-    def __init__(self, book_id, title, author_first_name, author_last_name, publish_date, subject, genre, loaned_out,
-                 notes, collections, is_deleted):
-        self.book_id = book_id
-        self.title = title
-        self.author_first_name = author_first_name
-        self.author_last_name = author_last_name
-        self.publish_date = publish_date
-        self.subject = subject
-        self.genre = genre
-        self.loaned_out = loaned_out
-        self.notes = notes
-        self.collections = collections
-        self.is_deleted = is_deleted
-
-        self.status = 'active'
-
-
-@api.route('/', endpoint='books')
+@api.route('', endpoint='books')
 @api.response(200, 'Success')
 @api.response(400, 'Validation Error')
 class Books(Resource):
     # this ensures arguments are valid and get can receive appropriate query params.
     @api.doc(body=query_parser, validate=True)
-    # this generates json object based on same fields specified in model
     @api.marshal_with(book, code=200)
     def get(self):
         """
         Queries the books resource based on URL query string parameters.
         :return: List of all books that match query parameters. If parameters are empty, all books are returned.
         """
-
-        return
+        print('working')
+        #get_all_books()
+        return 'this worked'
 
     # This ensures body of request matches book model
     @api.expect(book, validate=True)
@@ -75,7 +59,9 @@ class Books(Resource):
         Creates a new book record for a single book.
         :return: Book ID of the created record.
         """
-        return
+        print('posting')
+        #create_new_book(json)
+        return 'post worked'
 
 
 @api.route('/<book_id>')
@@ -90,7 +76,7 @@ class BookRecord(Resource):
         :param book_id: Record of a book.
         :return: JSON of requested book record.
         """
-
+        #get_book(book_id)
         return
 
     @api.expect(book, validate=True)
@@ -101,7 +87,7 @@ class BookRecord(Resource):
         :param book_id: Record number to be updated.
         :return: Book_id of updated record.
         """
-
+        #update_book(book_id, json)
         return
 
     @api.response(200, 'Deleted')
@@ -112,6 +98,7 @@ class BookRecord(Resource):
         :param book_id: Record to be deleted.
         :return: Json of book_id of deleted record.
         """
+        #delete_book(book_id)
         return
 
 
@@ -127,6 +114,7 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: Notes for a specific book.
         """
+        #get_notes(book_id)
         return
 
     # Need checking here so existing notes aren't written over.
@@ -139,6 +127,7 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: Note_ID of created note.
         """
+        #create_note(book_id, json)
         return
 
     @api.expect(note, validate=True)
@@ -149,7 +138,7 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: Book_id of edited record.
         """
-
+        #edit_note(book_id, json)
         return
 
     @api.response(200, 'Deleted Note')
@@ -160,6 +149,7 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: Book_id of edited record.
         """
+        #delete_note(book_id)
         return
 
 
@@ -175,7 +165,7 @@ class BookCollections(Resource):
         :param book_id: Record for a book.
         :return: Json list of the collections a book is part of.
         """
-
+        #get_collections(book_id)
         return
 
 

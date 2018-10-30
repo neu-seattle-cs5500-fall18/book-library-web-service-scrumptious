@@ -1,6 +1,6 @@
 from flask import request
 from flask_restplus import Namespace, Resource, fields
-from model import UserDAO
+from model.user_dao import create_new_user, get_all_users, get_user, update_user, delete_user
 
 
 api = Namespace('users', description='User operations')
@@ -13,48 +13,51 @@ user = api.model('User', {
     'is_deleted': fields.Boolean(description='Designates whether a user is deleted'),
 })
 
-
-class UserMarshaler(object):
-    def __init__(self, user_id, user_first, user_last, user_email, is_deleted):
-        self.user_id = user_id
-        self.user_first = user_first
-        self.user_last = user_last
-        self.user_email = user_email
-        self.is_deleted = is_deleted
+new_user = api.model('New_User', {
+    'user_first_name': fields.String(description='The user\'s first name'),
+    'user_last_name': fields.String(description='The user\'s last name'),
+    'email': fields.String(description='The user\'s email address'),
+})
 
 
-@api.route('/', endpoint='users')
+@api.route('')
 class Users(Resource):
-    @api.marshal_with(user)
-    @api.response(200, 'Resource successfully retrieved')
+
+    @api.marshal_with(user, code=200)
     def get(self):
         """
         Gets all users
         :return: Json object of all users
         """
-        return UserDAO.get_all_users(), 200
+        print('Received GET on resources /users')
+        response = get_all_users()
+        return response
 
-    @api.doc(responses={201: 'User successfully created'})
-    @api.expect(user)
+    @api.response(201, 'created new user.')
+    #@api.expect(user)
     def post(self):
         """
         Creates a new user record.
         :return: User ID of the created record.
         """
-        info_json = request.get_json()
-        new_user_id = UserDAO.create_new_user(info_json)
-        return new_user_id, 201
+        print('Received POST on resource /users')
+
+        user_info = request.get_json()
+        response = create_new_user(user_info)
+
+        return response
 
 
-@api.route('/<user_id>')
+@api.route('/<user_id>', endpoint='user_record')
 @api.doc(params={'user_id': 'An ID'})
 class UserRecord(Resource):
     @api.marshal_with(user, code=200, description='Success')
     def get(self, user_id):
+        print('Received GET on resource /users/<user_id>')
 
-        user_record = UserDAO.get_user(user_id)
+        user_record = get_user(user_id)
 
-        return user_record, 200
+        return user_record
 
     @api.doc(body=user, validate=True)
     @api.response(code=200, description='Success')
@@ -65,11 +68,12 @@ class UserRecord(Resource):
         :return: Json with user_id of updated record.
         """
 
-        request_body = request.get_json()
+        print('Received PUT on resource /users/<user_id>')
+        #request_body = request.get_json()
 
-        user_id = UserDAO.update_user(user_id, request_body)
+        #user_id = UserDAO.update_user(user_id, request_body)
 
-        return user_id
+        return 'success'
 
     @api.response(code=200, description='User deleted')
     def delete(self, user_id):
@@ -79,6 +83,9 @@ class UserRecord(Resource):
         :return: Json of user_id of deleted record.
         """
 
-        id_of_deleted = UserDAO.delete_user(user_id)
-        return id_of_deleted, 200
+        print('Received DELETE on resource /users/<user_id>')
+
+        id_of_deleted = delete_user(user_id)
+
+        return id_of_deleted
     

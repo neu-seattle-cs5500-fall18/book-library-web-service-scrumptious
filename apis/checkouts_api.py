@@ -22,19 +22,7 @@ query_parser.add_argument('due_date', required=False)
 query_parser.add_argument('return_date', required=False)
 
 
-class CheckOut(object):
-    def __init__(self, checkout_id, user_id, book_id, checkout_date, due_date, return_date):
-        self.checkout_id = checkout_id
-        self.user_id = user_id
-        self.book_id = book_id
-        self.checkout_date = checkout_date
-        self.due_date = due_date
-        self.return_date = return_date
-
-        self.status = 'active'
-
-
-@api.route('/', endpoint='checkouts')
+@api.route('', endpoint='checkouts')
 @api.response(code=400, description='Validation Error')
 class Checkouts(Resource):
 
@@ -45,6 +33,7 @@ class Checkouts(Resource):
         Queries the checkouts resource based on URL.
         :return: Json object of all checkouts that match the query parameter.
         """
+        print('got all checkouts')
         return "got a checkout"
 
     @api.doc(body=checkout, validate=True)
@@ -55,6 +44,7 @@ class Checkouts(Resource):
         :param checkout_id: Record for a checkout id.
         :return: checkout_id for the create book
         """
+        print('posted checkout')
         return "Successfully added checkout" % checkout_id
 
 

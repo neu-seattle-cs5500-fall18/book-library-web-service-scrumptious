@@ -10,14 +10,6 @@ book_collection = api.model('BookCollections', {
 })
 
 
-# This should be a book collection representation.
-class BookCollection(object):
-    def __init__(self, collection_id, book_id, title):
-        self.collection_id = collection_id
-        self.book_id = book_id
-        self.title = title
-
-
 @api.route('/bookcollections', endpoint='bookcollections')
 class BookCollections(Resource):
     @api.marshal_with(book_collection)
