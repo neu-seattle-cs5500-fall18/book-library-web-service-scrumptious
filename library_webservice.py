@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -8,8 +6,9 @@ app.config['SQLALCHEMY_DATABASE_URI']='postgres://lnvbfbgadkzbcx:ea44d8a7b2eb902
 
 db = SQLAlchemy(app)
 
-from model.User import User
+from model.user import User
 
+#This Creates the Table in the DB.
 user = User
 db.create_all()
 
