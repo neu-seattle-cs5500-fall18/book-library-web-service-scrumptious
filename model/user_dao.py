@@ -28,28 +28,39 @@ def get_user(user_id):
 
     a_user = User.query.get(user_id)
 
-    return a_user
+    if a_user is None:
+        return 404
+    else:
+        return a_user
 
 
 def update_user(user_id, user_info):
     print('Updating user')
 
     a_user = User.query.get(user_id)
-    a_user.user_first_name = user_info['user_first_name']
-    a_user.user_last_name = user_info['user_last_name']
-    a_user.email = user_info['email']
 
-    db.session.commit()
+    if a_user is None:
+        return 404
 
-    return a_user.user_id
+    else:
+        a_user.user_first_name = user_info['user_first_name']
+        a_user.user_last_name = user_info['user_last_name']
+        a_user.email = user_info['email']
+
+        db.session.commit()
+
+        return a_user.user_id
 
 
 def delete_user(user_id):
     print('Delete user')
 
     a_user = User.query.get(user_id)
-    a_user.is_deleted = True
-    db.session.commit()
 
-    return a_user.user_id
+    if a_user is None:
+        return 404
+    else:
+        a_user.is_deleted = True
+        db.session.commit()
+        return a_user.user_id
 

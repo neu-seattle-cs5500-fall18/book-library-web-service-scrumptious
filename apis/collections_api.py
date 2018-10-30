@@ -3,7 +3,7 @@ from flask_restplus import Namespace, Resource, fields
 api = Namespace('collections', 'Book collections operations')
 
 # restplus automatically returns json object type.
-book_collection = api.model('BookCollections', {
+collection_marshaller = api.model('BookCollections', {
     'collection_id': fields.Integer('The collection record'),
     'book_id': fields.Integer('The book record'),
     'title': fields.String('The book title.'),
@@ -12,7 +12,7 @@ book_collection = api.model('BookCollections', {
 
 @api.route('/bookcollections', endpoint='bookcollections')
 class BookCollections(Resource):
-    @api.marshal_with(book_collection)
+    @api.marshal_with(collection_marshaller)
     @api.response(200, 'Resource successfully gotten')
     def get(self):
         """

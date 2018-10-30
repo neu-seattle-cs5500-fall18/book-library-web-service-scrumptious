@@ -4,7 +4,7 @@ from flask_restplus import Namespace, fields, Resource, reqparse
 
 api = Namespace('checkouts', description='Checkouts operations')
 
-checkout = api.model('Checkout', {
+checkout_marshaller = api.model('Checkout', {
     'checkout_id': fields.Integer(readOnly=True, description='checkout id'),
     'user_id': fields.Integer(required=True, description='user who checks out the book'),
     'book_id': fields.Integer(required=True, description='the book that user checks out'),
@@ -27,7 +27,7 @@ query_parser.add_argument('return_date', required=False)
 class Checkouts(Resource):
 
     @api.doc(body=query_parser, validate=True)
-    @api.marshal_with(checkout, code=200, description='Success')
+    @api.marshal_with(checkout_marshaller, code=200, description='Success')
     def get(self):
         """
         Queries the checkouts resource based on URL.
@@ -36,8 +36,8 @@ class Checkouts(Resource):
         print('got all checkouts')
         return "got a checkout"
 
-    @api.doc(body=checkout, validate=True)
-    @api.marshal_with(checkout, code=201, description='Success')
+    @api.doc(body=checkout_marshaller, validate=True)
+    @api.marshal_with(checkout_marshaller, code=201, description='Success')
     def post(self, checkout_id):
         """
         Create a new checkout for the book.
@@ -52,7 +52,7 @@ class Checkouts(Resource):
 @api.doc(params={'checkout_id': 'Record of a checkout'})
 @api.response(code=400, description='Validation error')
 class CheckoutRecord(Resource):
-    @api.marshal_with(checkout, code=200, description='Success')
+    @api.marshal_with(checkout_marshaller, code=200, description='Success')
     def get(self, checkout_id):
         """
         Gets a specific checkout record based on checkout_id.
@@ -61,7 +61,7 @@ class CheckoutRecord(Resource):
         """
         return "Successfully got %s " % checkout_id
 
-    @api.doc(body=checkout, validate=True)
+    @api.doc(body=checkout_marshaller, validate=True)
     @api.response(code=200, description='Success')
     def put(self, checkout_id):
         """
@@ -84,8 +84,8 @@ class CheckoutRecord(Resource):
 @api.route('/reminders/')
 @api.response(code=400, description='Validation Error')
 class Reminder(Resource):
-    @api.doc(body=checkout, validate=True)
-    @api.marshal_with(checkout, code=200, description="Success")
+    @api.doc(body=checkout_marshaller, validate=True)
+    @api.marshal_with(checkout_marshaller, code=200, description="Success")
     def get(self, return_date):
         """
         Return the checkouts that have not been returned.

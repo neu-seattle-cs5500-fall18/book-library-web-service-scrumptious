@@ -10,7 +10,7 @@ note = api.model('Note', {
 
 
 # Response model, any other fields are considered private and not returned
-book = api.model('Book', {
+book_marshaller = api.model('Book', {
     'book_id': fields.Integer(required=True, description='The book record'),
     'title': fields.String(description='The book title.'),
     'author_first_name': fields.String(description='The author\'s first name.'),
@@ -40,7 +40,7 @@ query_parser.add_argument('is_deleted', default=False)
 class Books(Resource):
     # this ensures arguments are valid and get can receive appropriate query params.
     @api.doc(body=query_parser, validate=True)
-    @api.marshal_with(book, code=200)
+    @api.marshal_with(book_marshaller, code=200)
     def get(self):
         """
         Queries the books resource based on URL query string parameters.
@@ -51,9 +51,9 @@ class Books(Resource):
         return 'this worked'
 
     # This ensures body of request matches book model
-    @api.expect(book, validate=True)
+    @api.expect(book_marshaller, validate=True)
     @api.response(201, 'Created')
-    @api.marshal_with(book, code=201)
+    @api.marshal_with(book_marshaller, code=201)
     def post(self):
         """
         Creates a new book record for a single book.
@@ -69,7 +69,7 @@ class Books(Resource):
 @api.response(200, 'Success')
 @api.response(400, 'Validation error')
 class BookRecord(Resource):
-    @api.marshal_with(book, code=200)
+    @api.marshal_with(book_marshaller, code=200)
     def get(self, book_id):
         """
         Gets a specific book record based on book_id.
@@ -79,8 +79,8 @@ class BookRecord(Resource):
         #get_book(book_id)
         return
 
-    @api.expect(book, validate=True)
-    @api.marshal_with(book, code=200)
+    @api.expect(book_marshaller, validate=True)
+    @api.marshal_with(book_marshaller, code=200)
     def put(self, book_id):
         """
         Updates an existing record  based on book_id.
@@ -91,7 +91,7 @@ class BookRecord(Resource):
         return
 
     @api.response(200, 'Deleted')
-    @api.marshal_with(book, code=200)
+    @api.marshal_with(book_marshaller, code=200)
     def delete(self, book_id):
         """
         Delete a book record based on book_id.
@@ -120,7 +120,7 @@ class BookNotes(Resource):
     # Need checking here so existing notes aren't written over.
     @api.expect(note, validate=True)
     @api.response(201, 'Created Note')
-    @api.marshal_with(book, code=201)
+    @api.marshal_with(book_marshaller, code=201)
     def post(self, book_id):
         """
         Creates a new note for a book.
@@ -131,7 +131,7 @@ class BookNotes(Resource):
         return
 
     @api.expect(note, validate=True)
-    @api.marshal_with(book, code=200)
+    @api.marshal_with(book_marshaller, code=200)
     def put(self, book_id):
         """
         Edit a specific note for a book.
@@ -142,7 +142,7 @@ class BookNotes(Resource):
         return
 
     @api.response(200, 'Deleted Note')
-    @api.marshal_with(book, code=200)
+    @api.marshal_with(book_marshaller, code=200)
     def delete(self, book_id):
         """
         Delete a specific note for a book
