@@ -3,3 +3,4 @@ flask_restplus==0.12.01
 Flask-SQLAlchemy==2.3.2
 gunicorn==19.9.0
 psycopg2==2.7.5
+migrate==0.3.8
