@@ -27,7 +27,7 @@ class Users(Resource):
 
         return response
 
-    @api.response(400, 'Invalid')
+    @api.response(400, 'Record not found')
     @api.response(201, 'Created new user.')
     @api.expect(user_marshaller)
     def post(self):
@@ -46,14 +46,18 @@ class Users(Resource):
 @api.route('/<user_id>', endpoint='user_record')
 @api.doc(params={'user_id': 'An ID for a user record'})
 class UserRecord(Resource):
-    @api.marshal_with(user_marshaller, code=200, description='Success')
+    @api.marshal_with(user_marshaller)
     def get(self, user_id):
         print('Received GET on resource /users/<user_id>')
-        user_record = get_user(user_id)
 
+        user_record = get_user(user_id)
+        # print(user_record)
+        # if user_record == 404:
+        #     abort(400, 'User not found')
+        # else:
         return user_record
 
-    @api.response(code=400, description='Invalid')
+    @api.response(code=400, description='Record not found')
     @api.response(code=200, description='Success')
     @api.expect(user_marshaller, validate=True)
     def put(self, user_id):
@@ -81,4 +85,3 @@ class UserRecord(Resource):
         id_of_deleted = delete_user(user_id)
 
         return id_of_deleted
-
