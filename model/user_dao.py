@@ -1,4 +1,5 @@
 from model.user import User
+from flask_restplus import abort
 from library_webservice import db
 
 
@@ -29,7 +30,7 @@ def get_user(user_id):
     a_user = User.query.get(user_id)
 
     if a_user is None:
-        return 404
+        abort(400, 'Record not found')
     else:
         return a_user
 
@@ -40,7 +41,7 @@ def update_user(user_id, user_info):
     a_user = User.query.get(user_id)
 
     if a_user is None:
-        return 404
+        abort(400, 'Record not found')
 
     else:
         a_user.user_first_name = user_info['user_first_name']
@@ -58,7 +59,7 @@ def delete_user(user_id):
     a_user = User.query.get(user_id)
 
     if a_user is None:
-        return 404
+        abort(400, 'Record not found')
     else:
         a_user.is_deleted = True
         db.session.commit()
