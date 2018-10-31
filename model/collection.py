@@ -1,5 +1,5 @@
 from library_webservice import db
-from model import Book
+from model import book
 
 
 # class BookCollection(db.Model):

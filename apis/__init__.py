@@ -1,9 +1,9 @@
 
 from flask_restplus import Api
-from .books import api as books_ns
-from .checkouts import api as checkouts_ns
-from .users import api as users_ns
-from .collections import api as collections_ns
+from .books_api import api as books_ns
+from .checkouts_api import api as checkouts_ns
+from .users_api import api as users_ns
+from .collections_api import api as collections_ns
 
 api = Api(
           title='Library Webservice API',

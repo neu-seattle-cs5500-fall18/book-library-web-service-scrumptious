@@ -4,7 +4,7 @@ from flask_restplus import Namespace, fields, Resource, reqparse
 
 api = Namespace('checkouts', description='Checkouts operations')
 
-checkout = api.model('Checkout', {
+checkout_marshaller = api.model('Checkout', {
     'checkout_id': fields.Integer(readOnly=True, description='checkout id'),
     'user_id': fields.Integer(required=True, description='user who checks out the book'),
     'book_id': fields.Integer(required=True, description='the book that user checks out'),
@@ -22,39 +22,29 @@ query_parser.add_argument('due_date', required=False)
 query_parser.add_argument('return_date', required=False)
 
 
-class CheckOut(object):
-    def __init__(self, checkout_id, user_id, book_id, checkout_date, due_date, return_date):
-        self.checkout_id = checkout_id
-        self.user_id = user_id
-        self.book_id = book_id
-        self.checkout_date = checkout_date
-        self.due_date = due_date
-        self.return_date = return_date
-
-        self.status = 'active'
-
-
-@api.route('/', endpoint='checkouts')
+@api.route('', endpoint='checkouts')
 @api.response(code=400, description='Validation Error')
 class Checkouts(Resource):
 
     @api.doc(body=query_parser, validate=True)
-    @api.marshal_with(checkout, code=200, description='Success')
+    @api.marshal_with(checkout_marshaller, code=200, description='Success')
     def get(self):
         """
         Queries the checkouts resource based on URL.
         :return: Json object of all checkouts that match the query parameter.
         """
+        print('got all checkouts')
         return "got a checkout"
 
-    @api.doc(body=checkout, validate=True)
-    @api.marshal_with(checkout, code=201, description='Success')
+    @api.doc(body=checkout_marshaller, validate=True)
+    @api.marshal_with(checkout_marshaller, code=201, description='Success')
     def post(self, checkout_id):
         """
         Create a new checkout for the book.
         :param checkout_id: Record for a checkout id.
         :return: checkout_id for the create book
         """
+        print('posted checkout')
         return "Successfully added checkout" % checkout_id
 
 
@@ -62,7 +52,7 @@ class Checkouts(Resource):
 @api.doc(params={'checkout_id': 'Record of a checkout'})
 @api.response(code=400, description='Validation error')
 class CheckoutRecord(Resource):
-    @api.marshal_with(checkout, code=200, description='Success')
+    @api.marshal_with(checkout_marshaller, code=200, description='Success')
     def get(self, checkout_id):
         """
         Gets a specific checkout record based on checkout_id.
@@ -71,7 +61,7 @@ class CheckoutRecord(Resource):
         """
         return "Successfully got %s " % checkout_id
 
-    @api.doc(body=checkout, validate=True)
+    @api.doc(body=checkout_marshaller, validate=True)
     @api.response(code=200, description='Success')
     def put(self, checkout_id):
         """
@@ -94,8 +84,8 @@ class CheckoutRecord(Resource):
 @api.route('/reminders/')
 @api.response(code=400, description='Validation Error')
 class Reminder(Resource):
-    @api.doc(body=checkout, validate=True)
-    @api.marshal_with(checkout, code=200, description="Success")
+    @api.doc(body=checkout_marshaller, validate=True)
+    @api.marshal_with(checkout_marshaller, code=200, description="Success")
     def get(self, return_date):
         """
         Return the checkouts that have not been returned.
