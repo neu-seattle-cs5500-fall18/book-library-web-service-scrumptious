@@ -14,4 +14,4 @@ class Book(db.Model):
     #collections: db.Column()
     deleted: db.Column(db.Boolean, nullable=False, default=False)
 
-    #book_id: db.Column('book_id', backref='Book', lazy=True)
+    book_id: db.Column('book_id', backref='Book', lazy=True)
