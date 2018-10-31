@@ -4,4 +4,8 @@ Flask-SQLAlchemy==2.3.2
 gunicorn==19.9.0
 psycopg2==2.7.5
 pbr==5.1.0
+<<<<<<< HEAD
 migrate==0.3.8
+=======
+migrate==0.3.8
+>>>>>>> f50916c8f56b15b20654735dfd7863aae470b790
