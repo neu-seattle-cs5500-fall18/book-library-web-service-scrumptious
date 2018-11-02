@@ -3,11 +3,11 @@ from library_webservice import db
 
 class Author(db.Model):
     #how to enforce that come combination of names is not null?
-    author_id: db.Column(db.Integer, primary_key=True)
-    first_name: db.Column(db.String)
-    last_name: db.Column(db.String)
-    middle_name: db.Column(db.String)
-    pen_name: db.Column(db.String)
+    author_id= db.Column(db.Integer, primary_key=True)
+    first_name= db.Column(db.String)
+    last_name= db.Column(db.String)
+    middle_name= db.Column(db.String)
+    pen_name= db.Column(db.String)
 
     def __init__(self, author_id, first_name, last_name, middle_name, pen_name):
         self.author_id = author_id
