@@ -1,7 +1,7 @@
 from library_webservice import db
 
 
-class BookCopy(db.model):
+class BookCopy(db.Model):
     book_copy_id = db.Column(db.Integer, primary_key=True)
     book_id = db.Column(db.Integer, db.ForeignKey('Book.book_id'), nullable=False)
     is_checked_out = db.Column(db.Boolean, nullable=False, default=False)
