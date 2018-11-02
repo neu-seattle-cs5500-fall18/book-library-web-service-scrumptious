@@ -17,7 +17,7 @@ def create_new_checkout(checkout_info):
     checkout_date = checkout_info['checkout_date']
     due_date = checkout_info['due_date']
 
-    new_checkout = Checkout(user_id=user_id, book_id=book_id, checkout_date=checkout_date, due_date = due_date)
+    new_checkout = Checkout(user_id=user_id, book_id=book_id, checkout_date=checkout_date, due_date=due_date)
 
     db.session.add(new_checkout)
     db.session.commit()
