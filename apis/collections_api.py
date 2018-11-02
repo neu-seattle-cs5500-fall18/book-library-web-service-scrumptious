@@ -25,3 +25,6 @@ class BookCollections(Resource):
         )
         book_col.append(book)
         return book_col
+
+
+
