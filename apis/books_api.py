@@ -206,7 +206,7 @@ class BookCopy(Resource):
             return book_copy
         else:
             abort(400, 'Invalid input for book_id or book_copy_id')
-        
+
     def delete(self, book_id, book_copy_id):
         if book_id.isdigit() and book_copy_id.isdigit():
             id = book_checker.delete_book_copy(book_id, book_copy_id)
