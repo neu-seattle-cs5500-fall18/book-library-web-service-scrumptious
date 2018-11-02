@@ -96,7 +96,7 @@ class CheckoutRecord(Resource):
         return id_of_deleted
 
 
-@api.route('/checkout')
+@api.route('/checkout/reminder')
 @api.response(code=400, description='Validation Error')
 class Reminder(Resource):
     @api.doc(body=checkout_marshaller, validate=True)
