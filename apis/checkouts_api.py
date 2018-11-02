@@ -12,6 +12,7 @@ checkout_marshaller = api.model('Checkout', {
     'checkout_date': fields.Date(required=True, description='the date that the book is checked out'),
     'due_date': fields.Date(required=True, desciription='the date that the checkout book is due'),
     'return_date': fields.Date(required=True, description='the date that the checkout book is returned'),
+    'is_deleted': fields.Boolean(required=True, description='shows if the checkout is deleted'),
 })
 
 query_parser = reqparse.RequestParser()
