@@ -1,6 +1,7 @@
-# adding some reviews to pull from sarah for lab3
-
+from flask import request
 from flask_restplus import Namespace, fields, Resource, reqparse
+from model.checkout_dao import create_new_checkout, get_all_checkouts, get_checkout, update_checkout, delete_checkout, \
+    get_reminder
 
 api = Namespace('checkouts', description='Checkouts operations')
 
@@ -33,22 +34,25 @@ class Checkouts(Resource):
         Queries the checkouts resource based on URL.
         :return: Json object of all checkouts that match the query parameter.
         """
+        response = get_all_checkouts
+
         print('got all checkouts')
-        return "got a checkout"
+        return response
 
     @api.doc(body=checkout_marshaller, validate=True)
     @api.marshal_with(checkout_marshaller, code=201, description='Success')
-    def post(self, checkout_id):
+    def post(self):
         """
         Create a new checkout for the book.
-        :param checkout_id: Record for a checkout id.
         :return: checkout_id for the create book
         """
-        print('posted checkout')
-        return "Successfully added checkout" % checkout_id
+        checkout_info = request.get_json()
+        response = create_new_checkout(checkout_info)
+
+        return response, 201
 
 
-@api.route('/checkout_id')
+@api.route('/checkout/<checkout_id>')
 @api.doc(params={'checkout_id': 'Record of a checkout'})
 @api.response(code=400, description='Validation error')
 class CheckoutRecord(Resource):
@@ -59,7 +63,8 @@ class CheckoutRecord(Resource):
         :param checkout_id: Record of a checkout.
         :return: JSON of requested checkout record.
         """
-        return "Successfully got %s " % checkout_id
+        checkout_record = get_checkout(checkout_id)
+        return checkout_record
 
     @api.doc(body=checkout_marshaller, validate=True)
     @api.response(code=200, description='Success')
@@ -69,7 +74,12 @@ class CheckoutRecord(Resource):
         :param checkout_id: Record checkout id to be updated.
         :return: Json with checkout_id of updated record.
         """
-        return "Successfully updated %s " % checkout_id
+        print('Received PUT on resource /checkout/<checkout_id>')
+        request_body = request.get_json()
+
+        checkout_id = update_checkout(checkout_id, request_body)
+
+        return checkout_id
 
     @api.response(code=200, description='Checkout deleted')
     def delete(self, checkout_id):
@@ -78,20 +88,25 @@ class CheckoutRecord(Resource):
         :param checkout_id: Record to be deleted.
         :return: Json of checkout_id of deleted record.
         """
-        return "Successfully deleted" % checkout_id
+        print('Received DELETE on resource /checkouts/<checkout_id>')
+
+        id_of_deleted = delete_checkout(checkout_id)
+
+        return id_of_deleted
 
 
-@api.route('/reminders/')
+@api.route('/checkout')
 @api.response(code=400, description='Validation Error')
 class Reminder(Resource):
     @api.doc(body=checkout_marshaller, validate=True)
     @api.marshal_with(checkout_marshaller, code=200, description="Success")
-    def get(self, return_date):
+    def get(self):
         """
         Return the checkouts that have not been returned.
-        :param return_date: the date when the book is returned.
         :return: the checkouts that don't have a return date yet.
         """
-        return "got the list of checkouts for reminders"
+
+        checkouts = get_reminder()
+        return checkouts
 
 
