@@ -16,7 +16,7 @@ class Author(db.Model):
         self.middle_name = middle_name
         self.pen_name = pen_name
 
-    def to_diect(self):
+    def to_dict(self):
         print('Author to_dict')
         author_dict = {
             'author_id': self.author_id,
