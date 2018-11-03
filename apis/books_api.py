@@ -14,7 +14,6 @@ note = api.model('Note', {
 book_marshaller = api.model('Book', {
     'book_id': fields.Integer(required=True, description='The book record'),
     'title': fields.String(description='The book title.'),
-    'authors': fields.List(description='A list of all authors'),
     'publish_date': fields.Date(description='The publish date of a book.'),
     'subject': fields.String(description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
     'genre': fields.String(description='Genre classification for a fiction book (i.e. horror, science fiction'),
