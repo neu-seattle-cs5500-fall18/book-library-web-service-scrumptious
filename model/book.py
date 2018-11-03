@@ -5,6 +5,7 @@ authorship = db.Table('authorship',
                       db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
                       db.Column('author_id', db.Integer, db.ForeignKey('author.author_id'), primary_key=True))
 
+
 class Book(db.Model):
     book_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -23,7 +24,7 @@ class Book(db.Model):
         self.book_note = book_notes
         self.is_deleted = is_deleted
 
-    def __repr__(self): return'<Book %r>' %(self.title)
+    def __repr__(self): return'<Book %r>' % self.title
 
     def to_dict(self):
         print('Book to_dict')

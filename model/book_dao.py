@@ -6,6 +6,7 @@ from model.book_copy import BookCopy
 # Book querying actions.
 # !!! use lower case db.session
 
+
 def query_by_id(book_id):
     a_book = Book.query.get(book_id)
 
@@ -13,6 +14,7 @@ def query_by_id(book_id):
         abort(400, 'Record not found')
     else:
         return a_book
+
 
 def query_books(query_params):
     """
@@ -22,6 +24,7 @@ def query_books(query_params):
     if query_params is None:
         book_list = Book.query.getall()
         return book_list
+
 
 def create_new_book(request_body):
     # does kwargs work here?
@@ -40,6 +43,7 @@ def update_book_record(book_id, json):
     db.session.commit()
     return book
 
+
 def delete_book(book_id):
     book = Book.query.get(book_id)
     book.deleted = True
@@ -53,11 +57,13 @@ def get_notes(book_id):
     notes = book.notes
     return notes
 
+
 def edit_note(book_id, json):
     book = query_by_id(book_id)
     book.notes = json
     db.session.commit()
     return book.book_id
+
 
 def delete_note(book_id):
     book = query_by_id(book_id)
@@ -72,12 +78,14 @@ def get_book_copies(book_id):
     copies = BookCopy.query.filter(BookCopy.book_id == book.book_id)
     return copies
 
+
 def insert_book_copy(book_id):
     book = query_by_id(book_id)
     copy = BookCopy(book_id)
     db.session.add(copy)
     db.session.commit()
     return copy.book_copy_id
+
 
 def delete_book_copy(book_id, book_copy_id):
     return
