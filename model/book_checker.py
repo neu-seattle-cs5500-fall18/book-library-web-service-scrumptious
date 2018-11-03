@@ -8,14 +8,23 @@ def get_books(query_params):
     return
 
 def create_book(book_json):
-
-    #check formatting of title
-    #ensure books is not in table
-    #abort(400,'cannot create, already exists as record #')
-    #else:
-    #create_book_copy
-    #add to authors table is present
-    #Notes optionally empty
+    # title = book_json['title']
+    # publish_date = book_json['publish_date']
+    # subject = book_json['subject']
+    # genre = book_json['genre']
+    # book_note = book_json['book_note']
+    #
+    # book = Book(title=title, publish_date=publish_date, subject=subject, genre=genre, book_note=book_note)
+    # book_id= book_dao.create_new_book(book)
+    #
+    # authors = book_json['authors']
+    # temp_authors = []
+    # for author in authors:
+    #     id = author_checker.add_author(author)
+    #     temp_authors.append(id)
+    #
+    # for author_id in temp_authors:
+    #     authorship
     return
 
 def get_book(book_id):
