@@ -1,5 +1,6 @@
 from library_webservice import db
 
+
 class Collection(db.Model):
     collection_name = db.Column(db.Integer, primary_key=True)
     collection_books = db.relationship('CollectionBooks', backref='Collection', lazy=True)
