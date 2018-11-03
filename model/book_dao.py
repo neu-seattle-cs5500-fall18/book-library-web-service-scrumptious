@@ -57,9 +57,9 @@ def edit_note(book_id, note):
     db.session.commit()
     return book.book_id
 
+
 def delete_note(book_id):
     book = query_by_id(book_id)
     book.notes = ""
     db.session.commit()
     return book.book_id
-
