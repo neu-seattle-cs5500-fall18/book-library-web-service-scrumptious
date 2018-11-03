@@ -4,8 +4,8 @@ from library_webservice import db
 class Author(db.Model):
     #how to enforce that come combination of names is not null?
     author_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    first_name = db.Column(db.String, nullable=False)
-    last_name = db.Column(db.String)
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String, nullable=False)
     middle_name = db.Column(db.String)
 
     def __init__(self, author_id, first_name, last_name, middle_name):
