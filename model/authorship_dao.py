@@ -8,7 +8,6 @@ def create_authorship(book_id, author_id_list):
     return #???
 
 
-
 # this creates a list of author book key value pairs.
 def get_authorship(**kwargs):
     authorship_list = []
@@ -18,7 +17,8 @@ def get_authorship(**kwargs):
         authorship_list.append(result)
     return
 
-#what are the args here?
+
+# what are the args here?
 def delete_authorship(**kwargs):
     return
 

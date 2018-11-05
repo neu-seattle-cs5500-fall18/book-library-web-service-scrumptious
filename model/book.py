@@ -15,13 +15,13 @@ class Book(db.Model):
     book_note = db.Column(db.String, nullable=True)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
 
-    def __init__(self, book_id, title, publish_date, subject, genre, book_notes, is_deleted):
+    def __init__(self, book_id, title, publish_date, subject, genre, book_note, is_deleted):
         self.book_id = book_id
         self.title = title
         self.publish_date = publish_date
         self.subject = subject
         self.genre = genre
-        self.book_note = book_notes
+        self.book_note = book_note
         self.is_deleted = is_deleted
 
     def __repr__(self): return'<Book %r>' % self.title

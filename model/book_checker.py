@@ -2,10 +2,12 @@ from model import book_dao
 
 # functions that interact with a books record.
 
+
 def get_books(query_params):
     #any need to check the query values here?
     book_dao.query_books(query_params)
     return
+
 
 def create_book(book_json):
     # title = book_json['title']
@@ -27,13 +29,16 @@ def create_book(book_json):
     #     authorship
     return
 
+
 def get_book(book_id):
     book = book_dao.query_book_id(book_id)
     return book
 
+
 def update_book(book_id, book_json):
     book_dao.update_book_record(book_id, book_json)
     return
+
 
 def delete_book(book_id):
     return
@@ -49,13 +54,16 @@ def get_note(book_id):
     note = book_dao.query_book_note(book_id)
     return note
 
+
 def create_note(book_id, json):
     id = book_dao.insert_note(book_id, json)
     return id
 
+
 def update_note(book_id, json):
     id = book_dao.edit_note(book_id, json)
     return id
+
 
 def delete_note(book_id):
     id = book_dao.remove_note(book_id)
@@ -81,6 +89,7 @@ def create_book_copy(book_id):
     #session.db.add(new_book_copy)
     #session.db.commit()
     #return new_book_copy.book_copy_id
+
 
 def delete_book_copy(book_id, book_copy_id):
 

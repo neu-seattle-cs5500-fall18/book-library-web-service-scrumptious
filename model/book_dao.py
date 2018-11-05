@@ -2,6 +2,7 @@ from flask import abort
 from library_webservice import db
 from model.book import Book
 
+
 # Book querying actions.
 # !!! use lower case db.session
 def query_by_id(book_id):
@@ -50,6 +51,7 @@ def get_note(book_id):
     book = Book.query_by_id(book_id)
     note = book.note
     return note
+
 
 def edit_note(book_id, note):
     book = query_by_id(book_id)
