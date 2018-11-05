@@ -36,7 +36,7 @@ def get_book(book_id):
 
 
 def update_book(book_id, book_json):
-    book_dao.update_book_record(book_id, book_json)
+    book_dao.update(book_id, book_json)
     return
 
 

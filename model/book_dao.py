@@ -14,36 +14,37 @@ def query_by_id(book_id):
 
 
 # Does this need to not accept everything upstream?
-def query_books(**query_params):
+#takes query args and values as a dict
+def query_books(**kwargs):
     """
     Queries all books in library
     :return: List of Book
     """
-    if query_params is None:
+    if kwargs is None:
         book_list = Book.query.getall()
         return book_list
+    #else filter by kwargs
 
 
-#trying **kwargs here.
-def create_new_book(**book_dict):
-    new_book = Book(**book_dict)
+def create(**kwargs):
+    new_book = Book(**kwargs)
     db.session.add(new_book)
     db.session.commit()
     return new_book.book_id
 
 
-def update_book_record(book_id, **book_dict):
+def update(book_id, **kwargs):
     book = Book.query.get(book_id)
-    book = Book(**book_dict)
+    book.update(kwargs)
     db.session.commit()
-    return book
+    return book.to_dict()
 
 
-def delete_book(book_id):
+def delete(book_id):
     book = Book.query.get(book_id)
     book.deleted = True
     db.session.commit()
-    return book
+    return book.to_dict()
 
 
 # Notes actions
@@ -57,11 +58,11 @@ def edit_note(book_id, note):
     book = query_by_id(book_id)
     book.notes = note
     db.session.commit()
-    return book.book_id
+    return book.to_dict()
 
 
 def delete_note(book_id):
     book = query_by_id(book_id)
     book.notes = ""
     db.session.commit()
-    return book.book_id
+    return book.to_dict()

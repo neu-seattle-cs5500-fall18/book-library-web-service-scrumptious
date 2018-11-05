@@ -1,9 +1,9 @@
 from library_webservice import db
 
 #Helper table for many to many relationship.
-authorship = db.Table('authorship',
-                      db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
-                      db.Column('author_id', db.Integer, db.ForeignKey('author.author_id'), primary_key=True))
+authorship_table = db.Table('authorship',
+                            db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
+                            db.Column('author_id', db.Integer, db.ForeignKey('author.author_id'), primary_key=True))
 
 
 class Book(db.Model):
@@ -14,17 +14,23 @@ class Book(db.Model):
     genre = db.Column(db.String, nullable=False)
     book_note = db.Column(db.String, nullable=True)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
+    authors = db.relationship('Author', secondary=authorship_table, lazy='subquery',
+                              backref=db.backref('books',lazy=True))
 
-    def __init__(self, book_id, title, publish_date, subject, genre, book_note, is_deleted):
-        self.book_id = book_id
-        self.title = title
-        self.publish_date = publish_date
-        self.subject = subject
-        self.genre = genre
-        self.book_note = book_note
-        self.is_deleted = is_deleted
+    def __init__(self, **kwargs):
+        self.book_id = kwargs['book_id']
+        self.title = kwargs['title']
+        self.publish_date = kwargs['publish_date']
+        self.subject = kwargs['subject']
+        self.genre = kwargs['genre']
+        self.book_note = kwargs['book_note']
+        self.is_deleted = kwargs['is_deleted']
+        self.authors = kwargs['authors']
 
-    def __repr__(self): return'<Book %r>' % self.title
+    def __repr__(self): return"<Book(book_id='%s',title='%s',publish_date='%s',subject='%s',genre='%s'," \
+                              "book_note='%s',is_deleted='%s'>" \
+                              %(self.book_id,self.title,self.publish_date,self.subject,self.genre,self.book_note,
+                                self.is_deleted)
 
     def to_dict(self):
         print('Book to_dict')
@@ -37,3 +43,8 @@ class Book(db.Model):
             'is_deleted': self.is_deleted
         }
         return book_dict
+
+    def update(self, **kwargs):
+        for key, value in kwargs:
+            self[key] = value
+

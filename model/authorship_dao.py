@@ -1,11 +1,12 @@
-from model.book import authorship
+from model.book import authorship_table
 
 
 def create_authorship(book_id, author_id_list):
 
     for author in author_id_list:
-        authorship.insert(book_id=book_id, author_id=author)
-    return #???
+        #uniqueness should be handled by table
+        authorship_table.insert(book_id=book_id, author_id=author)
+    return
 
 
 # this creates a list of author book key value pairs.
@@ -18,8 +19,8 @@ def get_authorship(**kwargs):
     return
 
 
-# what are the args here?
-def delete_authorship(**kwargs):
-    return
+# # what are the args here?
+# def delete_authorship(**kwargs):
+#     return
 
 
