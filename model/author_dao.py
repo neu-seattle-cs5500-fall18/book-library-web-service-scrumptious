@@ -24,10 +24,11 @@ def get_author(**query_args):
     return list_of_authors
 
 
-def create_author(**author_dict):
+#def create_author(**author_dict):
+def create_author(author_dict):
     #Creates a new author, returns id
     #need to check for author existing already.
-    author = Author(**author_dict)
+    author = Author(author_dict)
     db.session.add(author)
     db.session.commit()
     return author.author_id

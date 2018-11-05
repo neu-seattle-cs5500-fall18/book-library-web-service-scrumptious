@@ -112,7 +112,7 @@ class BookRecord(Resource):
         return
 
 
-#Need to decide how to handle this, probably by book name and author.
+# Need to decide how to handle this, probably by book name and author.
 @api.route('/<book_id>/note')
 @api.doc(params={'book_id': 'A record for a book.'})
 @api.response(200, 'Success')
@@ -174,6 +174,7 @@ class BookNotes(Resource):
             return id
         else:
             abort(400, 'Invalid input for book_id')
+
 
 @api.route('/<book_id>/copies')
 class BookCopies(Resource):
