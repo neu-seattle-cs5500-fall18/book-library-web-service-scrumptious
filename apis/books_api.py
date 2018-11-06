@@ -175,7 +175,7 @@ class BookNotes(Resource):
         :return: Book_id of edited record.
         """
         if book_id.isdigit():
-            id = book_checker.edit_note(book_id, request.get_json())
+            id = book_checker.update_note(book_id, request.get_json())
             return id
         else:
             abort(400, 'Invalid input for book_id')

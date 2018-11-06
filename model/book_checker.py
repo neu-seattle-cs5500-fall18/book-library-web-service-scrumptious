@@ -6,23 +6,23 @@ from flask_restplus import abort
 
 
 def valid_input(book_dict):
-    # Assumes subject and genre are required inputs
-    return None not in book_dict.title and None not in book_dict.publish_date and None not in book_dict.subject
+    return None not in book_dict['title'] and None not in book_dict['publish_date'] and None not in book_dict['subject']
 
 
-# gets dict of query params, returns a list of book dicts.
 def clean_book(book_dict):
-    book_dict.title = book_dict.title.lower().title()
-    # how do we want to store publish date???
-    book_dict.subject = book_dict.subject.lower().title()
-    book_dict.genre = book_dict.genre.lower().title()
+    title = book_dict['title'].lower().title()
+    subject = book_dict['subject'].lower().title()
+    genre = book_dict['genre'].lower().title()
+    book_dict['title'] = title
+    book_dict['subject'] = subject
+    book_dict['genre'] = genre
 
     return book_dict
 
 
-def get_books(query_params):
+def get_books(**query_params):
     list_books = []
-    results = book_dao.query_books(query_params)
+    results = book_dao.query_books(**query_params)
     for book in results:
         list_books.append(book.to_dict())
     return list_books
