@@ -1,4 +1,4 @@
-from model import book_dao, book_copy_dao
+from model import book_dao, book_copy_checker
 from model import author_checker
 
 # functions that interact with a books record.
@@ -18,18 +18,13 @@ def create_book(book_json):
     genre = book_json['genre']
     book_note = book_json['book_note']
 
-    book = {'title':title, 'publish_date':publish_date, 'subject':subject, 'genre':genre, 'book_note':book_note}
-    print(book)
-    new_book = book_dao.create(book)
-    print(new_book)
+    a_book = {'title':title, 'publish_date':publish_date, 'subject':subject, 'genre':genre, 'book_note':book_note}
+    new_book = book_dao.create(a_book)
     authors = book_json['authors']
     authors_result = author_checker.create(new_book, authors)
-    print(new_book.authors)
-    print(new_book)
-    copies = book_copy_dao.create(new_book)
+    copies = book_copy_checker.create_copy(new_book)
 
-    print(new_book.copies)
-    return new_book
+    return new_book.to_dict()
 
 
 def get_book(book_id):

@@ -7,13 +7,14 @@ pattern = re.compile('\A(\w\.)+')
 
 
 def valid_input(first_name, last_name, middle_name):
+    print("author_checker.valid_input()")
     return (first_name.isalpha() or pattern.match(first_name) or first_name is None) and \
            (middle_name.isalpha() or pattern.match(middle_name) or middle_name is None) and \
            (last_name.isalpha() or pattern.match(last_name))
 
 
 def clean_author(first_name, last_name, middle_name):
-    print('Clean Author Info')
+    print('author_checker.clean_author')
 
     if first_name is not None:
         first_name = first_name.lower().title()
@@ -35,13 +36,13 @@ def clean_author(first_name, last_name, middle_name):
     return formatted_author
 
 
-def create_author(json_author_info):
+def create_author(book, json_author_info):
     """
     Method to verify the integrity of the body of a POST request to create a new author.
     :param json_author_info: Json body of HTTP request.
     :return: Json of the id of the newly created Author.
     """
-    print('Create author')
+    print('author_checker.create_author()')
 
     f_name = json_author_info['first_name']
     l_name = json_author_info['last_name']
@@ -49,16 +50,19 @@ def create_author(json_author_info):
 
     if valid_input(f_name, l_name, m_name):
         author_dict = clean_author(f_name, l_name, m_name)
-        return author_dao.create_author(author_dict)
+        return author_dao.create(book, author_dict)
     else:
         abort(400, 'Invalid input')
 
+
 def create(book, list_authors):
+    print("author_checker.create()")
     temp_list = []
-    for e in list_authors:
-        author = author_dao.create(book, e)
-        temp_list.append(author)
-        return temp_list
+    for author in list_authors:
+        author_record = create_author(book, author)
+        temp_list.append(author_record)
+    return temp_list
+
 
 def get_author(author_id):
     """
