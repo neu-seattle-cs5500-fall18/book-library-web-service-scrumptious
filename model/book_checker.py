@@ -1,4 +1,5 @@
-from model import book_dao
+from model import book_dao, book_copy_dao
+from model import author_checker
 
 # functions that interact with a books record.
 
@@ -10,6 +11,7 @@ def get_books(query_params):
 
 
 def create_book(book_json):
+    print("book_checker.create_book()")
     title = book_json['title']
     publish_date = book_json['publish_date']
     subject = book_json['subject']
@@ -17,26 +19,17 @@ def create_book(book_json):
     book_note = book_json['book_note']
 
     book = {'title':title, 'publish_date':publish_date, 'subject':subject, 'genre':genre, 'book_note':book_note}
-
-    result = book_dao.create(book)
-
+    print(book)
+    new_book = book_dao.create(book)
+    print(new_book)
     authors = book_json['authors']
+    authors_result = author_checker.create(new_book, authors)
+    print(new_book.authors)
+    print(new_book)
+    copies = book_copy_dao.create(new_book)
 
-    authors_result = authors_dao
-
-    print(result)
-
-    # book_id= book_dao.create_new_book(book)
-
-    # authors = book_json['authors']
-    # temp_authors = []
-    # for author in authors:
-    #     id = author_checker.add_author(author)
-    #     temp_authors.append(id)
-    #
-    # for author_id in temp_authors:
-    #     authorship
-    return result
+    print(new_book.copies)
+    return new_book
 
 
 def get_book(book_id):

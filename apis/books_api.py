@@ -49,7 +49,7 @@ class Books(Resource):
         return list_of_books
 
     # This ensures body of request matches book model
-    @api.expect(book_marshaller, validate=True)
+    #@api.expect(book_marshaller, validate=True)
     @api.response(201, 'Created')
     @api.marshal_with(book_marshaller, 201)
     def post(self):
@@ -59,6 +59,7 @@ class Books(Resource):
         """
         print('Received POST on resource /book')
         request_body = request.get_json()
+        print(request_body)
         book_id = book_checker.create_book(request_body)
         return book_id
 

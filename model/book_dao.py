@@ -26,11 +26,17 @@ def query_books(**kwargs):
     #else filter by kwargs
 
 
-def create(**kwargs):
-    new_book = Book(**kwargs)
+def create(book_dict):
+    print("book_dao.create()")
+    print(book_dict)
+    new_book = Book(**book_dict)
+    print(new_book)
+    print("new book created")
     db.session.add(new_book)
+    print("added to session")
     db.session.commit()
-    return new_book.to_dict()
+    print("commited to session")
+    return new_book
 
 
 def update(book_id, **kwargs):
