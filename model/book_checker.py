@@ -1,15 +1,28 @@
 from model import book_dao, book_copy_checker
 from model import author_checker
+from flask_restplus import abort
 
 # functions that interact with a books record.
 
-# gets dict of query params, returns a list of book dicts.
 
+def valid_input(book_dict):
+    # Assumes subject and genre are required inputs
+    return None not in book_dict.title and None not in book_dict.publish_date and None not in book_dict.subject
+
+
+# gets dict of query params, returns a list of book dicts.
 def clean_book(book_dict):
+    book_dict.title = book_dict.title.lower().title()
+    # how do we want to store publish date???
+    book_dict.subject = book_dict.subject.lower().title()
+    book_dict.genre = book_dict.genre.lower().title()
+
     return book_dict
 
 
+
 def get_books(**query_params):
+
     list_books = []
     results = book_dao.query_books(**query_params)
     for book in results:
@@ -25,11 +38,14 @@ def create_book(book_json):
     genre = book_json['genre']
     book_note = book_json['book_note']
     authors = book_json['authors']
-    a_book = {'title':title, 'publish_date':publish_date, 'subject':subject, 'genre':genre, 'book_note':book_note}
+    a_book = {'title': title, 'publish_date': publish_date, 'subject': subject, 'genre': genre, 'book_note': book_note}
 
-    # need an if check here on authors results.  Abort should stop process.
-    a_book = clean_book(a_book)
-    authors = author_checker.create_author(authors)
+    if valid_input(a_book):
+        a_book = clean_book(a_book)
+    else:
+        abort(400, 'Invalid input')
+    # author_checker validates input
+    authors = author_checker.create_authors(authors)
     new_book = book_dao.create(a_book, authors)
 
     print("book_checker.create_book() ==> Complete")
@@ -82,20 +98,6 @@ def delete_note(book_id):
 def get_copies(book_id):
     copies = book_dao.query_copies(book_id)
     return copies
-
-
-def create_book_copy(book_id):
-    id = book_dao.insert_book_copy(book_id)
-    return id
-    #check is valid book_id
-    #parent_record = Book.query.get(book_id)
-    #if parent_record is None:
-        #abort(400, 'Invalid record')
-    #else:
-    #new_book_copy = BookCopy(book_id)
-    #session.db.add(new_book_copy)
-    #session.db.commit()
-    #return new_book_copy.book_copy_id
 
 
 def delete_book_copy(book_id, book_copy_id):

@@ -8,10 +8,9 @@ pattern = re.compile('\A(\w\.)+')
 
 def valid_input(first_name, last_name, middle_name):
     print("author_checker.valid_input()")
-    return True
-    # return (first_name.isalpha() or pattern.match(first_name) or first_name is None) and \
-    #        (middle_name.isalpha() or pattern.match(middle_name) or middle_name is None) and \
-    #        (last_name.isalpha() or pattern.match(last_name))
+    return (first_name is None or first_name.isalpha() or pattern.match(first_name)) and \
+           (middle_name is None or middle_name.isalpha() or pattern.match(middle_name)) and \
+           (last_name.isalpha() or pattern.match(last_name))
 
 
 def clean_author(first_name, last_name, middle_name):
@@ -37,11 +36,11 @@ def clean_author(first_name, last_name, middle_name):
     return formatted_author
 
 
-def create_author(list_json_authors):
+def create_authors(list_json_authors):
     """
     Method to verify the integrity of the body of a POST request to create a new author.
     Returns results back to book checker.
-    :param list: Json body of HTTP request.
+    :param list_json_authors: Json body of HTTP request.
     :return:
     """
     print('author_checker.create_author()')
