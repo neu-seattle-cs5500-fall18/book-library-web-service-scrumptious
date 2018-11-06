@@ -9,15 +9,34 @@ note = api.model('Note', {
     'notes': fields.String(required=True, description='Note about a book.')
 })
 
+author_marshaller = api.model('Author', {
+    'author_id': fields.Integer(required=False, description='Id for an author record'),
+    'first_name': fields.String(required=True, description='First name of an author'),
+    'last_name': fields.String(required=True, description='Last name of an author'),
+    'middle_name': fields.String(required=True, description='Middle name of an author')
+})
+
+book_copies_marshaller = api.model('BookCopies', {
+    'book_copy_id': fields.Integer(required=True, description='Id for a book copy'),
+    'book_id': fields.Integer(required=True, description='Id for a book'),
+    'is_checked_out' : fields.Boolean(required=True, description= 'Indicates whether a copy of a book is checked out or not'),
+    'is_deleted': fields.Boolean(required=True, description= 'Indicates whether a copy of a book is deleted')
+})
+
 
 # Response model, any other fields are considered private and not returned
 book_marshaller = api.model('Book', {
-    'book_id': fields.Integer(required=True, description='The book record'),
-    'title': fields.String(description='The book title.'),
-    'publish_date': fields.Date(description='The publish date of a book.'),
-    'subject': fields.String(description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
-    'genre': fields.String(description='Genre classification for a fiction book (i.e. horror, science fiction'),
-    'note': fields.String(description='Personal note about a book.')
+    'book_id': fields.Integer(required=False, description='The book record'),
+    'title': fields.String(required=True, description='The book title.'),
+    'publish_date': fields.Date(required=True, description='The publish date of a book.'),
+    'subject': fields.String(required=True, description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
+    'genre': fields.String(required=True, description='Genre classification for a fiction book (i.e. horror, science fiction'),
+    'book_note': fields.String(required=True, description='Personal note about a book.'),
+    'authors': fields.List(fields.Nested(author_marshaller), required=True, description='List of authors for a book')
+})
+
+full_book_marshaller = api.inherit('FullBook', book_marshaller, {
+    'copies' : fields.List(fields.Nested(book_copies_marshaller))
 })
 
 query_parser = reqparse.RequestParser()
@@ -49,9 +68,9 @@ class Books(Resource):
         return list_of_books
 
     # This ensures body of request matches book model
-    #@api.expect(book_marshaller, validate=True)
+    @api.expect(book_marshaller, validate=True)
     @api.response(201, 'Created')
-    @api.marshal_with(book_marshaller, 201)
+    @api.marshal_with(full_book_marshaller, 201)
     def post(self):
         """
         Creates a new book record for a single book.
@@ -195,22 +214,22 @@ class BookCopies(Resource):
         else:
             abort(400, 'Invalid input for book_id')
 
-#
-# @api.route('/<book_id>/copies/<book_copy_id>')
-# class BookCopy(Resource):
-#
-#     def get(self, book_id, book_copy_id):
-#         if book_id.isdigit() and book_copy_id.isdigit():
-#             book_copy = book_checker.get_book_copy(book_id, book_copy_id)
-#             return book_copy
-#         else:
-#             abort(400, 'Invalid input for book_id or book_copy_id')
-#
-#     def delete(self, book_id, book_copy_id):
-#         if book_id.isdigit() and book_copy_id.isdigit():
-#             id = book_checker.delete_book_copy(book_id, book_copy_id)
-#         else:
-#             abort(400, 'Invalid input ofr book_id or book_copy_id')
-#
+
+@api.route('/<book_id>/copies/<book_copy_id>')
+class BookCopy(Resource):
+
+    def get(self, book_id, book_copy_id):
+        if book_id.isdigit() and book_copy_id.isdigit():
+            book_copy = book_checker.get_book_copy(book_id, book_copy_id)
+            return book_copy
+        else:
+            abort(400, 'Invalid input for book_id or book_copy_id')
+
+    def delete(self, book_id, book_copy_id):
+        if book_id.isdigit() and book_copy_id.isdigit():
+            id = book_checker.delete_book_copy(book_id, book_copy_id)
+        else:
+            abort(400, 'Invalid input ofr book_id or book_copy_id')
+
 #
 
