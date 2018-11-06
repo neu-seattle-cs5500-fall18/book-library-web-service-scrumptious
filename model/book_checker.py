@@ -10,15 +10,24 @@ def get_books(query_params):
 
 
 def create_book(book_json):
-    # title = book_json['title']
-    # publish_date = book_json['publish_date']
-    # subject = book_json['subject']
-    # genre = book_json['genre']
-    # book_note = book_json['book_note']
-    #
-    # book = Book(title=title, publish_date=publish_date, subject=subject, genre=genre, book_note=book_note)
+    title = book_json['title']
+    publish_date = book_json['publish_date']
+    subject = book_json['subject']
+    genre = book_json['genre']
+    book_note = book_json['book_note']
+
+    book = {'title':title, 'publish_date':publish_date, 'subject':subject, 'genre':genre, 'book_note':book_note}
+
+    result = book_dao.create(book)
+
+    authors = book_json['authors']
+
+    authors_result = authors_dao
+
+    print(result)
+
     # book_id= book_dao.create_new_book(book)
-    #
+
     # authors = book_json['authors']
     # temp_authors = []
     # for author in authors:
@@ -27,7 +36,7 @@ def create_book(book_json):
     #
     # for author_id in temp_authors:
     #     authorship
-    return
+    return result
 
 
 def get_book(book_id):

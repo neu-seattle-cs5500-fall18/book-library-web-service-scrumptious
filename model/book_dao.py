@@ -30,7 +30,7 @@ def create(**kwargs):
     new_book = Book(**kwargs)
     db.session.add(new_book)
     db.session.commit()
-    return new_book.book_id
+    return new_book.to_dict()
 
 
 def update(book_id, **kwargs):

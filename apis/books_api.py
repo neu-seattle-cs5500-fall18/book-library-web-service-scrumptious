@@ -18,6 +18,7 @@ book_marshaller = api.model('Book', {
     'subject': fields.String(description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
     'genre': fields.String(description='Genre classification for a fiction book (i.e. horror, science fiction'),
     'note': fields.String(description='Personal note about a book.'),
+    'authors': fields.List(description='list of authors')
 })
 
 query_parser = reqparse.RequestParser()
@@ -58,7 +59,6 @@ class Books(Resource):
         :return: Book ID of the created record.
         """
         print('Received POST on resource /book')
-
         request_body = request.get_json()
         book_id = book_checker.create_book(request_body)
         return book_id
@@ -195,22 +195,22 @@ class BookCopies(Resource):
         else:
             abort(400, 'Invalid input for book_id')
 
-
-@api.route('/<book_id>/copies/<book_copy_id>')
-class BookCopy(Resource):
-
-    def get(self, book_id, book_copy_id):
-        if book_id.isdigit() and book_copy_id.isdigit():
-            book_copy = book_checker.get_book_copy(book_id, book_copy_id)
-            return book_copy
-        else:
-            abort(400, 'Invalid input for book_id or book_copy_id')
-
-    def delete(self, book_id, book_copy_id):
-        if book_id.isdigit() and book_copy_id.isdigit():
-            id = book_checker.delete_book_copy(book_id, book_copy_id)
-        else:
-            abort(400, 'Invalid input ofr book_id or book_copy_id')
-
-
+#
+# @api.route('/<book_id>/copies/<book_copy_id>')
+# class BookCopy(Resource):
+#
+#     def get(self, book_id, book_copy_id):
+#         if book_id.isdigit() and book_copy_id.isdigit():
+#             book_copy = book_checker.get_book_copy(book_id, book_copy_id)
+#             return book_copy
+#         else:
+#             abort(400, 'Invalid input for book_id or book_copy_id')
+#
+#     def delete(self, book_id, book_copy_id):
+#         if book_id.isdigit() and book_copy_id.isdigit():
+#             id = book_checker.delete_book_copy(book_id, book_copy_id)
+#         else:
+#             abort(400, 'Invalid input ofr book_id or book_copy_id')
+#
+#
 

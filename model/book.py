@@ -14,8 +14,7 @@ class Book(db.Model):
     genre = db.Column(db.String, nullable=False)
     book_note = db.Column(db.String, nullable=True)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
-    authors = db.relationship('Author', secondary=authorship_table, lazy='subquery',
-                              backref=db.backref('books',lazy=True))
+    authors = db.relationship('Author', secondary=authorship_table, backref=db.backref('books', lazy='dynamic'))
 
     def __init__(self, **kwargs):
         self.book_id = kwargs['book_id']

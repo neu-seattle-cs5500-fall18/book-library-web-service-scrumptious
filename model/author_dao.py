@@ -23,14 +23,15 @@ def get_author(**kwargs):
     return list_of_authors
 
 
-def create_author(**kwargs):
-    #Creates a new author, returns author as dict
-    #need to check for author existing already.
-    # uniqness of name combination is handled by declarative base.
-    author = Author(**kwargs)
-    db.session.add(author)
-    db.session.commit()
-    return author.to_dict()
+def create_authors(book, list_authors):
+
+    for author in list_authors:
+        record = Author(**author)
+        db.session.add(record)
+        db.session.commit()
+        record.books.append(book)
+        db.session.commit()
+    return book.authors
 
 
 def update_author(author_id, **kwargs):
