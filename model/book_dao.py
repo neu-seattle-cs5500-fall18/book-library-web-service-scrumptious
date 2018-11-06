@@ -1,6 +1,8 @@
 from flask import abort
 from library_webservice import db
+from model import author_dao
 from model.book import Book
+from model import book_copy_dao
 
 
 # Book querying actions.
@@ -21,21 +23,23 @@ def query_books(**kwargs):
     :return: List of Book
     """
     if kwargs is None:
-        book_list = Book.query.getall()
-        return book_list
-    #else filter by kwargs
+        query_results = Book.query.getall()
+        return query_results
+    else:
+        query_results = Book.query.filter_by(**kwargs)
+        return query_results
 
 
-def create(book_dict):
+def create(book_dict, list_authors):
     print("book_dao.create()")
-    print(book_dict)
     new_book = Book(**book_dict)
-    print(new_book)
-    print("new book created")
     db.session.add(new_book)
-    print("added to session")
     db.session.commit()
-    print("commited to session")
+    print(new_book)
+    author_dao.create(new_book, list_authors)
+    book_copy_dao.create(new_book)
+    print("book_dao.create() ==> Complete")
+    print(new_book)
     return new_book
 
 

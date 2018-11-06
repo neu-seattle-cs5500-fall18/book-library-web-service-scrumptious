@@ -43,7 +43,7 @@ class Books(Resource):
         :return: List of all books that match query parameters. If parameters are empty, all books are returned.
         """
         print('Received GET on resource /books')
-
+        #this should throw error if arg doesn't match the parser
         query_args = query_parser
         list_of_books = book_checker.get_books(query_args)
         return list_of_books

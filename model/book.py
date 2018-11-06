@@ -41,7 +41,9 @@ class Book(db.Model):
             'publish_date': self.publish_date,
             'subject': self.subject,
             'book_note': self.book_note,
-            'is_deleted': self.is_deleted
+            'is_deleted': self.is_deleted,
+            'authors': self.authors,
+            'copies': self.copies
         }
         return book_dict
 
