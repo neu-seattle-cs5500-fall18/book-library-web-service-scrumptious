@@ -17,8 +17,7 @@ book_marshaller = api.model('Book', {
     'publish_date': fields.Date(description='The publish date of a book.'),
     'subject': fields.String(description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
     'genre': fields.String(description='Genre classification for a fiction book (i.e. horror, science fiction'),
-    'note': fields.String(description='Personal note about a book.'),
-    'authors': fields.List(description='list of authors')
+    'note': fields.String(description='Personal note about a book.')
 })
 
 query_parser = reqparse.RequestParser()
