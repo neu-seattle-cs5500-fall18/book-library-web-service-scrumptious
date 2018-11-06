@@ -8,9 +8,10 @@ from model import author_checker
 def clean_book(book_dict):
     return book_dict
 
-def get_books(query_params):
+
+def get_books(**query_params):
     list_books = []
-    results = book_dao.query_books(query_params)
+    results = book_dao.query_books(**query_params)
     for book in results:
         list_books.append(book.to_dict())
     return list_books
