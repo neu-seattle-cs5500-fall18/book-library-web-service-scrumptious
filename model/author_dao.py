@@ -23,16 +23,20 @@ def get_author(**kwargs):
     return list_of_authors
 
 
-def create_authors(book, list_authors):
 
-    for author in list_authors:
-        record = Author(**author)
-        db.session.add(record)
-        db.session.commit()
-        record.books.append(book)
-        db.session.commit()
-    return book.authors
+def create(book, author):
+    print("author_dao.create()")
+    first = author['first_name']
+    last = author['last_name']
+    middle = author['middle_name']
 
+    new_author = Author(**author)
+    new_author.books.append(book)
+    db.session.add(new_author)
+    db.session.commit()
+    print("commited to session")
+    print("book appended to author")
+    return new_author
 
 def update_author(author_id, **kwargs):
     #updates an existing author by id and dict arguments, returns dict

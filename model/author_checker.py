@@ -53,6 +53,12 @@ def create_author(json_author_info):
     else:
         abort(400, 'Invalid input')
 
+def create(book, list_authors):
+    temp_list = []
+    for e in list_authors:
+        author = author_dao.create(book, e)
+        temp_list.append(author)
+        return temp_list
 
 def get_author(author_id):
     """
