@@ -1,7 +1,6 @@
 from flask import request
 from flask_restplus import abort, fields, Namespace, reqparse, Resource
-from model import book_checker
-
+from controller import book_checker
 
 api = Namespace('books', description='Book operations')
 

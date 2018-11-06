@@ -1,4 +1,4 @@
-from model import author_dao
+from data_access_layer import author_dao
 from flask_restplus import abort
 import re
 
