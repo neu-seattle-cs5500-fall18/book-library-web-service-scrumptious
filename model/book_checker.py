@@ -3,11 +3,17 @@ from model import author_checker
 
 # functions that interact with a books record.
 
+# gets dict of query params, returns a list of book dicts.
+
+def clean_book(book_dict):
+    return book_dict
 
 def get_books(query_params):
-    #any need to check the query values here?
-    book_dao.query_books(query_params)
-    return
+    list_books = []
+    results = book_dao.query_books(query_params)
+    for book in results:
+        list_books.append(book.to_dict())
+    return list_books
 
 
 def create_book(book_json):
@@ -17,13 +23,16 @@ def create_book(book_json):
     subject = book_json['subject']
     genre = book_json['genre']
     book_note = book_json['book_note']
-
-    a_book = {'title':title, 'publish_date':publish_date, 'subject':subject, 'genre':genre, 'book_note':book_note}
-    new_book = book_dao.create(a_book)
     authors = book_json['authors']
-    authors_result = author_checker.create(new_book, authors)
-    copies = book_copy_checker.create_copy(new_book)
+    a_book = {'title':title, 'publish_date':publish_date, 'subject':subject, 'genre':genre, 'book_note':book_note}
 
+    # need an if check here on authors results.  Abort should stop process.
+    a_book = clean_book(a_book)
+    authors = author_checker.create_author(authors)
+    new_book = book_dao.create(a_book, authors)
+
+    print("book_checker.create_book() ==> Complete")
+    print(new_book)
     return new_book.to_dict()
 
 

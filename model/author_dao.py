@@ -22,21 +22,31 @@ def get_author(**kwargs):
         list_of_authors.append(author.to_dict())
     return list_of_authors
 
+def author_exists(author_dict):
+    print("author_dao.author_exists()")
+    record = Author.query.filter_by(first_name=author_dict['first_name'], last_name=author_dict['last_name'],
+                                    middle_name=author_dict['middle_name'])
+    return record is None
 
 
-def create(book, author):
+def create(book, list_author):
     print("author_dao.create()")
-    first = author['first_name']
-    last = author['last_name']
-    middle = author['middle_name']
 
-    new_author = Author(**author)
-    new_author.books.append(book)
-    db.session.add(new_author)
+    for author in list_author:
+        if author_exists(author):
+            print("here")
+            existing_record = Author.query.filter_by(**author)
+            existing_record.books.append(book)
+            print("appended book to existing author")
+        else:
+            print("or here")
+            new_author = Author(**author)
+            new_author.books.append(book)
+            db.session.add(new_author)
+            print("added new author")
     db.session.commit()
-    print("commited to session")
-    print("book appended to author")
-    return new_author
+    print("author_dao.create() ==> Complete")
+
 
 def update_author(author_id, **kwargs):
     #updates an existing author by id and dict arguments, returns dict
