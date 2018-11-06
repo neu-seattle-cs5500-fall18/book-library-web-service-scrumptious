@@ -6,11 +6,9 @@ from flask_restplus import abort
 
 
 def valid_input(book_dict):
-    # Assumes subject and genre are required inputs
     return None not in book_dict['title'] and None not in book_dict['publish_date'] and None not in book_dict['subject']
 
 
-# gets dict of query params, returns a list of book dicts.
 def clean_book(book_dict):
     title = book_dict['title'].lower().title()
     subject = book_dict['subject'].lower().title()
