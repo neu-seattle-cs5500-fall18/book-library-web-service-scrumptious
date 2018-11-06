@@ -36,7 +36,7 @@ book_marshaller = api.model('Book', {
 })
 
 full_book_marshaller = api.inherit('FullBook', book_marshaller, {
-    'copies' : fields.List(fields.Nested(book_copies_marshaller))
+    'copies': fields.List(fields.Nested(book_copies_marshaller))
 })
 
 query_parser = reqparse.RequestParser()
