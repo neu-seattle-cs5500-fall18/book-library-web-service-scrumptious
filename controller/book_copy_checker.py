@@ -1,4 +1,4 @@
-from model import book_copy_dao
+from data_access_layer import book_copy_dao
 
 
 def create_copy(book):

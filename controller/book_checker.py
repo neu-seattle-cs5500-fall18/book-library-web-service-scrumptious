@@ -1,5 +1,5 @@
-from model import book_dao, book_copy_checker
-from model import author_checker
+from data_access_layer import book_dao
+from controller import author_checker
 from flask_restplus import abort
 
 # functions that interact with a books record.
@@ -7,15 +7,15 @@ from flask_restplus import abort
 
 def valid_input(book_dict):
     # Assumes subject and genre are required inputs
-    return None not in book_dict.title and None not in book_dict.publish_date and None not in book_dict.subject
+    return None not in book_dict['title'] and None not in book_dict['publish_date'] and None not in book_dict['subject']
 
 
 # gets dict of query params, returns a list of book dicts.
 def clean_book(book_dict):
-    book_dict.title = book_dict.title.lower().title()
+    book_dict['title'] = book_dict.title.lower().title()
     # how do we want to store publish date???
-    book_dict.subject = book_dict.subject.lower().title()
-    book_dict.genre = book_dict.genre.lower().title()
+    book_dict['subject'] = book_dict.subject.lower().title()
+    book_dict['genre'] = book_dict.genre.lower().title()
 
     return book_dict
 
@@ -54,13 +54,19 @@ def create_book(book_json):
 
 
 def get_book(book_id):
-    book = book_dao.query_book_id(book_id)
-    return book
+
+    if book_id.isdigit():
+        book = book_dao.query_book_id(book_id)
+        return book.to_dict()
+    else:
+        abort(400, 'Invalid input for book_id')
 
 
 def update_book(book_id, book_json):
-    book_dao.update(book_id, book_json)
-    return
+    if book_id.isdigit():
+        book_dao.update(book_id, **book_json)
+    else:
+        abort(400, 'invalid input for book_id')
 
 
 def delete_book(book_id):
@@ -71,26 +77,35 @@ def delete_book(book_id):
     # how to update instances?
 
 
-# functions that handle interacting with a book's note
-
 def get_note(book_id):
-    note = book_dao.query_book_note(book_id)
-    return note
+    if book_id.isdigit():
+        note = book_dao.get_note(book_id)
+        return {'note': note}
+    else:
+        abort(400, 'Invalid input for book_id')
 
 
-def create_note(book_id, json):
-    id = book_dao.insert_note(book_id, json)
-    return id
+
+def create_note(book_id, note):
+    if book_id.isdigit():
+        id = book_dao.add_note(book_id, note)
+        return {'note':note}
 
 
-def update_note(book_id, json):
-    id = book_dao.edit_note(book_id, json)
-    return id
+def update_note(book_id, note):
+    if book_id.isdigit():
+        note = book_dao.edit_note(book_id, note)
+        return {'note': note}
+    else:
+        abort(400, 'Invalid input for book_id')
 
 
 def delete_note(book_id):
-    id = book_dao.remove_note(book_id)
-    return id
+    if book_id.isdigit():
+        id = book_dao.delete_note(book_id)
+        return id
+    else:
+        abort(400, 'Invalid input for book_id')
 
 
 ## functions that handle copies of books.

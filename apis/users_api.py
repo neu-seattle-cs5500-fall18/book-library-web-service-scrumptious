@@ -1,6 +1,6 @@
 from flask import request
 from flask_restplus import abort, Namespace, Resource, fields
-from model.user_checker import get_all_users, get_user, create_user, update_user, delete_user
+from controller.user_checker import get_all_users, get_user, create_user, update_user, delete_user
 
 
 api = Namespace('users', description='User operations')

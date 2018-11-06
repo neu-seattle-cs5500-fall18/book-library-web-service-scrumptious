@@ -1,4 +1,4 @@
-from model import user_dao
+from data_access_layer import user_dao
 from flask_restplus import abort
 
 

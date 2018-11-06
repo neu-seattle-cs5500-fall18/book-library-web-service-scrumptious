@@ -1,12 +1,9 @@
 from flask import abort
 from library_webservice import db
-from model import author_dao
+from data_access_layer import author_dao, book_copy_dao
 from model.book import Book
-from model import book_copy_dao
 
 
-# Book querying actions.
-# !!! use lower case db.session
 def query_by_id(book_id):
     a_book = Book.query.get(book_id)
     if a_book is None:
@@ -15,8 +12,6 @@ def query_by_id(book_id):
         return a_book
 
 
-# Does this need to not accept everything upstream?
-#takes query args and values as a dict
 def query_books(**kwargs):
     """
     Queries all books in library
@@ -35,44 +30,56 @@ def create(book_dict, list_authors):
     new_book = Book(**book_dict)
     db.session.add(new_book)
     db.session.commit()
-    print(new_book)
     author_dao.create(new_book, list_authors)
     book_copy_dao.create(new_book)
     print("book_dao.create() ==> Complete")
-    print(new_book)
     return new_book
 
 
+##Be Careful with this.
 def update(book_id, **kwargs):
     book = Book.query.get(book_id)
-    book.update(kwargs)
+    book.update(**kwargs)
     db.session.commit()
-    return book.to_dict()
+    return book
 
 
 def delete(book_id):
     book = Book.query.get(book_id)
-    book.deleted = True
-    db.session.commit()
-    return book.to_dict()
+
+    if book is None:
+        abort(400, 'No such book record')
+    else:
+        book.deleted = True
+        # book_copy_dao.delete()
+        # author_dao.delete()
+        db.session.commit()
+        return book
 
 
 # Notes actions
 def get_note(book_id):
     book = Book.query_by_id(book_id)
-    note = book.note
-    return note
+    if book is None:
+        abort(400, 'No such record')
+    else:
+        note = book.note
+        return note
 
 
 def edit_note(book_id, note):
     book = query_by_id(book_id)
     book.notes = note
     db.session.commit()
-    return book.to_dict()
+    return book
 
 
 def delete_note(book_id):
     book = query_by_id(book_id)
-    book.notes = ""
-    db.session.commit()
-    return book.to_dict()
+
+    if book is None:
+        abort(400, 'no such record')
+    else:
+        book.notes = 'None'
+        db.session.commit()
+        return book
