@@ -1,65 +1,70 @@
 from flask import request
-from flask_restplus import Namespace, Resource, fields
-from model.user_dao import create_new_user, get_all_users, get_user, update_user, delete_user
+from flask_restplus import abort, Namespace, Resource, fields
+from controller.user_checker import get_all_users, get_user, create_user, update_user, delete_user
 
 
 api = Namespace('users', description='User operations')
 
 user_marshaller = api.model('User', {
     'user_id': fields.Integer(description='The user\'s unique identifying record'),
-    'user_first_name': fields.String(required=True, max_length=50, description='The user\'s first name'),
-    'user_last_name': fields.String(required=True, max_length=50, description='The user\'s last name'),
-    'email': fields.String(required=True, max_length=50, description='The user\'s email address'),
+    'user_first_name': fields.String(required=True, max_length=25, description='The user\'s first name'),
+    'user_last_name': fields.String(required=True, max_length=25, description='The user\'s last name'),
+    'email': fields.String(required=True, max_length=25, description='The user\'s email address'),
     'is_deleted': fields.Boolean(description='Designates whether a user is deleted'),
+})
+
+user_input_marshaller= api.model('UserInput', {
+    'user_first_name': fields.String(required=True, max_length=25, description='The user\'s first name'),
+    'user_last_name': fields.String(required=True, max_length=25, description='The user\'s last name'),
+    'email': fields.String(required=True, max_length=50, description='The user\'s email address'),
 })
 
 
 @api.route('')
+@api.response(400, 'Record not found')
+@api.response(201, 'Created new user.')
+@api.response(200, 'Successful request')
 class Users(Resource):
-    @api.marshal_with(user_marshaller, code=200)
     def get(self):
         """
         Gets all users
-        :return: Json object of all users
+        :return: Json List of users of type Dict
         """
         print('Received GET on resources /users')
         response = get_all_users()
+        return response, 200
 
-        return response
-
-    @api.response(400, 'Record not found')
-    @api.response(201, 'Created new user.')
-    @api.expect(user_marshaller)
+    @api.expect(user_input_marshaller)
     def post(self):
         """
         Creates a new user record.
         :return: User ID of the created record.
         """
         print('Received POST on resource /users')
-
         user_info = request.get_json()
-        response = create_new_user(user_info)
-
+        response = create_user(user_info)
         return response, 201
 
 
 @api.route('/<user_id>', endpoint='user_record')
 @api.doc(params={'user_id': 'An ID for a user record'})
+@api.response(400, 'Invalid input for user_id in url')
+@api.response(400, 'Record not found')
+@api.response(200, 'Success')
+@api.response(200, 'User deleted')
 class UserRecord(Resource):
     @api.marshal_with(user_marshaller)
     def get(self, user_id):
         print('Received GET on resource /users/<user_id>')
 
-        user_record = get_user(user_id)
-        # print(user_record)
-        # if user_record == 404:
-        #     abort(400, 'User not found')
-        # else:
-        return user_record
+        if user_id.isdigit():
+            user_record = get_user(user_id)
+            print(user_record)
+            return user_record
+        else:
+            return abort(400, 'Invalid input for user_id in url')
 
-    @api.response(code=400, description='Record not found')
-    @api.response(code=200, description='Success')
-    @api.expect(user_marshaller, validate=True)
+    @api.expect(user_input_marshaller, validate=True)
     def put(self, user_id):
         """
         Updates an existing user record based on user_id.
@@ -67,13 +72,14 @@ class UserRecord(Resource):
         :return: Json with user_id of updated record.
         """
         print('Received PUT on resource /users/<user_id>')
-        request_body = request.get_json()
 
-        user_id = update_user(user_id, request_body)
+        if user_id.isdigit():
+            request_body = request.get_json()
+            user_id = update_user(user_id, request_body)
+            return user_id
+        else:
+            return abort(400, 'Invalid input for user_id in url')
 
-        return user_id
-
-    @api.response(code=200, description='User deleted')
     def delete(self, user_id):
         """
         Delete a user based on user_id.
@@ -82,6 +88,8 @@ class UserRecord(Resource):
         """
         print('Received DELETE on resource /users/<user_id>')
 
-        id_of_deleted = delete_user(user_id)
-
-        return id_of_deleted
+        if user_id.isdigit():
+            id_of_deleted = delete_user(user_id)
+            return id_of_deleted
+        else:
+            return abort(400, 'Invalid input for user_id in url')
