@@ -5,7 +5,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     user_first_name = db.Column(db.String, nullable=False)
     user_last_name = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nullable=False)
+    user_email = db.Column(db.String, nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
 
     def __init__(self, user_first_name, user_last_name, email):
@@ -23,7 +23,7 @@ class User(db.Model):
             'user_id': self.user_id,
             'user_first_name': self.user_first_name,
             'user_last_name': self.user_last_name,
-            'email': self.email,
+            'user_email': self.email,
             'is_deleted': self.is_deleted
         }
         return user_dict

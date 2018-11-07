@@ -15,6 +15,7 @@ checkout_marshaller = api.model('Checkout', {
     'is_deleted': fields.Boolean(required=True, description='shows if the checkout is deleted'),
 })
 
+
 query_parser = reqparse.RequestParser()
 query_parser.add_argument('checkout_id', required=False)
 query_parser.add_argument('user_id', required=False)

@@ -9,14 +9,14 @@ user_marshaller = api.model('User', {
     'user_id': fields.Integer(description='The user\'s unique identifying record'),
     'user_first_name': fields.String(required=True, max_length=25, description='The user\'s first name'),
     'user_last_name': fields.String(required=True, max_length=25, description='The user\'s last name'),
-    'email': fields.String(required=True, max_length=25, description='The user\'s email address'),
+    'user_email': fields.String(required=True, max_length=25, description='The user\'s email address'),
     'is_deleted': fields.Boolean(description='Designates whether a user is deleted'),
 })
 
-user_input_marshaller= api.model('UserInput', {
+user_input_marshaller = api.model('UserInput', {
     'user_first_name': fields.String(required=True, max_length=25, description='The user\'s first name'),
     'user_last_name': fields.String(required=True, max_length=25, description='The user\'s last name'),
-    'email': fields.String(required=True, max_length=50, description='The user\'s email address'),
+    'user_email': fields.String(required=True, max_length=50, description='The user\'s email address'),
 })
 
 
