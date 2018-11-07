@@ -7,9 +7,16 @@ app.config['SQLALCHEMY_DATABASE_URI']='postgres://lnvbfbgadkzbcx:ea44d8a7b2eb902
 db = SQLAlchemy(app)
 
 from model.user import User
+from model.book import Book
+from model.book_copy import BookCopy
+from model.author import Author
 
 #This Creates the Table in the DB.
 user = User
+author = Author
+book = Book
+book_copy = BookCopy
+
 db.create_all()
 
 from apis import api

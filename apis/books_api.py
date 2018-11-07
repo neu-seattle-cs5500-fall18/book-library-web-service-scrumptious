@@ -1,7 +1,6 @@
 from flask import request
 from flask_restplus import abort, fields, Namespace, reqparse, Resource
-from model import book_checker
-
+from controller import book_checker
 
 api = Namespace('books', description='Book operations')
 
@@ -9,15 +8,34 @@ note = api.model('Note', {
     'notes': fields.String(required=True, description='Note about a book.')
 })
 
+author_marshaller = api.model('Author', {
+    'author_id': fields.Integer(required=False, description='Id for an author record'),
+    'first_name': fields.String(required=True, description='First name of an author'),
+    'last_name': fields.String(required=True, description='Last name of an author'),
+    'middle_name': fields.String(required=True, description='Middle name of an author')
+})
+
+book_copies_marshaller = api.model('BookCopies', {
+    'book_copy_id': fields.Integer(required=True, description='Id for a book copy'),
+    'book_id': fields.Integer(required=True, description='Id for a book'),
+    'is_checked_out' : fields.Boolean(required=True, description= 'Indicates whether a copy of a book is checked out or not'),
+    'is_deleted': fields.Boolean(required=True, description= 'Indicates whether a copy of a book is deleted')
+})
+
 
 # Response model, any other fields are considered private and not returned
 book_marshaller = api.model('Book', {
-    'book_id': fields.Integer(required=True, description='The book record'),
-    'title': fields.String(description='The book title.'),
-    'publish_date': fields.Date(description='The publish date of a book.'),
-    'subject': fields.String(description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
-    'genre': fields.String(description='Genre classification for a fiction book (i.e. horror, science fiction'),
-    'note': fields.String(description='Personal note about a book.'),
+    'book_id': fields.Integer(required=False, description='The book record'),
+    'title': fields.String(required=True, description='The book title.'),
+    'publish_date': fields.Date(required=True, description='The publish date of a book.'),
+    'subject': fields.String(required=True, description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
+    'genre': fields.String(required=True, description='Genre classification for a fiction book (i.e. horror, science fiction'),
+    'book_note': fields.String(required=True, description='Personal note about a book.'),
+    'authors': fields.List(fields.Nested(author_marshaller), required=True, description='List of authors for a book')
+})
+
+full_book_marshaller = api.inherit('FullBook', book_marshaller, {
+    'copies': fields.List(fields.Nested(book_copies_marshaller))
 })
 
 query_parser = reqparse.RequestParser()
@@ -43,7 +61,7 @@ class Books(Resource):
         :return: List of all books that match query parameters. If parameters are empty, all books are returned.
         """
         print('Received GET on resource /books')
-
+        #this should throw error if arg doesn't match the parser
         query_args = query_parser
         list_of_books = book_checker.get_books(query_args)
         return list_of_books
@@ -51,15 +69,15 @@ class Books(Resource):
     # This ensures body of request matches book model
     @api.expect(book_marshaller, validate=True)
     @api.response(201, 'Created')
-    @api.marshal_with(book_marshaller, 201)
+    @api.marshal_with(full_book_marshaller, 201)
     def post(self):
         """
         Creates a new book record for a single book.
         :return: Book ID of the created record.
         """
         print('Received POST on resource /book')
-
         request_body = request.get_json()
+        print(request_body)
         book_id = book_checker.create_book(request_body)
         return book_id
 
@@ -112,7 +130,7 @@ class BookRecord(Resource):
         return
 
 
-#Need to decide how to handle this, probably by book name and author.
+# Need to decide how to handle this, probably by book name and author.
 @api.route('/<book_id>/note')
 @api.doc(params={'book_id': 'A record for a book.'})
 @api.response(200, 'Success')
@@ -156,7 +174,7 @@ class BookNotes(Resource):
         :return: Book_id of edited record.
         """
         if book_id.isdigit():
-            id = book_checker.edit_note(book_id, request.get_json())
+            id = book_checker.update_note(book_id, request.get_json())
             return id
         else:
             abort(400, 'Invalid input for book_id')
@@ -174,6 +192,7 @@ class BookNotes(Resource):
             return id
         else:
             abort(400, 'Invalid input for book_id')
+
 
 @api.route('/<book_id>/copies')
 class BookCopies(Resource):
@@ -211,5 +230,5 @@ class BookCopy(Resource):
         else:
             abort(400, 'Invalid input ofr book_id or book_copy_id')
 
-
+#
 
