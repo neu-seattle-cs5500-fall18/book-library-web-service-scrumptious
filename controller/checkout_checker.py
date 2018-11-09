@@ -1,6 +1,7 @@
 from data_access_layer import checkout_dao
 from flask_restplus import abort
 from model.checkout import Checkout
+from model.book import Book
 
 # functions that interact with a checkout record
 
@@ -33,30 +34,30 @@ def get_all_checkouts():
     return list_of_checkouts
 
 
-def create_checkout(json_user_info):
+def create_checkout(user_id, book_id):
     """
-    Method to verify the integrity of the body of a POST request to create a new checkout.
-    :param json_user_info: Json body of HTTP request.
-    :return: Json of the id of the newly created User.
+    Checking if a new checkout can be created
+    :param user_id: given a user id
+    :param book_id: given a book id
+    :return: a checkout of the book
     """
     print('Create a checkout')
 
-    user_id = json_user_info['user_id']
-    book_id = json_user_info['book_id']
-    book_copy_id = json_user_info['book_copy_id']
-    checkout_date = json_user_info['checkout_date']
-    due_date = json_user_info['due_date']
-
-    existing_checkout = Checkout.query.filter_by(user_id=user_id).filter_by(book_id=book_id).\
-        filter_by(book_copy_id = book_copy_id).filter_by(
-        checkout_date=checkout_date).filter_by(due_date=due_date)
+    existing_checkout = Checkout.query.filter_by(user_id=user_id).filter_by(book_id=book_id)
 
     if existing_checkout is not None:
         abort(400, 'Invalid input')
 
-        checkout_dict = clean_checkout(user_id, book_id, book_copy_id, checkout_date, due_date)
+    book_copy = Book.query.filter_by(book_id)
 
-        return checkout_dao.create_new_checkout(checkout_dict)
+    if book_copy is None:
+        abort(400, 'Book not available')
+
+    checkout_dict = {
+        'user_id': user_id,
+        'book_id': book_id,
+    }
+    return checkout_dao.create_new_checkout(checkout_dict)
 
 
 def get_checkout(checkout_id):

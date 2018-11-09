@@ -1,6 +1,8 @@
 from model.checkout import Checkout
+from model.book import Book
 from flask_restplus import abort
 from library_webservice import db
+from datetime import datetime
 
 
 def query_checkout(checkout_id):
@@ -19,22 +21,20 @@ def get_all_checkouts():
     return list_of_checkouts
 
 
-def create_new_checkout(checkout_info):
-    print('Creating new user')
+def create_new_checkout(user_id, book_id):
+    print('Creating new checkout')
 
-    user_id = checkout_info['user_id']
-    book_id = checkout_info['book_id']
-    book_copy_id = checkout_info['book_copy_id']
-    checkout_date = checkout_info['checkout_date']
-    due_date = checkout_info['due_date']
+    book_copy = Book.query.filter_by(book_id).first()
+    book_copy_id = book_copy.book_copy_id
+    lending_time = datetime.timedelta(days=21)
 
-    existing_checkout = Checkout.query.filter_by(user_id=user_id).filter_by(book_id=book_id).filter_by(
-        checkout_date=checkout_date).filter_by(due_date=due_date)
-
-    new_checkout = Checkout(user_id=user_id, book_id=book_id, checkout_date=checkout_date, due_date=due_date)
+    new_checkout = Checkout(user_id=user_id, book_id=book_id,book_copy_id = book_copy_id, checkout_date=datetime.now,
+                            due_date=datetime.now+lending_time)
 
     db.session.add(new_checkout)
     db.session.commit()
+
+    book_copy.is_checked_out = True
 
     return new_checkout.user_id
 
