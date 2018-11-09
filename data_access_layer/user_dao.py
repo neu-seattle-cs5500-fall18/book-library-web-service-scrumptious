@@ -3,6 +3,7 @@ from flask_restplus import abort
 from library_webservice import db
 from model.user import User
 
+
 #check edge case of no users
 def query_all_users():
     print('Get all users')
@@ -23,7 +24,7 @@ def create_user_record(user_info_dict):
     email = user_info_dict['user_email']
 
     # Check if user info already exists
-    existing_user = User.query.filter_by(user_first_name=firstname).filter_by(user_last_name=lastname).filter_by(user_email=email).first()
+    existing_user = User.query.filter_by(user_first_name=firstname).filter_by(user_last_name=lastname).filter_by(user_email=email)
 
     print(existing_user)
 

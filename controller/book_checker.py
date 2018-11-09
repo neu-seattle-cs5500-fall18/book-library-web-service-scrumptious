@@ -87,7 +87,6 @@ def get_note(book_id):
         abort(400, 'Invalid input for book_id')
 
 
-
 def create_note(book_id, note):
     if book_id.isdigit():
         id = book_dao.add_note(book_id, note)
@@ -111,6 +110,7 @@ def delete_note(book_id):
 
 
 ## functions that handle copies of books.
+
 
 def get_copies(book_id):
     copies = book_dao.query_copies(book_id)

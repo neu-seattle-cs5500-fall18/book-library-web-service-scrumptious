@@ -3,6 +3,16 @@ from flask_restplus import abort
 from library_webservice import db
 
 
+def query_checkout(checkout_id):
+    print('Query user')
+    a_checkout = Checkout.query.get(checkout_id)
+
+    if a_checkout is None:
+        abort(400, 'Record not found')
+    else:
+        return a_checkout.to_dict()
+
+
 def get_all_checkouts():
     print('Get all checkouts')
     list_of_checkouts = Checkout.query.all()
@@ -14,8 +24,12 @@ def create_new_checkout(checkout_info):
 
     user_id = checkout_info['user_id']
     book_id = checkout_info['book_id']
+    book_copy_id = checkout_info['book_copy_id']
     checkout_date = checkout_info['checkout_date']
     due_date = checkout_info['due_date']
+
+    existing_checkout = Checkout.query.filter_by(user_id=user_id).filter_by(book_id=book_id).filter_by(
+        checkout_date=checkout_date).filter_by(due_date=due_date)
 
     new_checkout = Checkout(user_id=user_id, book_id=book_id, checkout_date=checkout_date, due_date=due_date)
 
@@ -30,10 +44,7 @@ def get_checkout(checkout_id):
 
     a_checkout = Checkout.query.get(checkout_id)
 
-    if a_checkout is None:
-        abort(400, 'Record not found')
-    else:
-        return a_checkout
+    return a_checkout
 
 
 def update_checkout(checkout_id, checkout_info):
@@ -41,31 +52,23 @@ def update_checkout(checkout_id, checkout_info):
 
     a_checkout = Checkout.query.get(checkout_id)
 
-    if a_checkout is None:
-        abort(400, 'Record not found')
+    a_checkout.user_id = checkout_info['user_id']
+    a_checkout.book_id = checkout_info['book_id']
+    a_checkout.book_id = checkout_info['book_copy_id']
+    a_checkout.checkout_date = checkout_info['checkout_date']
+    a_checkout.due_date = checkout_info['due_date']
 
-    else:
-        a_checkout.user_id = checkout_info['user_id']
-        a_checkout.book_id = checkout_info['book_id']
-        a_checkout.checkout_date = checkout_info['checkout_date']
-        a_checkout.due_date = checkout_info['due_date']
+    db.session.commit()
 
-        db.session.commit()
-
-        return a_checkout.checkout_id
+    return a_checkout.checkout_id
 
 
 def delete_checkout(checkout_id):
     print('Delete checkout')
 
     a_checkout = Checkout.query.get(checkout_id)
-
-    if a_checkout is None:
-        abort(400, 'Record not found')
-    else:
-        a_checkout.is_deleted = True
-        db.session.commit()
-        return a_checkout.checkout_id
+    db.session.commit()
+    return a_checkout.checkout_id
 
 
 def get_reminder():
