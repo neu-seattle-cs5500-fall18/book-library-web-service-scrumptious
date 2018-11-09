@@ -80,14 +80,13 @@ class CheckoutRecord(Resource):
     @api.response(code=200, description='Success')
     def put(self, checkout_id):
         """
-        Updates an existing checkout record based on checkout_id.
+        Update an existing checkout when the checked-out book is returned.
         :param checkout_id: Record checkout id to be updated.
         :return: Json with checkout_id of updated record.
         """
         print('Received PUT on resource /checkout/<checkout_id>')
-        request_body = request.get_json()
 
-        checkout_id = checkout_checker.update_checkout(checkout_id, request_body)
+        checkout_id = checkout_checker.update_checkout(checkout_id)
 
         return checkout_id
 
