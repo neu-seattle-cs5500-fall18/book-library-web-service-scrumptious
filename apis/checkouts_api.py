@@ -45,15 +45,19 @@ class Checkouts(Resource):
         print('got all checkouts')
         return response
 
-    @api.doc(body=checkout_marshaller, validate=True)
+
+@api.route('/user/<user_id>/book/<book_id')
+@api.response(code=400, description='Validation Error')
+class CreateCheckout(Resource):
+
     @api.marshal_with(checkout_marshaller, code=201, description='Success')
-    def post(self):
+    def post(self, user_id, book_id):
         """
         Create a new checkout for the book.
         :return: checkout_id for the create book
         """
         checkout_info = request.get_json()
-        response = checkout_checker.create_checkout(checkout_info)
+        response = checkout_checker.create_checkout(user_id, book_id)
 
         return response, 201
 
