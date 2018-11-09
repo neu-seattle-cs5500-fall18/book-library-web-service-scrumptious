@@ -46,7 +46,7 @@ def create_checkout(user_id, book_id):
     existing_checkout = Checkout.query.filter_by(user_id=user_id).filter_by(book_id=book_id)
 
     if existing_checkout is not None:
-        abort(400, 'Invalid input')
+        abort(400, 'checkout already existed')
 
     book_copy = Book.query.filter_by(book_id)
 
@@ -78,7 +78,7 @@ def update_checkout(checkout_id, json_user_info):
     if a_checkout is None:
         abort(400, 'Invalid input')
 
-    return checkout_dao.update_checkout(checkout_id, json_user_info)
+    return checkout_dao.update_checkout(checkout_id)
 
 
 def delete_checkout(checkout_id):

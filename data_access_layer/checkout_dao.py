@@ -1,3 +1,4 @@
+from data_access_layer import book_copy_dao
 from model.checkout import Checkout
 from model.book import Book
 from flask_restplus import abort
@@ -31,10 +32,10 @@ def create_new_checkout(user_id, book_id):
     new_checkout = Checkout(user_id=user_id, book_id=book_id,book_copy_id = book_copy_id, checkout_date=datetime.now,
                             due_date=datetime.now+lending_time)
 
+    book_copy.is_checked_out = True
+
     db.session.add(new_checkout)
     db.session.commit()
-
-    book_copy.is_checked_out = True
 
     return new_checkout.user_id
 
@@ -47,16 +48,15 @@ def get_checkout(checkout_id):
     return a_checkout
 
 
-def update_checkout(checkout_id, checkout_info):
+def update_checkout(checkout_id):
     print('Updating checkout')
 
     a_checkout = Checkout.query.get(checkout_id)
 
-    a_checkout.user_id = checkout_info['user_id']
-    a_checkout.book_id = checkout_info['book_id']
-    a_checkout.book_id = checkout_info['book_copy_id']
-    a_checkout.checkout_date = checkout_info['checkout_date']
-    a_checkout.due_date = checkout_info['due_date']
+    a_checkout.return_date = datetime.now
+    book_copy_id = a_checkout.book_copy_id
+    book_copy = book_copy_dao.get_book_copy(book_copy_id)
+    book_copy.is_checked_out = False
 
     db.session.commit()
 
