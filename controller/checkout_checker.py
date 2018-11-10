@@ -73,7 +73,7 @@ def get_checkout(checkout_id):
     return a_checkout
 
 
-def update_checkout(checkout_id, json_user_info):
+def update_checkout(checkout_id):
     a_checkout = checkout_dao.query_checkout(checkout_id)
     if a_checkout is None:
         abort(400, 'Invalid input')

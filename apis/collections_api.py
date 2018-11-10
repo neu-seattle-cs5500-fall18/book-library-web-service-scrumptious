@@ -10,7 +10,7 @@ collection_marshaller = api.model('BookCollections', {
 })
 
 
-@api.route('/bookcollections', endpoint='bookcollections')
+@api.route('', endpoint='bookcollections')
 class BookCollections(Resource):
     @api.marshal_with(collection_marshaller)
     @api.response(200, 'Resource successfully gotten')
