@@ -18,6 +18,8 @@ def get_book_copy(book_copy_id):
     else:
         return book_copy
 
+
+
 # def get_book_copies(book_id):
 #     list_of_copies = []
 #     db_results = BookCopy.query.filter(BookCopy.book_id == book_id)

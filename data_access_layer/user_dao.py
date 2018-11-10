@@ -3,6 +3,7 @@ from flask_restplus import abort
 from library_webservice import db
 from model.user import User
 
+
 #check edge case of no users
 def query_all_users():
     print('Get all users')
@@ -20,15 +21,15 @@ def create_user_record(user_info_dict):
     print('Create user record')
     firstname = user_info_dict['user_first_name']
     lastname = user_info_dict['user_last_name']
-    email = user_info_dict['email']
+    email = user_info_dict['user_email']
 
     # Check if user info already exists
-    existing_user = User.query.filter_by(user_first_name=firstname).filter_by(user_last_name= lastname).filter_by(email= lastname).first()
+    existing_user = User.query.filter_by(user_first_name=firstname).filter_by(user_last_name=lastname).filter_by(user_email=email)
 
     print(existing_user)
 
     if existing_user is None:
-        new_user = User(user_first_name=firstname, user_last_name=lastname, email=email)
+        new_user = User(user_first_name=firstname, user_last_name=lastname, user_email=email)
         db.session.add(new_user)
         db.session.commit()
         return new_user.user_id
@@ -56,7 +57,7 @@ def update_user(user_id, user_info):
     else:
         a_user.user_first_name = user_info['user_first_name']
         a_user.user_last_name = user_info['user_last_name']
-        a_user.email = user_info['email']
+        a_user.user_email = user_info['email']
 
         db.session.commit()
 
