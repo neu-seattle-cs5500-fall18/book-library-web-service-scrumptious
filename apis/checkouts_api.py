@@ -1,6 +1,6 @@
 from flask import request
 from flask_restplus import Namespace, fields, Resource, reqparse
-from model.checkout_dao import create_new_checkout, get_all_checkouts, get_checkout, update_checkout, delete_checkout, \
+from data_access_layer.checkout_dao import create_new_checkout, get_all_checkouts, get_checkout, update_checkout, delete_checkout, \
     get_reminder
 
 api = Namespace('checkouts', description='Checkouts operations')
@@ -96,7 +96,7 @@ class CheckoutRecord(Resource):
         return id_of_deleted
 
 
-@api.route('/checkout')
+@api.route('/checkout/reminder')
 @api.response(code=400, description='Validation Error')
 class Reminder(Resource):
     @api.doc(body=checkout_marshaller, validate=True)
