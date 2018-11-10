@@ -26,16 +26,16 @@ def get_book_copies(book_id):
     return list_of_copies
 
 
-def insert_book_copy(book_id):
-    copy = BookCopy(book_id)
-    db.session.add(copy)
-    db.session.commit()
-    return copy.book_copy_id
+# def insert_book_copy(book_id):
+#     copy = BookCopy(book_id)
+#     db.session.add(copy)
+#     db.session.commit()
+#     return copy.book_copy_id
 
 
-def delete_book_copy(book_copy_id):
-    copy = BookCopy.query.get(book_copy_id)
-    copy.is_deleted = True
-    return copy.book_copy_id
+# def delete_book_copy(book_copy_id):
+#     copy = BookCopy.query.get(book_copy_id)
+#     copy.is_deleted = True
+#     return copy.book_copy_id
 
 

@@ -33,18 +33,12 @@ def create_book(book_json):
     book_note = book_json['book_note']
     authors = book_json['authors']
     a_book = {'title': title, 'publish_date': publish_date, 'subject': subject, 'genre': genre, 'book_note': book_note}
-
-    if valid_input(a_book):
-        a_book = clean_book(a_book)
-    else:
-        abort(400, 'Invalid input')
-    # author_checker validates input
-    authors = author_checker.create_authors(authors)
-    new_book = book_dao.create(a_book, authors)
+    list_authors = author_checker.create_authors(authors)
+    new_book = book_dao.create(a_book, list_authors)
 
     print("book_checker.create_book() ==> Complete")
     print(new_book)
-    return new_book.to_dict()
+    return new_book
 
 
 def get_books(multi_dict_query_params):

@@ -45,15 +45,15 @@ def query_books(book_dict):
 
     if book_dict['title'] is not None:
         title = book_dict['title']
-        results = results.filter(Book.title==title)
+        results = results.filter(Book.title == title)
 
     if book_dict['subject'] is not None:
         subject = book_dict['subject']
-        results = results.filter(Book.subject==subject)
+        results = results.filter(Book.subject == subject)
 
     if book_dict['genre'] is not None:
         genre = book_dict['genre']
-        results = results.filter(Book.genre==genre)
+        results = results.filter(Book.genre == genre)
 
     results.all()
 
@@ -75,7 +75,7 @@ def create(book_dict, list_authors):
 
 ##Be Careful with this.
 def update(book_id, **kwargs):
-    book = Book.query.get(book_id)
+    book = Book.query.get(book_id).join(authorship_table).join(Author)
     book.update(**kwargs)
     db.session.commit()
     return book.to_dict()

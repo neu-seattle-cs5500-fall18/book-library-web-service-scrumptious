@@ -36,7 +36,7 @@ def clean_author(first_name, last_name, middle_name):
     return formatted_author
 
 
-def create_authors(list_json_authors):
+def create_authors(list_authors):
     """
     Method to verify the integrity of the body of a POST request to create a new author.
     Returns results back to book checker.
@@ -47,17 +47,12 @@ def create_authors(list_json_authors):
 
     cleaned_list = []
 
-    for e in list_json_authors:
-        f_name = e['first_name']
-        l_name = e['last_name']
-        m_name = e['middle_name']
-
-        if valid_input(f_name, l_name, m_name):
-            author_dict = clean_author(f_name, l_name, m_name)
-            cleaned_list.append(author_dict)
-        else:
-            abort(400, 'Invalid input')
-
+    for author in list_authors:
+        author_dict= {}
+        author_dict['first_name'] = author['first_name']
+        author_dict['last_name'] = author['last_name']
+        author_dict['middle_name'] = author['middle_name']
+        cleaned_list.append(author_dict)
     return cleaned_list
 
 
