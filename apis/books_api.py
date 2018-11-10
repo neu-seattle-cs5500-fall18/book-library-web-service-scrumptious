@@ -1,5 +1,5 @@
 from flask import request
-from flask_restplus import abort, fields, Namespace, reqparse, Resource
+from flask_restplus import abort, fields, inputs, Namespace, reqparse, Resource
 from controller import book_checker
 
 api = Namespace('books', description='Book operations')
@@ -39,13 +39,14 @@ full_book_marshaller = api.inherit('FullBook', book_marshaller, {
 })
 
 query_parser = reqparse.RequestParser()
-query_parser.add_argument('title', required=False)
-query_parser.add_argument('first_name', required=False)
-query_parser.add_argument('last_name', required=False)
-query_parser.add_argument('publish_date_start', action='append', required=False)
-query_parser.add_argument('publish_date_end', action='append', required=False)
-query_parser.add_argument('subject', action='append', required=False)
-query_parser.add_argument('genre', action='append', required=False)
+query_parser.add_argument('title', type=str, required=False)
+query_parser.add_argument('first_name', type=str, required=False)
+query_parser.add_argument('last_name', type=str, required=False)
+query_parser.add_argument('middle_name', type=str, required=False)
+query_parser.add_argument('publish_date_start', type=inputs.date, required=False)
+query_parser.add_argument('publish_date_end', type=inputs.date, required=False)
+query_parser.add_argument('subject', type=str, required=False)
+query_parser.add_argument('genre', type=str, required=False)
 
 
 @api.route('', endpoint='books')

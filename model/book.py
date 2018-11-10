@@ -17,17 +17,6 @@ class Book(db.Model):
     authors = db.relationship('Author', secondary=authorship_table, backref=db.backref('books', lazy='dynamic'))
     copies = db.relationship('BookCopy', backref=db.backref('book'))
 
-    #
-    # def __init__(self, book_id, **kwargs):
-    #     self.book_id = book_id
-    #     self.title = kwargs['title']
-    #     self.publish_date = kwargs['publish_date']
-    #     self.subject = kwargs['subject']
-    #     self.genre = kwargs['genre']
-    #     self.book_note = kwargs['book_note']
-    #     self.is_deleted = kwargs['is_deleted']
-    #     self.authors = kwargs['authors']
-
     def __repr__(self): return"<Book(book_id='%s',title='%s',publish_date='%s',subject='%s',genre='%s'," \
                               "book_note='%s',is_deleted='%s',authors='%s',copies='%s'>" \
                               %(self.book_id,self.title,self.publish_date,self.subject,self.genre,self.book_note,

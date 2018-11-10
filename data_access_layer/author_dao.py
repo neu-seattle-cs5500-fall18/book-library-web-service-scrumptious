@@ -9,7 +9,7 @@ def get_author(author_id):
     return author.to_dict()
 
 
-def get_author(args):
+def get_authors(args):
     #this gets an author based on query parameters, in the form of a dict,
     # returns a list of author dicts
     list_of_authors = []

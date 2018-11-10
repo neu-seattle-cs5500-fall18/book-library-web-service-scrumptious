@@ -1,6 +1,7 @@
 from library_webservice import db
 from data_access_layer import author_dao, book_copy_dao
-from model.book import Book
+from model.book import Book, authorship_table
+from model.author import Author
 
 
 def create_list_dict(book_query):
@@ -14,7 +15,7 @@ def query_book_id(book_id):
     a_book = Book.query.get(book_id)
     return a_book.all()
 
-
+#this needs to be able to handle multidict
 def query_books(book_dict):
     """
     Queries all books in library
@@ -22,31 +23,42 @@ def query_books(book_dict):
     """
     print("book_dao.query_books()")
 
-    query_results = Book.query
-    #
-    # if book_dict['AuthorName'] is not None:
-    #     author_name = book_dict['AuthorName']
-    #     query_results.filter_by(author_name=author_name)
+    results = db.session.query(Book).join(authorship_table).join(Author)
+
+    if book_dict['first_name'] is not None:
+        first = book_dict['first_name']
+        results = results.filter(Author.first_name==first)
+    if book_dict['middle_name'] is not None:
+        middle = book_dict['middle_name']
+        results = results.filter(Author.middle_name == middle)
+    if book_dict['last_name'] is not None:
+        last = book_dict['last_name']
+        results = results.filter(Author.last_name==last)
+
     if book_dict['publish_date_start'] is not None:
         start = book_dict['publish_date_start']
-        query_results.filter_by(Book.publish_date > start)
+        results = results.filter(Book.publish_date > start)
+
     if book_dict['publish_date_end'] is not None:
         end = book_dict['publish_date_end']
-        query_results.filter(Book.publish_date < end)
+        results.filter(Book.publish_date < end)
+
     if book_dict['title'] is not None:
         title = book_dict['title']
-        query_results.filter_by(title=title)
+        results = results.filter(Book.title==title)
+
     if book_dict['subject'] is not None:
         subject = book_dict['subject']
-        query_results.filter_by(subject=subject)
+        results = results.filter(Book.subject==subject)
+
     if book_dict['genre'] is not None:
         genre = book_dict['genre']
-        query_results.filter_by(genre=genre)
+        results = results.filter(Book.genre==genre)
 
-    query_results.all()
+    results.all()
 
     print("book_dao.create() ==> Complete")
-    return create_list_dict(query_results)
+    return create_list_dict(results)
 
 
 
