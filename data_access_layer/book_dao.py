@@ -1,28 +1,53 @@
-from flask import abort
 from library_webservice import db
 from data_access_layer import author_dao, book_copy_dao
 from model.book import Book
 
 
-def query_by_id(book_id):
+def create_list_dict(book_query):
+    new_list = []
+    for book in book_query:
+        new_list.append(book.to_dict())
+    return new_list
+
+
+def query_book_id(book_id):
     a_book = Book.query.get(book_id)
-    if a_book is None:
-        abort(400, 'Record not found')
-    else:
-        return a_book
+    return a_book.all()
 
 
-def query_books(**kwargs):
+def query_books(book_dict):
     """
     Queries all books in library
     :return: List of Book
     """
-    if kwargs is None:
-        query_results = Book.query.getall()
-        return query_results
-    else:
-        query_results = Book.query.filter_by(**kwargs)
-        return query_results
+    print("book_dao.query_books()")
+
+    query_results = Book.query
+    #
+    # if book_dict['AuthorName'] is not None:
+    #     author_name = book_dict['AuthorName']
+    #     query_results.filter_by(author_name=author_name)
+    if book_dict['publish_date_start'] is not None:
+        start = book_dict['publish_date_start']
+        query_results.filter_by(Book.publish_date > start)
+    if book_dict['publish_date_end'] is not None:
+        end = book_dict['publish_date_end']
+        query_results.filter(Book.publish_date < end)
+    if book_dict['title'] is not None:
+        title = book_dict['title']
+        query_results.filter_by(title=title)
+    if book_dict['subject'] is not None:
+        subject = book_dict['subject']
+        query_results.filter_by(subject=subject)
+    if book_dict['genre'] is not None:
+        genre = book_dict['genre']
+        query_results.filter_by(genre=genre)
+
+    query_results.all()
+
+    print("book_dao.create() ==> Complete")
+    return create_list_dict(query_results)
+
 
 
 def create(book_dict, list_authors):
@@ -33,7 +58,7 @@ def create(book_dict, list_authors):
     author_dao.create(new_book, list_authors)
     book_copy_dao.create(new_book)
     print("book_dao.create() ==> Complete")
-    return new_book
+    return new_book.to_dict()
 
 
 ##Be Careful with this.
@@ -41,45 +66,33 @@ def update(book_id, **kwargs):
     book = Book.query.get(book_id)
     book.update(**kwargs)
     db.session.commit()
-    return book
-
-
-def delete(book_id):
-    book = Book.query.get(book_id)
-
-    if book is None:
-        abort(400, 'No such book record')
-    else:
-        book.deleted = True
-        # book_copy_dao.delete()
-        # author_dao.delete()
-        db.session.commit()
-        return book
+    return book.to_dict()
 
 
 # Notes actions
 def get_note(book_id):
     book = Book.query_by_id(book_id)
-    if book is None:
-        abort(400, 'No such record')
-    else:
-        note = book.note
-        return note
+    note = book.note
+    return note
 
 
 def edit_note(book_id, note):
-    book = query_by_id(book_id)
+    book = Book.query_by_id(book_id)
     book.notes = note
     db.session.commit()
     return book
 
 
 def delete_note(book_id):
-    book = query_by_id(book_id)
+    book = Book.query_by_id(book_id)
+    book.notes = 'None'
+    db.session.commit()
+    return book
 
-    if book is None:
-        abort(400, 'no such record')
-    else:
-        book.notes = 'None'
-        db.session.commit()
-        return book
+
+def delete(book_id):
+    book = Book.query.get(book_id)
+    book.deleted = True
+    db.session.commit()
+    return book.to_dict()
+

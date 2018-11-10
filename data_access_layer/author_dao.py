@@ -4,21 +4,30 @@ from model.author import Author
 
 
 def get_author(author_id):
-    #this gets an author by its record number
     author = Author.query.get(author_id)
-    if author is None:
-        abort(400, 'Invalid input')
-    else:
-        return author.to_dict()
+    author.all()
+    return author.to_dict()
 
 
-def get_author(**kwargs):
+def get_author(args):
     #this gets an author based on query parameters, in the form of a dict,
     # returns a list of author dicts
     list_of_authors = []
-    query_results = Author.query.filter_by(**kwargs)
+    query_results = Author.query.get_all()
 
-    for author in kwargs:
+    if args['first_name']:
+        first_name = args['first_name']
+        query_results.filter_by(first_name = first_name)
+    if args['last_name']:
+        last_name = args['last_name']
+        query_results.filter_by(last_name=last_name)
+    if args['middle_name']:
+        middle_name = args['middle_name']
+        query_results.filter_by(middle_name=middle_name)
+
+    query_results.all()
+
+    for author in query_results:
         list_of_authors.append(author.to_dict())
     return list_of_authors
 

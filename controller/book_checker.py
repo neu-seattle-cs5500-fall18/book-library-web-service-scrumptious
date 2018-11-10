@@ -24,14 +24,6 @@ def clean_book(book_dict):
     return book_dict
 
 
-def get_books(**query_params):
-    list_books = []
-    results = book_dao.query_books(**query_params)
-    for book in results:
-        list_books.append(book.to_dict())
-    return list_books
-
-
 def create_book(book_json):
     print("book_checker.create_book()")
     title = book_json['title']
@@ -55,13 +47,17 @@ def create_book(book_json):
     return new_book.to_dict()
 
 
-def get_book(book_id):
+def get_books(multi_dict_query_params):
+    list_books = book_dao.query_books(multi_dict_query_params)
+    return list_books
 
-    if book_id.isdigit():
-        book = book_dao.query_book_id(book_id)
-        return book.to_dict()
-    else:
+
+def get_book(book_id):
+    a_book = book_dao.query_book_id(book_id)
+    if a_book is None:
         abort(400, 'Invalid input for book_id')
+    else:
+        return a_book.to_dict()
 
 
 def update_book(book_id, book_json):

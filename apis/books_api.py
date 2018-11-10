@@ -40,12 +40,12 @@ full_book_marshaller = api.inherit('FullBook', book_marshaller, {
 
 query_parser = reqparse.RequestParser()
 query_parser.add_argument('title', required=False)
-query_parser.add_argument('author_first_name', required=False)
-query_parser.add_argument('author_last_name', required=False)
-query_parser.add_argument('publish_date', action='append', required=False)
+query_parser.add_argument('first_name', required=False)
+query_parser.add_argument('last_name', required=False)
+query_parser.add_argument('publish_date_start', action='append', required=False)
+query_parser.add_argument('publish_date_end', action='append', required=False)
 query_parser.add_argument('subject', action='append', required=False)
 query_parser.add_argument('genre', action='append', required=False)
-query_parser.add_argument('is_deleted', default=False)
 
 
 @api.route('', endpoint='books')
@@ -62,8 +62,9 @@ class Books(Resource):
         """
         print('Received GET on resource /books')
         #this should throw error if arg doesn't match the parser
-        query_args = query_parser
-        list_of_books = book_checker.get_books(query_args)
+        args = query_parser.parse_args()
+        print(args)
+        list_of_books = book_checker.get_books(args)
         return list_of_books
 
     # This ensures body of request matches book model
