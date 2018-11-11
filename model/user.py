@@ -1,4 +1,5 @@
 from library_webservice import db
+from sqlalchemy import UniqueConstraint
 
 
 class User(db.Model):
@@ -6,8 +7,10 @@ class User(db.Model):
     user_first_name = db.Column(db.String, nullable=False)
     user_last_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
+    UniqueConstraint(user_first_name, user_last_name, email)
 
-    def __repr__(self): return'<User %r>' %(self.user_id)
+    def __repr__(self): return'<User %r, %r, %r, %r,>' % \
+                              (self.user_id,self.user_first_name,self.user_last_name,self.email)
 
     def to_dict(self):
         print('User to_dict')
