@@ -1,6 +1,7 @@
-from data_access_layer import book_dao
+from data_access_layer import book_dao, book_copy_dao, author_dao
 from controller import author_checker
 from flask_restplus import abort
+
 
 # functions that interact with a books record.
 
@@ -34,10 +35,11 @@ def create_book(book_json):
     authors = book_json['authors']
     a_book = {'title': title, 'publish_date': publish_date, 'subject': subject, 'genre': genre, 'book_note': book_note}
     list_authors = author_checker.create_authors(authors)
-    new_book = book_dao.create(a_book, list_authors)
+    new_book = book_dao.create(a_book)
+    book_copy = book_copy_dao.create(new_book)
+    new_authors = author_dao.create(new_book.book_id, authors)
 
     print("book_checker.create_book() ==> Complete")
-    print(new_book)
     return new_book
 
 
