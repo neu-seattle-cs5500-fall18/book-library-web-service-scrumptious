@@ -1,4 +1,3 @@
-from flask import abort
 from library_webservice import db
 from model.author import Author
 
@@ -7,13 +6,6 @@ def get_author(author_id):
     author = Author.query.get(author_id)
     author.all()
     return author.to_dict()
-
-
-def author_exists(author_dict):
-    print("author_dao.author_exists()")
-    record = Author.query.filter_by(**author_dict).all()
-    print(record)
-    return record is None
 
 
 def create(book, list_author):
@@ -33,3 +25,9 @@ def create(book, list_author):
             print("added new author")
     db.session.commit()
     print("author_dao.create() ==> Complete")
+
+
+def delete(author_id):
+    db.session.get(author_id).delete()
+    db.session.commit
+    return

@@ -8,7 +8,6 @@ class Author(db.Model):
     first_name = db.Column(db.String)
     last_name = db.Column(db.String, nullable=False)
     middle_name = db.Column(db.String)
-    # do not need a field here for books because books defines backref.
     UniqueConstraint(first_name, last_name, middle_name)
 
     def __repr__(self):

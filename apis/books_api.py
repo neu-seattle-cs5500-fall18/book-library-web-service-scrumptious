@@ -19,7 +19,6 @@ book_copies_marshaller = api.model('BookCopies', {
     'book_copy_id': fields.Integer(required=True, description='Id for a book copy'),
     'book_id': fields.Integer(required=True, description='Id for a book'),
     'is_checked_out' : fields.Boolean(required=True, description= 'Indicates whether a copy of a book is checked out or not'),
-    'is_deleted': fields.Boolean(required=True, description= 'Indicates whether a copy of a book is deleted')
 })
 
 
@@ -115,8 +114,8 @@ class BookRecord(Resource):
 
         if book_id.isdigit():
             request_body = request.get_json()
-            updated_id = book_checker.update_book(book_id, request_body)
-            return updated_id
+            book = book_checker.update_book(book_id, request_body)
+            return book
         else:
             abort(400, 'Invalid input received for book_id')
 
@@ -126,10 +125,10 @@ class BookRecord(Resource):
         """
         Delete a book record based on book_id.
         :param book_id: Record to be deleted.
-        :return: Json of book_id of deleted record.
+        :return:
         """
-        #delete_book(book_id)
-        return
+        book_checker.delete_book(book_id)
+        return 'success', 200
 
 
 # Need to decide how to handle this, probably by book name and author.

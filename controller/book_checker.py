@@ -41,13 +41,13 @@ def create_book(book_json):
     return new_book
 
 
-def get_books(multi_dict_query_params):
-    list_books = book_dao.query_books(multi_dict_query_params)
+def get_books(dict_query_params):
+    list_books = book_dao.query_books(dict_query_params)
     return list_books
 
 
 def get_book(book_id):
-    a_book = book_dao.query_book_id(book_id)
+    a_book = book_dao.get(book_id)
     if a_book is None:
         abort(400, 'Invalid input for book_id')
     else:
@@ -62,12 +62,12 @@ def update_book(book_id, book_json):
 
 
 def delete_book(book_id):
-    return
-    #delete all instances of book
-    #how to update authorship?
-    #how to update collections?
-    # how to update instances?
+    a_book = book_dao.get(book_id)
 
+    if a_book is None:
+        abort(400, 'so such record')
+    else:
+        return book_dao.delete(book_id)
 
 def get_note(book_id):
     if book_id.isdigit():

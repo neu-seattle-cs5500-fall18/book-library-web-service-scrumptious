@@ -11,11 +11,11 @@ def create_list_dict(book_query):
     return new_list
 
 
-def query_book_id(book_id):
+def get(book_id):
     a_book = Book.query.get(book_id)
-    return a_book.all()
+    return a_book
 
-#this needs to be able to handle multidict
+
 def query_books(book_dict):
     """
     Queries all books in library
@@ -27,30 +27,25 @@ def query_books(book_dict):
 
     if book_dict['first_name'] is not None:
         first = book_dict['first_name']
-        results = results.filter(Author.first_name==first)
+        results = results.filter(Author.first_name == first)
     if book_dict['middle_name'] is not None:
         middle = book_dict['middle_name']
         results = results.filter(Author.middle_name == middle)
     if book_dict['last_name'] is not None:
         last = book_dict['last_name']
         results = results.filter(Author.last_name==last)
-
     if book_dict['publish_date_start'] is not None:
         start = book_dict['publish_date_start']
         results = results.filter(Book.publish_date > start)
-
     if book_dict['publish_date_end'] is not None:
         end = book_dict['publish_date_end']
         results.filter(Book.publish_date < end)
-
     if book_dict['title'] is not None:
         title = book_dict['title']
         results = results.filter(Book.title == title)
-
     if book_dict['subject'] is not None:
         subject = book_dict['subject']
         results = results.filter(Book.subject == subject)
-
     if book_dict['genre'] is not None:
         genre = book_dict['genre']
         results = results.filter(Book.genre == genre)
@@ -81,30 +76,34 @@ def update(book_id, **kwargs):
     return book.to_dict()
 
 
-# Notes actions
-def get_note(book_id):
-    book = Book.query_by_id(book_id)
-    note = book.note
-    return note
-
-
-def edit_note(book_id, note):
-    book = Book.query_by_id(book_id)
-    book.notes = note
-    db.session.commit()
-    return book
-
-
-def delete_note(book_id):
-    book = Book.query_by_id(book_id)
-    book.notes = 'None'
-    db.session.commit()
-    return book
-
-
 def delete(book_id):
-    book = Book.query.get(book_id)
-    book.deleted = True
+    a_book = Book.query.get(book_id)
+
+    Book.query.filter_by(book_id=book_id).delete()
     db.session.commit()
-    return book.to_dict()
+    return
+
+
+
+# # Notes actions
+# def get_note(book_id):
+#     book = Book.query_by_id(book_id)
+#     note = book.note
+#     return note
+#
+#
+# def edit_note(book_id, note):
+#     book = Book.query_by_id(book_id)
+#     book.notes = note
+#     db.session.commit()
+#     return book
+#
+#
+# def delete_note(book_id):
+#     book = Book.query_by_id(book_id)
+#     book.notes = 'None'
+#     db.session.commit()
+#     return book
+#
+#
 

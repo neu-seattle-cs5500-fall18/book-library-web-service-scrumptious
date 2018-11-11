@@ -16,6 +16,7 @@ def get_book_copy(book_copy_id):
     book_copy = BookCopy.query.get(book_copy_id)
     return book_copy.to_dict
 
+
 def get_book_copies(book_id):
     list_of_copies = []
     db_results = BookCopy.query.filter(BookCopy.book_id == book_id)
@@ -24,6 +25,12 @@ def get_book_copies(book_id):
         list_of_copies.append(book.to_dict())
 
     return list_of_copies
+
+
+def delete_copy(copy_id):
+    BookCopy.get(copy_id).delete()
+    db.session.commit()
+    return
 
 
 # def insert_book_copy(book_id):
