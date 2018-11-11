@@ -4,8 +4,14 @@ from controller import book_checker
 
 api = Namespace('books', description='Book operations')
 
-note = api.model('Note', {
-    'notes': fields.String(required=True, description='Note about a book.')
+note_marshaller = api.model('Note', {
+    'note_title': fields.String(required=True, description = 'Unique title of note'),
+    'note': fields.String(required=True, description='Note about a book.')
+})
+
+list_notes_marshaller = api.model('ListOfNotes', {
+    'notes' : fields.List(fields.Nested(note_marshaller))
+
 })
 
 author_marshaller = api.model('Author', {
@@ -29,7 +35,7 @@ book_marshaller = api.model('Book', {
     'publish_date': fields.Date(required=True, description='The publish date of a book.'),
     'subject': fields.String(required=True, description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
     'genre': fields.String(required=True, description='Genre classification for a fiction book (i.e. horror, science fiction'),
-    'book_note': fields.String(required=True, description='Personal note about a book.'),
+    'notes': fields.List(fields.Nested(note_marshaller), description = 'List of notes for a book'),
     'authors': fields.List(fields.Nested(author_marshaller), required=True, description='List of authors for a book')
 })
 
@@ -131,16 +137,15 @@ class BookRecord(Resource):
         return 'success', 200
 
 
-# Need to decide how to handle this, probably by book name and author.
-@api.route('/<book_id>/note')
+@api.route('/<book_id>/notes')
 @api.doc(params={'book_id': 'A record for a book.'})
 @api.response(200, 'Success')
 @api.response(400, 'Validation Error')
 class BookNotes(Resource):
-
+    @api.marshal_with(list_notes_marshaller, code=200)
     def get(self, book_id):
         """
-        Gets the book note for a specific book.
+        Gets the book notes for a specific book.
         :param book_id: Record for a book.
         :return: Note for a specific book.
         """
@@ -151,7 +156,7 @@ class BookNotes(Resource):
             abort(400, 'invalid input for book_id')
 
     # Need checking here so existing notes aren't written over.
-    @api.expect(note, validate=True)
+    @api.expect(note_marshaller, validate=True)
     @api.response(201, 'Created Note')
     @api.marshal_with(book_marshaller, code=201)
     def post(self, book_id):
@@ -166,7 +171,7 @@ class BookNotes(Resource):
         else:
             abort(400, 'Invalid input for book_id')
 
-    @api.expect(note, validate=True)
+    @api.expect(note_marshaller, validate=True)
     @api.marshal_with(book_marshaller, code=200)
     def put(self, book_id):
         """
@@ -181,7 +186,7 @@ class BookNotes(Resource):
             abort(400, 'Invalid input for book_id')
 
     @api.response(200, 'Deleted Note')
-    @api.marshal_with(book_marshaller, code=200)
+    @api.marshal_with(note_marshaller, code=200)
     def delete(self, book_id):
         """
         Delete a specific note for a book

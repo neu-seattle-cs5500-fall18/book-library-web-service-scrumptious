@@ -12,13 +12,13 @@ class Book(db.Model):
     publish_date = db.Column(db.Date, nullable=False)
     subject = db.Column(db.String, nullable=False)
     genre = db.Column(db.String, nullable=False)
-    book_note = db.Column(db.String, nullable=True)
+    notes = db.relationship('Note', backref=db.backref('book'))
     authors = db.relationship('Author', secondary=authorship_table, backref=db.backref('books', lazy='dynamic'))
     copies = db.relationship('BookCopy', cascade="all,delete", backref=db.backref('book'))
 
     def __repr__(self): return"<Book(book_id='%s',title='%s',publish_date='%s',subject='%s',genre='%s'," \
                               "book_note='%s',authors='%s',copies='%s'>" \
-                              %(self.book_id,self.title,self.publish_date,self.subject,self.genre,self.book_note,
+                              %(self.book_id,self.title,self.publish_date,self.subject,self.genre,self.notes,
                                 self.authors,self.copies)
 
     def to_dict(self):
@@ -28,7 +28,7 @@ class Book(db.Model):
             'title': self.title,
             'publish_date': self.publish_date,
             'subject': self.subject,
-            'book_note': self.book_note,
+            'notes': self.notes,
             'authors': self.authors,
             'copies': self.copies
         }
