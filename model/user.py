@@ -23,6 +23,7 @@ class User(db.Model):
         return user_dict
 
     def update(self, **kwargs):
-        for key, value in kwargs:
-            self[key] = value
+        print('User.update()')
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 

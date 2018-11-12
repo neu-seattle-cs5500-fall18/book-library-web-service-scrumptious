@@ -54,6 +54,16 @@ full_book_marshaller = api.inherit('FullBook', book_marshaller, {
     'copies': fields.List(fields.Nested(book_copies_marshaller))
 })
 
+edit_book_marshaller = api.model('EditBook', {
+    'title': fields.String(required=False, description='The book title.'),
+    'publish_date': fields.Date(required=False, description='The publish date of a book.'),
+    'subject': fields.String(required=False,
+                             description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
+    'genre': fields.String(required=False,
+                           description='Genre classification for a fiction book (i.e. horror, science fiction'),
+
+})
+
 query_parser = reqparse.RequestParser()
 query_parser.add_argument('title', type=str, required=False)
 query_parser.add_argument('first_name', type=str, required=False)
@@ -114,11 +124,11 @@ class BookRecord(Resource):
         else:
             abort(400, 'Invalid input received for book_id')
 
-    @api.expect(book_marshaller, validate=True)
+    @api.expect(edit_book_marshaller, validate=True)
     @api.marshal_with(book_marshaller, code=200)
     def put(self, book_id):
         """
-        Updates an existing record  based on book_id, and according to fields fo the book_marshaller model.
+        Updates an existing record  based on book_id, and according to fields fo the edit_book_marshaller model.
         :param book_id: Record number to be updated.
         :return: Book_id of updated record.
         """

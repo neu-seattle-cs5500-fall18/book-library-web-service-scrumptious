@@ -20,6 +20,7 @@ class BookCopy(db.Model):
         return copy_dict
 
     def update(self, **kwargs):
-        for key, value in kwargs:
-            self[key] = value
+        print('BookCopy.update()')
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 

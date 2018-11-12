@@ -102,7 +102,8 @@ class BookDao:
         :param kwargs: Key value pairs of the book attributes to be updated.
         :return: a dictionary of the updated book.
         """
-        book = Book.query.get(book_id).join(authorship_table).join(Author)
+        print('BookDao.update()')
+        book = Book.query.get(book_id)
         book.update(**kwargs)
         db.session.commit()
         return book.to_dict()

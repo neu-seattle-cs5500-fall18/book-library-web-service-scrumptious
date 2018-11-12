@@ -28,6 +28,7 @@ class Book(db.Model):
             'title': self.title,
             'publish_date': self.publish_date,
             'subject': self.subject,
+            'genre'
             'notes': self.notes,
             'authors': self.authors,
             'copies': self.copies
@@ -35,6 +36,9 @@ class Book(db.Model):
         return book_dict
 
     def update(self, **kwargs):
-        for key, value in kwargs:
-            self[key] = value
+        print('Book.update()')
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
 
