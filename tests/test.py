@@ -2,7 +2,6 @@ import os
 import tempfile
 
 import pytest
-
 from library_webservice import app
 
 @pytest.fixture()

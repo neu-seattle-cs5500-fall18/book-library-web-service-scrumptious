@@ -1,18 +1,28 @@
 from library_webservice import db
 
-
-class Collection(db.Model):
-    collection_name = db.Column(db.Integer, primary_key=True)
-    collection_books = db.relationship('CollectionBooks', backref='Collection', lazy=True)
-
-    def __init__(self, collection_id, book_id, title):
-        self.collection_id = collection_id
-        self.book_id = book_id
-        self.title = title
+collection_table = db.Table('collections',
+                            db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
+                            db.Column('collection_id', db.Integer, db.ForeignKey('collection.collection_id'), primary_key=True))
 
 
-class CollectionBooks(db.model):
-    id: db.Column(db.Integer, primary_key=True)
-    collection_name = db.Column(db.String, db.ForeignKey('Collection.collection_name'), nullable=False)
-    book_id = db.Column(db.Integer, db.ForeignKey('Book.book_id'), nullable=False)
+class BookCollection(db.Model):
+    collection_id = db.Column(db.Integer, primary_key=True)
+    book_ids = db.relationship('Collection', secondary=collection_table, backref=db.backref('books', lazy='dynamic'))
+    title = db.Column(db.String, nullable=False, unique=True)
+    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
 
+    def __repr__(self): return "<Collection(collection_id='%s',books='%s'>" \
+                               % (self.collection_id, self.book.ids)
+
+    def to_dict(self):
+        print('Book collections to_dict')
+        collection_dict = {
+            'collection_id': self.collection_id,
+            'book_ids': self.book_ids,
+            'title': self.title
+        }
+        return collection_dict
+
+    def update(self, **kwargs):
+        for key, value in kwargs:
+            self[key] = value

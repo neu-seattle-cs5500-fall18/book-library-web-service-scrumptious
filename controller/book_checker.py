@@ -72,5 +72,3 @@ class BookChecker:
             return BookDao.delete(book_id)
         else:
             abort(400, 'so such record')
-
-

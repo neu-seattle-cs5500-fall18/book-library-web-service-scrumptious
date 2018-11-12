@@ -18,8 +18,7 @@ class User(db.Model):
             'user_id': self.user_id,
             'user_first_name': self.user_first_name,
             'user_last_name': self.user_last_name,
-            'email': self.email,
-            'is_deleted': self.is_deleted
+            'user_email': self.email,
         }
         return user_dict
 

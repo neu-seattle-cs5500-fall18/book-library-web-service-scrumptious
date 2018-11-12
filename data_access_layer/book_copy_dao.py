@@ -40,7 +40,3 @@ class BookCopyDao:
         db.session.commit()
         return None
 
-
-
-
-
