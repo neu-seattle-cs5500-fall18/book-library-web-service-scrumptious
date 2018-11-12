@@ -4,6 +4,16 @@ from model.book import Book
 
 
 class AuthorDao:
+
+    @staticmethod
+    def contains(author_id):
+        print('AuthorDao.contains()')
+        an_author = Author.query.get(author_id)
+        if an_author is None:
+            return False
+        else:
+            return True
+
     @staticmethod
     def get_author(author_id):
         print("AuthorDao.get_author()")

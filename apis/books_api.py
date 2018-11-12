@@ -1,6 +1,7 @@
 from flask import request
 from flask_restplus import abort, fields, inputs, Namespace, reqparse, Resource
 from controller import book_checker
+from controller import author_checker
 
 api = Namespace('books', description='Book operations')
 
@@ -9,9 +10,12 @@ note_marshaller = api.model('Note', {
     'note': fields.String(required=True, description='Note about a book.')
 })
 
+return_note_marshaller = api.inherit('ReturnNote', note_marshaller, {
+    'book_id': fields.Integer(description='Book id note is associated with.')
+})
+
 list_notes_marshaller = api.model('ListOfNotes', {
     'notes' : fields.List(fields.Nested(note_marshaller))
-
 })
 
 author_marshaller = api.model('Author', {
@@ -147,18 +151,17 @@ class BookNotes(Resource):
         """
         Gets the book notes for a specific book.
         :param book_id: Record for a book.
-        :return: Note for a specific book.
+        :return: List of notes for a specific book.
         """
         if book_id.isdigit():
-            note = book_checker.get_note(book_id)
-            return note
+            list_notes = book_checker.get_note(book_id)
+            return list_notes
         else:
             abort(400, 'invalid input for book_id')
 
-    # Need checking here so existing notes aren't written over.
-    @api.expect(note_marshaller, validate=True)
+    @api.expect(return_note_marshaller, validate=True)
     @api.response(201, 'Created Note')
-    @api.marshal_with(book_marshaller, code=201)
+    @api.marshal_with(note_marshaller, code=201)
     def post(self, book_id):
         """
         Creates a new note for a book.
@@ -166,14 +169,20 @@ class BookNotes(Resource):
         :return: Note_ID of created note.
         """
         if book_id.isdigit():
-            id = book_checker.create_note(book_id, request.get_json())
+            note = book_checker.create_note(book_id, request.get_json())
             return id
         else:
             abort(400, 'Invalid input for book_id')
 
+
+@api.route('/<book_id>/notes/<note_title>')
+@api.doc(params={'book_id': 'A record for a book.','note_title': 'Title of a note in the book.'})
+@api.response(200, 'Success')
+@api.response(400, 'Validation Error')
+class BookNotes(Resource):
     @api.expect(note_marshaller, validate=True)
-    @api.marshal_with(book_marshaller, code=200)
-    def put(self, book_id):
+    @api.marshal_with(return_note_marshaller, code=200)
+    def put(self, book_id, note_title):
         """
         Edit a specific note for a book.
         :param book_id: Record for a book.
@@ -186,16 +195,15 @@ class BookNotes(Resource):
             abort(400, 'Invalid input for book_id')
 
     @api.response(200, 'Deleted Note')
-    @api.marshal_with(note_marshaller, code=200)
-    def delete(self, book_id):
+    def delete(self, book_id, note_title):
         """
         Delete a specific note for a book
         :param book_id: Record for a book.
         :return: Book_id of edited record.
         """
         if book_id.isdigit():
-            id = book_checker.delete_note(book_id)
-            return id
+            result = book_checker.delete_note(book_id)
+            return result
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -220,21 +228,51 @@ class BookCopies(Resource):
             abort(400, 'Invalid input for book_id')
 
 
-@api.route('/<book_id>/copies/<book_copy_id>')
-class BookCopy(Resource):
-
-    def get(self, book_id, book_copy_id):
-        if book_id.isdigit() and book_copy_id.isdigit():
-            book_copy = book_checker.get_book_copy(book_id, book_copy_id)
-            return book_copy
+@api.route('/<book_id>/authors')
+class BookAuthors(Resource):
+    @api.expect(author_marshaller, validate=True)
+    def post(self, book_id):
+        """
+        adds new author to an existing book.
+        :param book_id:
+        :return:
+        """
+        if book_id.isdigit():
+            author_json = request.get_json()
+            author = author_checker.create_author(book_id, author_json)
+            return author
         else:
-            abort(400, 'Invalid input for book_id or book_copy_id')
+            abort(400)
 
-    def delete(self, book_id, book_copy_id):
-        if book_id.isdigit() and book_copy_id.isdigit():
-            id = book_checker.delete_book_copy(book_id, book_copy_id)
+
+@api.route('/<book_id>/authors/<author_id>')
+class BookAuthor(Resource):
+    @api.marshal_with(author_marshaller)
+    def put(self, book_id, author_id):
+        """
+        adds existing author to book.
+        :param book_id:
+        :param author_id:
+        :return:
+        """
+        if book_id.isdigit() and author_id.isdigit():
+            result = author_checker.add_book_to_author(book_id, author_id)
+            return result
         else:
-            abort(400, 'Invalid input ofr book_id or book_copy_id')
+            abort(400)
 
-#
+    def delete(self,book_id, author_id):
+        """
+        deletes an author from a book.
+        :param book_id:
+        :param author_id:
+        :return:
+        """
+        if book_id.isdigit() and author_id.isdigit():
+            result = author_checker.delete_author_from_book(book_id, author_id)
+            return result
+        else:
+            abort(400)
+
+
 

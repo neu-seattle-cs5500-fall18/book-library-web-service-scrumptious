@@ -1,4 +1,5 @@
-from data_access_layer import author_dao
+from data_access_layer.author_dao import AuthorDao
+from data_access_layer.book_dao import BookDao
 from flask_restplus import abort
 import re
 
@@ -36,24 +37,38 @@ def clean_author(first_name, last_name, middle_name):
     return formatted_author
 
 
-def create_authors(list_authors):
-    """
-    Method to verify the integrity of the body of a POST request to create a new author.
-    Returns results back to book checker.
-    :param list_json_authors: Json body of HTTP request.
-    :return:
-    """
-    print('author_checker.create_author()')
+def add_new_author(book_id, author_json):
+    an_author = clean_author(author_json)
 
-    cleaned_list = []
+    if BookDao.contains(book_id):
+        AuthorDao.create(book_id, an_author)
+    else:
+        abort(400)
+
+
+def add_book_to_author(book_id, author_id):
+
+    if BookDao.contains(book_id) and AuthorDao.contains(author_id):
+        AuthorDao.add_book(book_id, author_id)
+    else:
+        abort(400)
+
+
+def create_author(book_id, author_json):
+    print('author_checker.create_author()')
+    an_author = clean_author(author_json['first_name'], author_json['last_name'], author_json['middle_name'])
+    an_author = AuthorDao.create(book_id, an_author)
+    return an_author
+
+
+def create_authors(book_id, list_authors):
+    print('author_checker.create_authors()')
+    list_new_authors = []
 
     for author in list_authors:
-        author_dict= {}
-        author_dict['first_name'] = author['first_name']
-        author_dict['last_name'] = author['last_name']
-        author_dict['middle_name'] = author['middle_name']
-        cleaned_list.append(author_dict)
-    return cleaned_list
+        an_author = clean_author(author['first_name'], author['last_name'],author['middle_name'])
+        list_authors.append(AuthorDao.create(book_id, an_author))
+    return list_new_authors
 
 
 def get_author(author_id):
@@ -63,7 +78,7 @@ def get_author(author_id):
     :return: Json of an Author Dict
     """
     print('Get author %r' % author_id)
-    an_author = author_dao.get_author(author_id)
+    an_author = AuthorDao.get_author(author_id)
     return an_author
 
 
@@ -78,3 +93,6 @@ def update_author(author_id, json_author_info):
     else:
         abort(400, 'Invalid input')
 
+def delete_author_from_book(book_id, author_id):
+
+    return
