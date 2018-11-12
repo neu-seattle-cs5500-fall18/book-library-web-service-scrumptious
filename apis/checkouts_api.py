@@ -15,7 +15,7 @@ checkout_marshaller = api.model('Checkout', {
     'return_date': fields.Date(required=True, description='the date that the checkout book is returned'),
 })
 
-
+#parser
 query_parser = reqparse.RequestParser()
 query_parser.add_argument('checkout_id', required=False)
 query_parser.add_argument('user_id', required=False)
