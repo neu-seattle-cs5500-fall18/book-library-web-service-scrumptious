@@ -75,7 +75,7 @@ class AuthorChecker:
 
             for author in list_authors:
                 print(author)
-                an_author = {**author}
+                an_author = AuthorChecker.clean_author(author['first_name',author['last_name'], author['middle_name']])
                 an_author = AuthorDao.create(book_id, an_author)
                 list_new_authors.append(an_author)
             return list_new_authors
