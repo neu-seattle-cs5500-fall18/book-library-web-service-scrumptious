@@ -170,7 +170,7 @@ class BookNotes(Resource):
         """
         print('Received GET on resource /books/<book_id>/notes')
         if book_id.isdigit():
-            list_notes = NoteChecker.get_note(book_id)
+            list_notes = NoteChecker.get_notes(book_id)
             return list_notes
         else:
             abort(400, 'invalid input for book_id')

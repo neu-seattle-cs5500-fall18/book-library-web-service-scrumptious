@@ -28,7 +28,7 @@ class Book(db.Model):
             'title': self.title,
             'publish_date': self.publish_date,
             'subject': self.subject,
-            'genre'
+            'genre': self.genre,
             'notes': self.notes,
             'authors': self.authors,
             'copies': self.copies
