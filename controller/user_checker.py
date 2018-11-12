@@ -24,7 +24,7 @@ def get_all_users():
     Method to retrieve all users within the database.
     :return: a Json list of User Dicts.
     """
-    list_of_users = user_dao.query_all_users()
+    list_of_users = user_dao.get_users()
     return list_of_users
 
 
@@ -42,7 +42,7 @@ def create_user(json_user_info):
 
     if valid_input(fname, lname, email):
         user_dict = clean_user(fname, lname, email)
-        return user_dao.create_user_record(user_dict)
+        return user_dao.create(user_dict)
     else:
         abort(400, 'Invalid input')
 
@@ -54,7 +54,7 @@ def get_user(user_id):
     :return: Json of a User Dict
     """
     print('Get user %r' % user_id)
-    a_user = user_dao.query_user(user_id)
+    a_user = user_dao.get(user_id)
     return a_user
 
 
@@ -72,4 +72,4 @@ def update_user(user_id, json_user_info):
 
 def delete_user(user_id):
     print('Delete user %r' % user_id)
-    return user_dao.delete_user(user_id)
+    return user_dao.delete(user_id)

@@ -1,85 +1,123 @@
-from flask import abort
 from library_webservice import db
-from data_access_layer import author_dao, book_copy_dao
-from model.book import Book
+from model.book import Book, authorship_table
+from model.author import Author
 
 
-def query_by_id(book_id):
-    a_book = Book.query.get(book_id)
-    if a_book is None:
-        abort(400, 'Record not found')
-    else:
-        return a_book
+class BookDao:
+    @staticmethod
+    def contains(book_id):
+        """
+        Method to determine if Books contains a given book_id.
+        :param book_id: Record of book to search for.
+        :return: True if present, false otherwise.
+        """
+        if Book.query.get(book_id) is None:
+            return False
+        else:
+            return True
 
+    @staticmethod
+    def create_list_dict(book_query):
+        """
+        Method to create a list of book dictionaries given a query object.
+        :param book_query: results of Session.query(query parameters)
+        :return: a List of book dictionaries.
+        """
+        new_list = []
+        for book in book_query:
+            new_list.append(book.to_dict())
+        return new_list
 
-def query_books(**kwargs):
-    """
-    Queries all books in library
-    :return: List of Book
-    """
-    if kwargs is None:
-        query_results = Book.query.getall()
-        return query_results
-    else:
-        query_results = Book.query.filter_by(**kwargs)
-        return query_results
+    @staticmethod
+    def get(book_id):
+        """
+        Method to retrieve a book by book_id
+        :param book_id: Record id of a book.
+        :return: a Dictionary of the queried book.
+        """
+        a_book = Book.query.get(book_id)
+        return a_book.to_dict()
 
+    @staticmethod
+    def query_books(query_params_dict):
+        """
+        Method to query books by a dictionary of given query arguments. If all query arguments are none, then all book
+        records are returned.
+        :param query_params_dict: Query arguments to filter by.  Limited to those of the book query marshaller.
+        :return: a List of book dictionaries based on query arguments.
+        """
+        print("book_dao.query_books()")
 
-def create(book_dict, list_authors):
-    print("book_dao.create()")
-    new_book = Book(**book_dict)
-    db.session.add(new_book)
-    db.session.commit()
-    author_dao.create(new_book, list_authors)
-    book_copy_dao.create(new_book)
-    print("book_dao.create() ==> Complete")
-    return new_book
+        results = db.session.query(Book).join(authorship_table).join(Author)
 
+        if query_params_dict['first_name'] is not None:
+            first = query_params_dict['first_name']
+            results = results.filter(Author.first_name == first)
+        if query_params_dict['middle_name'] is not None:
+            middle = query_params_dict['middle_name']
+            results = results.filter(Author.middle_name == middle)
+        if query_params_dict['last_name'] is not None:
+            last = query_params_dict['last_name']
+            results = results.filter(Author.last_name==last)
+        if query_params_dict['publish_date_start'] is not None:
+            start = query_params_dict['publish_date_start']
+            results = results.filter(Book.publish_date > start)
+        if query_params_dict['publish_date_end'] is not None:
+            end = query_params_dict['publish_date_end']
+            results.filter(Book.publish_date < end)
+        if query_params_dict['title'] is not None:
+            title = query_params_dict['title']
+            results = results.filter(Book.title == title)
+        if query_params_dict['subject'] is not None:
+            subject = query_params_dict['subject']
+            results = results.filter(Book.subject == subject)
+        if query_params_dict['genre'] is not None:
+            genre = query_params_dict['genre']
+            results = results.filter(Book.genre == genre)
 
-##Be Careful with this.
-def update(book_id, **kwargs):
-    book = Book.query.get(book_id)
-    book.update(**kwargs)
-    db.session.commit()
-    return book
+        results.all()
 
+        print("book_dao.create() ==> Complete")
+        return BookDao.create_list_dict(results)
 
-def delete(book_id):
-    book = Book.query.get(book_id)
-
-    if book is None:
-        abort(400, 'No such book record')
-    else:
-        book.deleted = True
-        # book_copy_dao.delete()
-        # author_dao.delete()
+    @staticmethod
+    def create(book_dict):
+        """
+        Method to create a new Book record given a book dictionary. Does not create associated author or copy records.
+        :param book_dict: dictionary of book values for a new record.
+        :return: a dictionary object of the created book.
+        """
+        print("BookDao.create()")
+        new_book = Book(**book_dict)
+        db.session.add(new_book)
         db.session.commit()
-        return book
+        print("book_dao.create() ==> Complete")
+        return new_book.to_dict()
 
-
-# Notes actions
-def get_note(book_id):
-    book = Book.query_by_id(book_id)
-    if book is None:
-        abort(400, 'No such record')
-    else:
-        note = book.note
-        return note
-
-
-def edit_note(book_id, note):
-    book = query_by_id(book_id)
-    book.notes = note
-    db.session.commit()
-    return book
-
-
-def delete_note(book_id):
-    book = query_by_id(book_id)
-
-    if book is None:
-        abort(400, 'no such record')
-    else:
-        book.notes = 'None'
+    @staticmethod
+    def update(book_id, **kwargs):
+        """
+        Method to update a book by book_id and provided attribute arguments.
+        :param book_id: the ID of the book to update.
+        :param kwargs: Key value pairs of the book attributes to be updated.
+        :return: a dictionary of the updated book.
+        """
+        book = Book.query.get(book_id).join(authorship_table).join(Author)
+        book.update(**kwargs)
         db.session.commit()
-        return book
+        return book.to_dict()
+
+    @staticmethod
+    def delete(book_id):
+        """
+        Method to delete a book record.  Has cascading effect on copies and authors.
+        :param book_id: id of book record to be deleted.
+        :return: null.
+        """
+        Book.query.filter_by(book_id=book_id).delete()
+        db.session.commit()
+        return None
+
+
+
+
