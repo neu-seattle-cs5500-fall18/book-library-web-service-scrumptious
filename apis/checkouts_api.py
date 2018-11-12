@@ -1,8 +1,7 @@
 from flask import request
 from flask_restplus import Namespace, fields, Resource, reqparse
 from controller import checkout_checker
-from data_access_layer.checkout_dao import create_new_checkout, get_all_checkouts, get_checkout, update_checkout, delete_checkout, \
-    get_reminder
+from data_access_layer.checkout_dao import get_all_checkouts, get_reminder
 
 api = Namespace('checkouts', description='Checkouts operations')
 
