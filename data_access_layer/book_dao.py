@@ -87,7 +87,7 @@ class BookDao:
         :param book_dict: dictionary of book values for a new record.
         :return: a dictionary object of the created book.
         """
-        print("book_dao.create()")
+        print("BookDao.create()")
         new_book = Book(**book_dict)
         db.session.add(new_book)
         db.session.commit()

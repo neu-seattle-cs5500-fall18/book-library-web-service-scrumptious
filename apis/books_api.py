@@ -1,9 +1,12 @@
 from flask import request
 from flask_restplus import abort, fields, inputs, Namespace, reqparse, Resource
-from controller import book_checker
-from controller import author_checker
+from controller.author_checker import AuthorChecker
+from controller.book_checker import BookChecker
+from controller.book_copy_checker import BookCopyChecker
+from controller.note_checker import NoteChecker
 
 api = Namespace('books', description='Book operations')
+
 
 note_marshaller = api.model('Note', {
     'note_title': fields.String(required=True, description = 'Unique title of note'),
@@ -28,7 +31,11 @@ author_marshaller = api.model('Author', {
 book_copies_marshaller = api.model('BookCopies', {
     'book_copy_id': fields.Integer(required=True, description='Id for a book copy'),
     'book_id': fields.Integer(required=True, description='Id for a book'),
-    'is_checked_out' : fields.Boolean(required=True, description= 'Indicates whether a copy of a book is checked out or not'),
+    'is_checked_out' : fields.Boolean(required=True, description= 'Indicates whether a copy of a book is checked out'),
+})
+
+list_copies_marshaller = api.model('ListBooksMarshaller', {
+    'copies': fields.List(fields.Nested(book_copies_marshaller))
 })
 
 
@@ -62,35 +69,30 @@ query_parser.add_argument('genre', type=str, required=False)
 @api.response(200, 'Success')
 @api.response(400, 'Validation Error')
 class Books(Resource):
-    # this ensures arguments are valid and get can receive appropriate query params.
     @api.doc(body=query_parser, validate=True)
     @api.marshal_with(book_marshaller, code=200)
     def get(self):
         """
         Queries the books resource based on URL query string parameters.
-        :return: List of all books that match query parameters. If parameters are empty, all books are returned.
+        :return: List of all books that match query parameters. If no query string is provided, all books are returned.
         """
         print('Received GET on resource /books')
-        #this should throw error if arg doesn't match the parser
         args = query_parser.parse_args()
-        print(args)
-        list_of_books = book_checker.get_books(args)
+        list_of_books = BookChecker.get_books(args)
         return list_of_books
 
-    # This ensures body of request matches book model
     @api.expect(book_marshaller, validate=True)
     @api.response(201, 'Created')
     @api.marshal_with(full_book_marshaller, 201)
     def post(self):
         """
         Creates a new book record for a single book.
-        :return: Book ID of the created record.
+        :return: Book of the created record.
         """
         print('Received POST on resource /book')
         request_body = request.get_json()
-        print(request_body)
-        book_id = book_checker.create_book(request_body)
-        return book_id
+        a_book = BookChecker.create_book(request_body)
+        return a_book
 
 
 @api.route('/<book_id>')
@@ -98,7 +100,7 @@ class Books(Resource):
 @api.response(200, 'Success')
 @api.response(400, 'Invalid input received for book_id')
 class BookRecord(Resource):
-    @api.marshal_with(book_marshaller, 200)
+    @api.marshal_with(full_book_marshaller, 200)
     def get(self, book_id):
         """
         Gets a specific book record based on book_id.
@@ -107,7 +109,7 @@ class BookRecord(Resource):
         """
         print('Received GET on resource /books/<book_id>')
         if book_id.isdigit():
-            a_book = book_checker.get_book(book_id)
+            a_book = BookChecker.get_book(book_id)
             return a_book
         else:
             abort(400, 'Invalid input received for book_id')
@@ -116,15 +118,14 @@ class BookRecord(Resource):
     @api.marshal_with(book_marshaller, code=200)
     def put(self, book_id):
         """
-        Updates an existing record  based on book_id.
+        Updates an existing record  based on book_id, and according to fields fo the book_marshaller model.
         :param book_id: Record number to be updated.
         :return: Book_id of updated record.
         """
         print('Received PUT on resource /books/<book_id>')
-
         if book_id.isdigit():
             request_body = request.get_json()
-            book = book_checker.update_book(book_id, request_body)
+            book = BookChecker.update_book(book_id, request_body)
             return book
         else:
             abort(400, 'Invalid input received for book_id')
@@ -137,8 +138,12 @@ class BookRecord(Resource):
         :param book_id: Record to be deleted.
         :return:
         """
-        book_checker.delete_book(book_id)
-        return 'success', 200
+        print('Received DELETE on resource /books/<book_id>')
+        if book_id.isdigit():
+            result = BookChecker.delete_book(book_id)
+            return result
+        else:
+            abort(400)
 
 
 @api.route('/<book_id>/notes')
@@ -153,24 +158,26 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: List of notes for a specific book.
         """
+        print('Received GET on resource /books/<book_id>/notes')
         if book_id.isdigit():
-            list_notes = book_checker.get_note(book_id)
+            list_notes = NoteChecker.get_note(book_id)
             return list_notes
         else:
             abort(400, 'invalid input for book_id')
 
-    @api.expect(return_note_marshaller, validate=True)
+    @api.expect(note_marshaller, validate=True)
     @api.response(201, 'Created Note')
-    @api.marshal_with(note_marshaller, code=201)
+    @api.marshal_with(return_note_marshaller, code=201)
     def post(self, book_id):
         """
         Creates a new note for a book.
         :param book_id: Record for a book.
         :return: Note_ID of created note.
         """
+        print('Received POST on resource /books/<book_id>/notes')
         if book_id.isdigit():
-            note = book_checker.create_note(book_id, request.get_json())
-            return id
+            note = NoteChecker.create_note(book_id, request.get_json())
+            return note
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -188,9 +195,10 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: Book_id of edited record.
         """
+        print('Recieved PUT on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():
-            id = book_checker.update_note(book_id, request.get_json())
-            return id
+            note = NoteChecker.update_note(book_id, request.get_json())
+            return note
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -201,8 +209,9 @@ class BookNotes(Resource):
         :param book_id: Record for a book.
         :return: Book_id of edited record.
         """
+        print('Received DELETE on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():
-            result = book_checker.delete_note(book_id)
+            result = NoteChecker.delete_note(book_id)
             return result
         else:
             abort(400, 'Invalid input for book_id')
@@ -210,20 +219,21 @@ class BookNotes(Resource):
 
 @api.route('/<book_id>/copies')
 class BookCopies(Resource):
-
+    @api.marshal_with(list_copies_marshaller)
     def get(self, book_id):
-
+        print('Received GET on resource /books/<book_id>/copies')
         if book_id.isdigit():
-            list_of_copies = book_checker.get_copies(book_id)
+            list_of_copies = BookCopyChecker.get_copies(book_id)
             return list_of_copies
         else:
             abort(400, 'Invalid input for book_id')
 
+    @api.marshal_with(book_copies_marshaller)
     def post(self, book_id):
-
+        print('Received POST on resource /books/<book_id>/copies')
         if book_id.isdigit():
-            id = book_checker.create_book_copy(book_id)
-            return id
+            book = BookCopyChecker.create_copy(book_id)
+            return book
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -231,15 +241,17 @@ class BookCopies(Resource):
 @api.route('/<book_id>/authors')
 class BookAuthors(Resource):
     @api.expect(author_marshaller, validate=True)
+    @api.marshal_with(author_marshaller)
     def post(self, book_id):
         """
         adds new author to an existing book.
         :param book_id:
         :return:
         """
+        print('Received POST on resource /books/<book_id>/authors')
         if book_id.isdigit():
             author_json = request.get_json()
-            author = author_checker.create_author(book_id, author_json)
+            author = AuthorChecker.create_author(book_id, author_json)
             return author
         else:
             abort(400)
@@ -255,21 +267,23 @@ class BookAuthor(Resource):
         :param author_id:
         :return:
         """
+        print('Received PUT on resource /books/<book_id>/authors/<author_id>')
         if book_id.isdigit() and author_id.isdigit():
-            result = author_checker.add_book_to_author(book_id, author_id)
+            result = AuthorChecker.add_book_to_author(book_id, author_id)
             return result
         else:
             abort(400)
 
-    def delete(self,book_id, author_id):
+    def delete(self, book_id, author_id):
         """
         deletes an author from a book.
         :param book_id:
         :param author_id:
         :return:
         """
+        print('Received DELETE on resource /books/<book_id>/authors/<author_id>')
         if book_id.isdigit() and author_id.isdigit():
-            result = author_checker.delete_author_from_book(book_id, author_id)
+            result = AuthorChecker.delete_author_from_book(book_id, author_id)
             return result
         else:
             abort(400)

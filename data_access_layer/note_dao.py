@@ -6,20 +6,19 @@ class NoteDao:
 
     @staticmethod
     def contains(note_title):
-        a_note = Note.query.get(note_title)
-        if a_note is None:
+        if Note.query.get(note_title) is None:
             return False
         else:
             return True
 
     @staticmethod
-    def create(note_dict, book_id):
+    def create(book_id, note_dict):
         note = Note(**note_dict)
         note['book_id'] = book_id
 
         db.session.add(note)
         db.session.commit()
-        return note
+        return note.to_dict()
 
     @staticmethod
     def get(note_title):
@@ -33,7 +32,7 @@ class NoteDao:
 
         for note in notes:
             list_notes.append(note.to_dict())
-            return list_notes
+        return list_notes
 
     @staticmethod
     def update(note_dict):

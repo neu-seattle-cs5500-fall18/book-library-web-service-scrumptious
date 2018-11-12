@@ -4,6 +4,13 @@ from model.book_copy import BookCopy
 
 class BookCopyDao:
     @staticmethod
+    def contains(book_copy_id):
+        if BookCopy.query.get(book_copy_id) is None:
+            return False
+        else:
+            return True
+
+    @staticmethod
     def create(book_id):
         print("book_copy_dao.create()")
         book_copy = BookCopy(book_id=book_id)
