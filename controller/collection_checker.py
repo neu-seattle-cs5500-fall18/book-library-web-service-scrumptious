@@ -1,5 +1,4 @@
-from data_access_layer import collection_dao
-from data_access_layer import book_dao
+from data_access_layer import book_dao, collection_dao
 from flask_restplus import abort
 from model.collection import BookCollection
 
