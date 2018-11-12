@@ -25,5 +25,6 @@ class Author(db.Model):
         return author_dict
 
     def update(self, **kwargs):
-        for key, value in kwargs:
-            self[key] = value
+        print('Author.update()')
+        for key, value in kwargs.items():
+            setattr(self, key, value)

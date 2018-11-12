@@ -25,9 +25,12 @@ class AuthorDao:
         print("AuthorDao.create()")
         book = Book.query.get(book_id)
         new_author = Author(**author_dict)
-        new_author.books.append(book)
         db.session.add(new_author)
         db.session.commit()
+        print(new_author)
+        new_author.books.append(book)
+        db.session.commit()
+        print(new_author)
         print("author_dao.create() ==> Complete")
         return new_author.to_dict()
 

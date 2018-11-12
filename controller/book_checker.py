@@ -38,11 +38,13 @@ class BookChecker:
         a_book = {'title': title, 'publish_date': publish_date, 'subject': subject, 'genre': genre}
 
         new_book = BookDao.create(a_book)
+        print(new_book)
         book_copy = BookCopyChecker.create_copy(new_book['book_id'])
         new_authors = AuthorChecker.create_authors(new_book['book_id'], authors)
 
         print("book_checker.create_book() ==> Complete")
-        return new_book
+        return BookDao.get(new_book['book_id'])
+
 
     @staticmethod
     def get_book(book_id):
@@ -60,6 +62,7 @@ class BookChecker:
 
     @staticmethod
     def update_book(book_id, book_json):
+        print(book_json)
         if BookDao.contains(book_id):
             a_book = BookDao.update(book_id, **book_json)
             return a_book
