@@ -1,8 +1,6 @@
 from flask import request
-
-from controller import checkout_checker
-
 from flask_restplus import Namespace, fields, Resource, reqparse
+from controller import checkout_checker
 from data_access_layer.checkout_dao import create_new_checkout, get_all_checkouts, get_checkout, update_checkout, delete_checkout, \
     get_reminder
 
@@ -46,7 +44,7 @@ class Checkouts(Resource):
         return response
 
 
-@api.route('/user/<user_id>/book/<book_id')
+@api.route('/user/<user_id>/book/<book_id>')
 @api.response(code=400, description='Validation Error')
 class CreateCheckout(Resource):
 
