@@ -27,9 +27,9 @@ class AuthorDao:
         new_author = Author(**author_dict)
         new_author.books.append(book)
         db.session.add(new_author)
-        print("added new author")
         db.session.commit()
         print("author_dao.create() ==> Complete")
+        return new_author.to_dict()
 
     @staticmethod
     def add_book(book_id, author_id):

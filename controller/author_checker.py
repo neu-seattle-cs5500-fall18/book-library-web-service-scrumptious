@@ -72,10 +72,14 @@ class AuthorChecker:
 
         if BookDao.contains(book_id):
             list_new_authors = []
+            print(list_authors)
 
             for author in list_authors:
-                an_author = AuthorChecker.clean_author(author['first_name'], author['last_name'],author['middle_name'])
-                list_authors.append(AuthorDao.create(book_id, an_author))
+                print(author)
+                an_author = {**author}
+                record = AuthorDao.create(book_id, an_author)
+                print(record)
+                list_authors.append(record)
             return list_new_authors
         else:
             abort(404)
