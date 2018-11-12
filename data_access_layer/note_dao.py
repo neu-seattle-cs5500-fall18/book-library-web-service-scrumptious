@@ -22,11 +22,13 @@ class NoteDao:
 
     @staticmethod
     def get(note_title):
+        print('NoteDao.get()')
         note = Note.query.get(note_title)
         return note.to_dict()
 
     @staticmethod
     def get_notes(book_id):
+        print('NoteDao.get_notes()')
         list_notes = []
         notes = Note.query.filter_by(book_id=book_id).all()
 

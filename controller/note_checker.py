@@ -5,10 +5,10 @@ from data_access_layer.note_dao import NoteDao
 
 class NoteChecker:
     @staticmethod
-    def get_note(book_id):
+    def get_notes(book_id):
         if BookDao.contains(book_id):
-            note = NoteDao.get(book_id)
-            return note
+            list_notes = NoteDao.get_notes(book_id)
+            return list_notes
         else:
             abort(404, 'Resource not found')
 

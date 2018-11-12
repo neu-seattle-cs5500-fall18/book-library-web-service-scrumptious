@@ -12,7 +12,7 @@ class Note(db.Model):
     def to_dict(self):
         a_dict = {
             'note_title': self.note_title,
-            'note' : self.note
+            'note': self.note
         }
 
         return a_dict
