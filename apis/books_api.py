@@ -284,7 +284,7 @@ class BookAuthor(Resource):
     @api.marshal_with(author_marshaller)
     def put(self, book_id, author_id):
         """
-        Adds an existing author to an existing book.
+        Adds an existing Author to an existing Book.
         :param book_id: Record of a book.
         :param author_id: Record of an author
         :return: JSON of author record according to author_marshaller model.
