@@ -7,18 +7,19 @@ class Note(db.Model):
     book_id = db.Column(db.Integer, db.ForeignKey('book.book_id'), nullable=False)
 
     def __repr__(self):
-        return '<Note %r : %r>' %(self.note_title, self.note)
+        return '<Note %r : %r %r>' %(self.note_title, self.note, self.book_id)
 
     def to_dict(self):
         a_dict = {
             'note_title': self.note_title,
-            'note': self.note
+            'note': self.note,
+            'book_id':self.book_id
         }
 
         return a_dict
 
     def update(self, **kwargs):
-        for key, value in kwargs:
-            self[key] = value
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
 
