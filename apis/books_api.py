@@ -39,7 +39,6 @@ list_copies_marshaller = api.model('ListBooksMarshaller', {
 })
 
 
-# Response model, any other fields are considered private and not returned
 book_marshaller = api.model('Book', {
     'book_id': fields.Integer(required=False, description='The book record'),
     'title': fields.String(required=True, description='The book title.'),
@@ -83,8 +82,10 @@ class Books(Resource):
     @api.marshal_with(book_marshaller, code=200)
     def get(self):
         """
-        Queries the books resource based on URL query string parameters.
-        :return: List of all books that match query parameters. If no query string is provided, all books are returned.
+        Queries the books resource based on URL query string parameters. Valid query arguments are:
+        title, first_name, last_name, middle_name, publish_date_start, publish_date_end, subject, genre.
+        If no query string is provided all books are returned.
+        :return: JSON List of all books that match query parameters.
         """
         print('Received GET on resource /books')
         args = query_parser.parse_args()
@@ -97,7 +98,7 @@ class Books(Resource):
     def post(self):
         """
         Creates a new book record for a single book.
-        :return: Book of the created record.
+        :return: JSON of the created Book record.
         """
         print('Received POST on resource /book')
         request_body = request.get_json()
@@ -128,9 +129,10 @@ class BookRecord(Resource):
     @api.marshal_with(book_marshaller, code=200)
     def put(self, book_id):
         """
-        Updates an existing record  based on book_id, and according to fields fo the edit_book_marshaller model.
-        :param book_id: Record number to be updated.
-        :return: Book_id of updated record.
+        Updates an existing Book record based on book_id and JSON. The edit_book_marshaller model holds the fields that
+        are valid to include within the json of the put request.
+        :param book_id: Book record to be updated.
+        :return: JSON of updated book record according to book_marshaller model.
         """
         print('Received PUT on resource /books/<book_id>')
         if book_id.isdigit():
@@ -146,7 +148,7 @@ class BookRecord(Resource):
         """
         Delete a book record based on book_id.
         :param book_id: Record to be deleted.
-        :return:
+        :return: Null.
         """
         print('Received DELETE on resource /books/<book_id>')
         if book_id.isdigit():
@@ -165,8 +167,8 @@ class BookNotes(Resource):
     def get(self, book_id):
         """
         Gets the book notes for a specific book.
-        :param book_id: Record for a book.
-        :return: List of notes for a specific book.
+        :param book_id: Record of book.
+        :return: JSON List of notes for a specific book.
         """
         print('Received GET on resource /books/<book_id>/notes')
         if book_id.isdigit():
@@ -182,7 +184,7 @@ class BookNotes(Resource):
         """
         Creates a new note for a book.
         :param book_id: Record for a book.
-        :return: Note_ID of created note.
+        :return: JSON of created note according to return_note_marshaller model.
         """
         print('Received POST on resource /books/<book_id>/notes')
         if book_id.isdigit():
@@ -201,11 +203,11 @@ class BookNotes(Resource):
     @api.marshal_with(return_note_marshaller, code=200)
     def put(self, book_id, note_title):
         """
-        Edit a specific note for a book.
+        Edit a specific note for a book. Valid input for JSON are fields in the note_marshaller model.
         :param book_id: Record for a book.
-        :return: Book_id of edited record.
+        :return: JSON of note according to return_note_marshaller
         """
-        print('Recieved PUT on resource /books/<book_id>/notes/<note_title>')
+        print('Received PUT on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():
             note = NoteChecker.update_note(book_id, request.get_json())
             return note
@@ -217,7 +219,7 @@ class BookNotes(Resource):
         """
         Delete a specific note for a book
         :param book_id: Record for a book.
-        :return: Book_id of edited record.
+        :return: Null.
         """
         print('Received DELETE on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():
@@ -231,6 +233,11 @@ class BookNotes(Resource):
 class BookCopies(Resource):
     @api.marshal_with(list_copies_marshaller)
     def get(self, book_id):
+        """
+        Gets the copies of a given book.
+        :param book_id: Record of a book.
+        :return: JSON of a list of book copies according to list_copies_marshaller model.
+        """
         print('Received GET on resource /books/<book_id>/copies')
         if book_id.isdigit():
             list_of_copies = BookCopyChecker.get_copies(book_id)
@@ -240,6 +247,11 @@ class BookCopies(Resource):
 
     @api.marshal_with(book_copies_marshaller)
     def post(self, book_id):
+        """
+        Create a new copy for an existing book.
+        :param book_id: Record of a book.
+        :return: JSON of a books copies according to book_copies_marshaller.
+        """
         print('Received POST on resource /books/<book_id>/copies')
         if book_id.isdigit():
             book = BookCopyChecker.create_copy(book_id)
@@ -254,9 +266,9 @@ class BookAuthors(Resource):
     @api.marshal_with(author_marshaller)
     def post(self, book_id):
         """
-        adds new author to an existing book.
-        :param book_id:
-        :return:
+        Adds new author to an existing book, given a JSON of author attributes according to author_marshaller.
+        :param book_id: Record of a book.
+        :return: JSON of new author according to author_marshaller model.
         """
         print('Received POST on resource /books/<book_id>/authors')
         if book_id.isdigit():
@@ -272,10 +284,10 @@ class BookAuthor(Resource):
     @api.marshal_with(author_marshaller)
     def put(self, book_id, author_id):
         """
-        adds existing author to book.
-        :param book_id:
-        :param author_id:
-        :return:
+        Adds an existing author to an existing book.
+        :param book_id: Record of a book.
+        :param author_id: Record of an author
+        :return: JSON of author record according to author_marshaller model.
         """
         print('Received PUT on resource /books/<book_id>/authors/<author_id>')
         if book_id.isdigit() and author_id.isdigit():
@@ -286,10 +298,10 @@ class BookAuthor(Resource):
 
     def delete(self, book_id, author_id):
         """
-        deletes an author from a book.
-        :param book_id:
-        :param author_id:
-        :return:
+        Deletes an author from a book.
+        :param book_id: Record of a book.
+        :param author_id: Record of an Author.
+        :return: Null
         """
         print('Received DELETE on resource /books/<book_id>/authors/<author_id>')
         if book_id.isdigit() and author_id.isdigit():
