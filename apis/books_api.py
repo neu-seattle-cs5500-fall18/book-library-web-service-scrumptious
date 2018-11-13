@@ -285,8 +285,8 @@ class BookAuthor(Resource):
     def put(self, book_id, author_id):
         """
         Adds an existing Author to an existing Book.
-        :param book_id: Record of a book.
-        :param author_id: Record of an author
+        :param book_id: Record of a Book.
+        :param author_id: Record of an Author
         :return: JSON of author record according to author_marshaller model.
         """
         print('Received PUT on resource /books/<book_id>/authors/<author_id>')
