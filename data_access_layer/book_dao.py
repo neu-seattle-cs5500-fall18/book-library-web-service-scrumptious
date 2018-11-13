@@ -1,7 +1,6 @@
 from library_webservice import db
 from model.book import Book, authorship_table
 from model.author import Author
-from model.book_copy import BookCopy
 
 
 class BookDao:
