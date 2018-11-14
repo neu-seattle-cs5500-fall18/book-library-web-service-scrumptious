@@ -10,12 +10,15 @@ from model.user import User
 from model.book import Book
 from model.book_copy import BookCopy
 from model.author import Author
+from model.note import Note
+
 
 #This Creates the Table in the DB.
 user = User
 author = Author
 book = Book
 book_copy = BookCopy
+note = Note
 
 db.create_all()
 

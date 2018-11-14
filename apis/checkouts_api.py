@@ -1,10 +1,7 @@
 from flask import request
-
-from controller import checkout_checker
-
 from flask_restplus import Namespace, fields, Resource, reqparse
-from data_access_layer.checkout_dao import create_new_checkout, get_all_checkouts, get_checkout, update_checkout, delete_checkout, \
-    get_reminder
+from controller import checkout_checker
+from data_access_layer.checkout_dao import get_all_checkouts, get_reminder
 
 api = Namespace('checkouts', description='Checkouts operations')
 
@@ -18,7 +15,7 @@ checkout_marshaller = api.model('Checkout', {
     'return_date': fields.Date(required=True, description='the date that the checkout book is returned'),
 })
 
-
+#parser
 query_parser = reqparse.RequestParser()
 query_parser.add_argument('checkout_id', required=False)
 query_parser.add_argument('user_id', required=False)
@@ -46,7 +43,7 @@ class Checkouts(Resource):
         return response
 
 
-@api.route('/user/<user_id>/book/<book_id')
+@api.route('/user/<user_id>/book/<book_id>')
 @api.response(code=400, description='Validation Error')
 class CreateCheckout(Resource):
 

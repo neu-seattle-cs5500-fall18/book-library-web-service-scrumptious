@@ -8,14 +8,7 @@ class Author(db.Model):
     first_name = db.Column(db.String)
     last_name = db.Column(db.String, nullable=False)
     middle_name = db.Column(db.String)
-    # do not need a field here for books because books defines backref.
     UniqueConstraint(first_name, last_name, middle_name)
-
-    # def __init__(self, **kwargs):
-    #     self.author_id = kwargs['author_id']
-    #     self.first_name = kwargs['first_name']
-    #     self.last_name = kwargs['last_name']
-    #     self.middle_name = kwargs['middle_name']
 
     def __repr__(self):
         return "<Author(author_id='%s', first_name='%s', last_Name='%s', middle_name ='%s')>" \
@@ -32,5 +25,6 @@ class Author(db.Model):
         return author_dict
 
     def update(self, **kwargs):
-        for key, value in kwargs:
-            self[key] = value
+        print('Author.update()')
+        for key, value in kwargs.items():
+            setattr(self, key, value)

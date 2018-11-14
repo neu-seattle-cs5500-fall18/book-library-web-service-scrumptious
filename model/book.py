@@ -12,26 +12,14 @@ class Book(db.Model):
     publish_date = db.Column(db.Date, nullable=False)
     subject = db.Column(db.String, nullable=False)
     genre = db.Column(db.String, nullable=False)
-    book_note = db.Column(db.String, nullable=True)
-    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
+    notes = db.relationship('Note', backref=db.backref('book'))
     authors = db.relationship('Author', secondary=authorship_table, backref=db.backref('books', lazy='dynamic'))
-    copies = db.relationship('BookCopy', backref=db.backref('book'))
-
-    #
-    # def __init__(self, book_id, **kwargs):
-    #     self.book_id = book_id
-    #     self.title = kwargs['title']
-    #     self.publish_date = kwargs['publish_date']
-    #     self.subject = kwargs['subject']
-    #     self.genre = kwargs['genre']
-    #     self.book_note = kwargs['book_note']
-    #     self.is_deleted = kwargs['is_deleted']
-    #     self.authors = kwargs['authors']
+    copies = db.relationship('BookCopy', cascade="all,delete", backref=db.backref('book'))
 
     def __repr__(self): return"<Book(book_id='%s',title='%s',publish_date='%s',subject='%s',genre='%s'," \
-                              "book_note='%s',is_deleted='%s',authors='%s',copies='%s'>" \
-                              %(self.book_id,self.title,self.publish_date,self.subject,self.genre,self.book_note,
-                                self.is_deleted,self.authors,self.copies)
+                              "book_note='%s',authors='%s',copies='%s'>" \
+                              %(self.book_id,self.title,self.publish_date,self.subject,self.genre,self.notes,
+                                self.authors,self.copies)
 
     def to_dict(self):
         print('Book to_dict')
@@ -40,14 +28,17 @@ class Book(db.Model):
             'title': self.title,
             'publish_date': self.publish_date,
             'subject': self.subject,
-            'book_note': self.book_note,
-            'is_deleted': self.is_deleted,
+            'genre': self.genre,
+            'notes': self.notes,
             'authors': self.authors,
             'copies': self.copies
         }
         return book_dict
 
     def update(self, **kwargs):
-        for key, value in kwargs:
-            self[key] = value
+        print('Book.update()')
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
 
