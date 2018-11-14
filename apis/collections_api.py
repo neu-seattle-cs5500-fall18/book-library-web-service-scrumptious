@@ -1,6 +1,8 @@
+from flask_restplus import Namespace, Resource, fields
 from flask import request
 from flask_restplus import abort, fields, Namespace, Resource
 from controller import collection_checker
+
 
 api = Namespace('collections', 'Book collections operations')
 
@@ -104,6 +106,7 @@ class CollectionRecord(Resource):
         else:
             abort(400, 'Invalid input for book_id or collection_id')
 
+
     @api.route('/<collection_id>/delete/<book_id>')
     @api.response(200, 'Deleted Book from collection')
     @api.marshal_with(collection_marshaller, code=200)
@@ -121,8 +124,6 @@ class CollectionRecord(Resource):
             abort(400, 'Invalid input for book_id or collection_id')
 
 
-
-=======
 # from flask import request
 # from flask_restplus import abort, fields, Namespace, Resource
 # from controller import collection_checker
@@ -244,5 +245,3 @@ class CollectionRecord(Resource):
 #         else:
 #             abort(400, 'Invalid input for book_id or collection_id')
 #
-#
-
