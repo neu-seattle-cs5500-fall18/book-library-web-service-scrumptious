@@ -41,10 +41,11 @@ class AuthorChecker:
 
     @staticmethod
     def add_new_author(book_id, author_json):
-        an_author = AuthorChecker.clean_author(author_json)
+        # an_author = AuthorChecker.clean_author(author_json)
 
         if BookDao.contains(book_id):
-            AuthorDao.create(book_id, an_author)
+            # AuthorDao.create(book_id, an_author)
+            AuthorDao.create(book_id, author_json)
         else:
             abort(400)
 
@@ -60,8 +61,9 @@ class AuthorChecker:
     def create_author(book_id, author_json):
         print('author_checker.create_author()')
         if BookDao.contains(book_id):
-            an_author = AuthorChecker.clean_author(author_json['first_name'], author_json['last_name'], author_json['middle_name'])
-            an_author = AuthorDao.create(book_id, an_author)
+            # an_author = AuthorChecker.clean_author(author_json['first_name'], author_json['last_name'], author_json['middle_name'])
+            # an_author = AuthorDao.create(book_id, an_author)
+            an_author = AuthorDao.create(book_id, author_json)
             return an_author
         else:
             abort(404)
@@ -75,8 +77,8 @@ class AuthorChecker:
 
             for author in list_authors:
                 print(author)
-                an_author = AuthorChecker.clean_author(author['first_name',author['last_name'], author['middle_name']])
-                an_author = AuthorDao.create(book_id, an_author)
+                # an_author = AuthorChecker.clean_author(author['first_name',author['last_name'], author['middle_name']])
+                an_author = AuthorDao.create(book_id, author)
                 list_new_authors.append(an_author)
             return list_new_authors
         else:

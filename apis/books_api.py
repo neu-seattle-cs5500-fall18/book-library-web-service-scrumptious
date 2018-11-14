@@ -152,6 +152,7 @@ class BookRecord(Resource):
         """
         print('Received DELETE on resource /books/<book_id>')
         if book_id.isdigit():
+            # delete relationship in authorship table
             result = BookChecker.delete_book(book_id)
             return result
         else:
