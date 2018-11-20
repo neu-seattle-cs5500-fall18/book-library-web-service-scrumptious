@@ -1,4 +1,4 @@
-from data_access_layer import checkout_dao
+from data_access_layer import checkout_dao, book_copy_dao
 from flask_restplus import abort
 from model.checkout import Checkout
 from model.book import Book
@@ -23,7 +23,7 @@ def get_all_checkouts():
     Method to retrieve all checkouts within the database.
     :return: a Json list of Checkout Dicts.
     """
-    list_of_checkouts = checkout_dao.get_all_checkouts()
+    list_of_checkouts = checkout_dao.CheckoutDao.get_all_checkouts()
     return list_of_checkouts
 
 
@@ -34,23 +34,26 @@ def create_checkout(user_id, book_id):
     :param book_id: given a book id.
     :return: a checkout of the book.
     """
-    print('Create a checkout')
+    print('Checker layer')
 
-    existing_checkout = Checkout.query.filter_by(user_id=user_id).filter_by(book_id=book_id)
+    existing_checkout = Checkout.query.filter_by(user_id=user_id, book_id=book_id)
 
     if existing_checkout is not None:
         abort(400, 'checkout already existed')
+    else:
 
-    book_copy = Book.query.filter_by(book_id)
+        book_copy = book_copy_dao.get_next_available(book_id)
 
     if book_copy is None:
         abort(400, 'Book not available')
+
+    print('passing the ifs')
 
     checkout_dict = {
         'user_id': user_id,
         'book_id': book_id,
     }
-    return checkout_dao.create_new_checkout(checkout_dict)
+    return checkout_dao.CheckoutDao.create_new_checkout(checkout_dict)
 
 
 def get_checkout(checkout_id):
@@ -60,7 +63,7 @@ def get_checkout(checkout_id):
     :return: Json of a Checkout Dict.
     """
     print('Get checkout %r' % checkout_id)
-    a_checkout = checkout_dao.query_checkout(checkout_id)
+    a_checkout = checkout_dao.CheckoutDao.query_checkout(checkout_id)
     if a_checkout is None:
         abort(400, 'Invalid input')
     return a_checkout
@@ -72,11 +75,11 @@ def update_checkout(checkout_id):
     :param checkout_id: the checkout_id that has been returned.
     :return: the updated checkout id adding the return date of the record.
     """
-    a_checkout = checkout_dao.query_checkout(checkout_id)
+    a_checkout = checkout_dao.CheckoutDao.query_checkout(checkout_id)
     if a_checkout is None:
         abort(400, 'Invalid input')
 
-    return checkout_dao.update_checkout(checkout_id)
+    return checkout_dao.CheckoutDao.update_checkout(checkout_id)
 
 
 def delete_checkout(checkout_id):
@@ -86,10 +89,10 @@ def delete_checkout(checkout_id):
     :return: the deleted checkout id record.
     """
     print('Delete checkout %r' % checkout_id)
-    a_checkout = checkout_dao.delete_checkout(checkout_id)
+    a_checkout = checkout_dao.CheckoutDao.delete_checkout(checkout_id)
     if a_checkout is None:
         abort(400, 'Onvalid input')
-    return checkout_dao.delete_checkout(checkout_id)
+    return checkout_dao.CheckoutDao.delete_checkout(checkout_id)
 
 
 def get_reminder_list():
@@ -99,4 +102,4 @@ def get_reminder_list():
     checkouts = Checkout.query.filter_by(return_date=None)
     if checkouts is None:
         abort(400, 'all checkouts have been returned')
-    return checkout_dao.get_reminder()
+    return checkout_dao.CheckoutDao.get_reminder()
