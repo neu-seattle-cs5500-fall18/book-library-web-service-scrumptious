@@ -1,6 +1,7 @@
 from library_webservice import db
 from model.author import Author
 from model.book import Book
+from flask_restplus import abort
 
 
 class AuthorDao:
@@ -41,14 +42,17 @@ class AuthorDao:
         print("AuthorDao.create()")
         book = Book.query.get(book_id)
         new_author = Author(**author_dict)
-        db.session.add(new_author)
-        db.session.commit()
-        print(new_author)
-        new_author.books.append(book)
-        db.session.commit()
-        print(new_author)
-        print("author_dao.create() ==> Complete")
-        return new_author.to_dict()
+        if new_author.valid_input(new_author.first_name, new_author.last_name, new_author.middle_name):
+            db.session.add(new_author)
+            db.session.commit()
+            print(new_author)
+            new_author.books.append(book)
+            db.session.commit()
+            print(new_author)
+            print("author_dao.create() ==> Complete")
+            return new_author.to_dict()
+        else:
+            abort(400)
 
     @staticmethod
     def add_book(book_id, author_id):

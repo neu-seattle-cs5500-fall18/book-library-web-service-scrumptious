@@ -7,7 +7,8 @@ from flask_restplus import abort
 class BookChecker:
     @staticmethod
     def valid_input(book_dict):
-        return None not in book_dict['title'] and None not in book_dict['publish_date'] and None not in book_dict['subject']
+        return None not in book_dict['title'] and None not in book_dict['publish_date'] and \
+               None not in book_dict['subject']
 
     @staticmethod
     def clean_book(book_dict):
@@ -44,7 +45,6 @@ class BookChecker:
 
         print("book_checker.create_book() ==> Complete")
         return BookDao.get(new_book['book_id'])
-
 
     @staticmethod
     def get_book(book_id):

@@ -8,7 +8,7 @@ class BookCopy(db.Model):
 
     def __repr__(self):
         return("<BookCopy(book_copy_id='%s',book_id='%s',is_checked_out='%s'>"
-               % (self.book_copy_id,self.book_id,self.is_checked_out))
+               % (self.book_copy_id, self.book_id, self.is_checked_out))
 
     def to_dict(self):
         print('Book Copy to_dict')
