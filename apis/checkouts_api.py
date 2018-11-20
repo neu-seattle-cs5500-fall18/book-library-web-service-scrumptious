@@ -1,7 +1,6 @@
 from flask import request
 from flask_restplus import Namespace, fields, Resource, reqparse
 from controller import checkout_checker
-from data_access_layer.checkout_dao import get_all_checkouts, get_reminder
 
 api = Namespace('checkouts', description='Checkouts operations')
 
@@ -37,7 +36,7 @@ class Checkouts(Resource):
         Queries the checkouts resource based on URL.
         :return: Json object of all checkouts that match the query parameter.
         """
-        response = get_all_checkouts
+        response = checkout_checker.get_all_checkouts
 
         print('got all checkouts')
         return response
@@ -53,7 +52,6 @@ class CreateCheckout(Resource):
         Create a new checkout for the book.
         :return: checkout_id for the create book
         """
-        checkout_info = request.get_json()
         response = checkout_checker.create_checkout(user_id, book_id)
 
         return response, 201
