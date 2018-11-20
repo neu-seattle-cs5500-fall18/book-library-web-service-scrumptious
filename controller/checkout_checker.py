@@ -3,13 +3,6 @@ from flask_restplus import abort
 from model.checkout import Checkout
 from model.book import Book
 
-# functions that interact with a checkout record
-
-
-# def valid_input(user_id, book_id, book_copy_id, checkout_date, due_date):
-#     print('Validate checkout info input')
-#     return user_id.isdigit() and book_id.isdigit() and checkout_date.isdate() and due_date.isdate()
-
 
 def clean_checkout(user_id, book_id, book_copy_id, checkout_date, due_date):
     print('Clean checkout Info')
@@ -36,10 +29,10 @@ def get_all_checkouts():
 
 def create_checkout(user_id, book_id):
     """
-    Checking if a new checkout can be created
-    :param user_id: given a user id
-    :param book_id: given a book id
-    :return: a checkout of the book
+    Checking if a new checkout can be created.
+    :param user_id: given a user id.
+    :param book_id: given a book id.
+    :return: a checkout of the book.
     """
     print('Create a checkout')
 
@@ -64,7 +57,7 @@ def get_checkout(checkout_id):
     """
     Method to get a specific checkout record based on checkout_id.
     :param checkout_id: Record of Checkout to get.
-    :return: Json of a Checkout Dict
+    :return: Json of a Checkout Dict.
     """
     print('Get checkout %r' % checkout_id)
     a_checkout = checkout_dao.query_checkout(checkout_id)
@@ -73,7 +66,12 @@ def get_checkout(checkout_id):
     return a_checkout
 
 
-def update_checkout(checkout_id, json_user_info):
+def update_checkout(checkout_id):
+    """
+    method to update a checkout since the checkout is returned.
+    :param checkout_id: the checkout_id that has been returned.
+    :return: the updated checkout id adding the return date of the record.
+    """
     a_checkout = checkout_dao.query_checkout(checkout_id)
     if a_checkout is None:
         abort(400, 'Invalid input')
@@ -82,8 +80,23 @@ def update_checkout(checkout_id, json_user_info):
 
 
 def delete_checkout(checkout_id):
+    """
+    Delete a particular checkout record.
+    :param checkout_id: the checkout id needs to be deleted.
+    :return: the deleted checkout id record.
+    """
     print('Delete checkout %r' % checkout_id)
     a_checkout = checkout_dao.delete_checkout(checkout_id)
     if a_checkout is None:
         abort(400, 'Onvalid input')
-    return checkout_dao.delete_user(checkout_id)
+    return checkout_dao.delete_checkout(checkout_id)
+
+
+def get_reminder_list():
+    """
+    Return a list of checkouts that do not have a return date yet.
+    """
+    checkouts = Checkout.query.filter_by(return_date=None)
+    if checkouts is None:
+        abort(400, 'all checkouts have been returned')
+    return checkout_dao.get_reminder()

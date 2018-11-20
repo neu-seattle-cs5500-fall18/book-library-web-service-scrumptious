@@ -1,6 +1,6 @@
 from library_webservice import db
 
-#Helper table for many to many relationship.
+# Helper table for many to many relationship.
 authorship_table = db.Table('authorship',
                             db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
                             db.Column('author_id', db.Integer, db.ForeignKey('author.author_id'), primary_key=True))
@@ -18,8 +18,8 @@ class Book(db.Model):
 
     def __repr__(self): return"<Book(book_id='%s',title='%s',publish_date='%s',subject='%s',genre='%s'," \
                               "book_note='%s',authors='%s',copies='%s'>" \
-                              %(self.book_id,self.title,self.publish_date,self.subject,self.genre,self.notes,
-                                self.authors,self.copies)
+                              % (self.book_id, self.title, self.publish_date, self.subject, self.genre, self.notes,
+                                 self.authors, self.copies)
 
     def to_dict(self):
         print('Book to_dict')

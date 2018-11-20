@@ -29,7 +29,7 @@ def create_new_checkout(user_id, book_id):
     book_copy_id = book_copy.book_copy_id
     lending_time = datetime.timedelta(days=21)
 
-    new_checkout = Checkout(user_id=user_id, book_id=book_id,book_copy_id = book_copy_id, checkout_date=datetime.now,
+    new_checkout = Checkout(user_id=user_id, book_id=book_id,book_copy_id=book_copy_id, checkout_date=datetime.now,
                             due_date=datetime.now+lending_time)
 
     book_copy.is_checked_out = True

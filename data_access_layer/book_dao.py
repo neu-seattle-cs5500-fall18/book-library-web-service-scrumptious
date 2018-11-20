@@ -58,7 +58,7 @@ class BookDao:
             results = results.filter(Author.middle_name == middle)
         if query_params_dict['last_name'] is not None:
             last = query_params_dict['last_name']
-            results = results.filter(Author.last_name==last)
+            results = results.filter(Author.last_name == last)
         if query_params_dict['publish_date_start'] is not None:
             start = query_params_dict['publish_date_start']
             results = results.filter(Book.publish_date > start)
@@ -109,13 +109,16 @@ class BookDao:
         return book.to_dict()
 
     @staticmethod
-    def delete(book_id):
+    def delete(a_book_id):
         """
         Method to delete a book record.  Has cascading effect on copies and authors.
-        :param book_id: id of book record to be deleted.
+        :param a_book_id: id of book record to be deleted.
         :return: null.
         """
-        Book.query.filter_by(book_id=book_id).delete()
+        b = Book.query.filter_by(book_id=a_book_id).first()
+        b.authors = []
+        db.session.commit()
+        db.session.delete(b)
         db.session.commit()
         return None
 

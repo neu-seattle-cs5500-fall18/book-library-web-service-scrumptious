@@ -101,18 +101,4 @@ class CheckoutRecord(Resource):
         return id_of_deleted
 
 
-@api.route('/checkout/reminder')
-@api.response(code=400, description='Validation Error')
-class Reminder(Resource):
-    @api.doc(body=checkout_marshaller, validate=True)
-    @api.marshal_with(checkout_marshaller, code=200, description="Success")
-    def get(self):
-        """
-        Return the checkouts that have not been returned.
-        :return: the checkouts that don't have a return date yet.
-        """
-
-        checkouts = get_reminder()
-        return checkouts
-
 
