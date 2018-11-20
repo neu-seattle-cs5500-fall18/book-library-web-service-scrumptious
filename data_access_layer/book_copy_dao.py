@@ -30,6 +30,13 @@ class BookCopyDao:
         return book_copy.to_dict()
 
     @staticmethod
+    def get_next_available(book_id):
+        results = BookCopy.query.filter(BookCopy.book_id==book_id);
+        copy = results.query.filter(BookCopy.is_checked_out is False).first()
+        copy.all()
+        return copy.to_dict()
+
+    @staticmethod
     def get_book_copy(book_copy_id):
         """
         Method to retrieve a BookCopy.
