@@ -58,7 +58,7 @@ class BookDao:
             results = results.filter(Author.middle_name == middle)
         if query_params_dict['last_name'] is not None:
             last = query_params_dict['last_name']
-            results = results.filter(Author.last_name==last)
+            results = results.filter(Author.last_name == last)
         if query_params_dict['publish_date_start'] is not None:
             start = query_params_dict['publish_date_start']
             results = results.filter(Book.publish_date > start)
@@ -115,16 +115,8 @@ class BookDao:
         :param a_book_id: id of book record to be deleted.
         :return: null.
         """
-        # Delete relationship in authorship table first!
-        #authorship_table.query.filter_by(book_id=a_book_id).delete()
-        #records = db.session.query(authorship_table).filter(authorship_table.c['book_id'] == a_book_id)  #.all()
-        #records.delete()
-        #for record in records:
-            #db.session.remove(record)
-        #record.authorship_table = []
-        #db.session.commit()
         b = Book.query.filter_by(book_id=a_book_id).first()
-        b.authors=[]
+        b.authors = []
         db.session.commit()
         db.session.delete(b)
         db.session.commit()
