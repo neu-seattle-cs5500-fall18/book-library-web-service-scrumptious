@@ -21,3 +21,5 @@ def client():
     os.unlink(app.app.config['DATABASE'])
 
 
+def test_assertion_works():
+    assert 1 == 1

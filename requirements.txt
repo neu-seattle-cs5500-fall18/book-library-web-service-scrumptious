@@ -2,7 +2,8 @@ Flask==1.0.2
 flask_restplus==0.12.01
 Flask-SQLAlchemy==2.3.2
 gunicorn==19.9.0
-migrate==0.3.8
 psycopg2==2.7.5
 pbr==5.1.0
 SQLAlchemy==1.2.12
+Flask-Migrate
+pytest
