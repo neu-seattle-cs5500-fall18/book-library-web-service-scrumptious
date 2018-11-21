@@ -3,21 +3,21 @@ import tempfile
 
 import pytest
 
-import library_webservice
+from library_webservice import app
 
 
 @pytest.fixture
 def client():
-    db_fd, library_webservice.app.config['DATABASE'] = tempfile.mkstemp()
-    library_webservice.app.config['TESTING'] = True
-    client = library_webservice.app.test_client()
+    db_fd, app.app.config['DATABASE'] = tempfile.mkstemp()
+    app.app.config['TESTING'] = True
+    client = app.app.test_client()
 
-    with library_webservice.app.app_context():
-        library_webservice.init_db()
+    with app.app.app_context():
+        app.init_db()
 
     yield client
 
     os.close(db_fd)
-    os.unlink(library_webservice.app.config['DATABASE'])
+    os.unlink(app.app.config['DATABASE'])
 
 

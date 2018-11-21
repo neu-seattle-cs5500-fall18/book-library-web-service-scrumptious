@@ -19,7 +19,7 @@ class BookDao:
     @staticmethod
     def create_list_dict(book_query):
         """
-        Method to create a list of book dictionaries given a query object.
+        Method to create a list of book dictionaries given a query object. Used internally to BookDao only.
         :param book_query: results of Session.query(query parameters)
         :return: a List of book dictionaries.
         """
@@ -43,7 +43,7 @@ class BookDao:
         """
         Method to query books by a dictionary of given query arguments. If all query arguments are none, then all book
         records are returned.
-        :param query_params_dict: Query arguments to filter by.  Limited to those of the book query marshaller.
+        :param query_params_dict: Query arguments to filter by.  Limited to those of the books_api query_parser.
         :return: a List of book dictionaries based on query arguments.
         """
         print("book_dao.query_books()")
@@ -83,7 +83,8 @@ class BookDao:
     @staticmethod
     def create(book_dict):
         """
-        Method to create a new Book record given a book dictionary. Does not create associated author or copy records.
+        Method to create a new Book record given a book dictionary. Does NOT create associated Author or BookCopy
+        records.
         :param book_dict: dictionary of book values for a new record.
         :return: a dictionary object of the created book.
         """
@@ -97,7 +98,7 @@ class BookDao:
     @staticmethod
     def update(book_id, **kwargs):
         """
-        Method to update a book by book_id and provided attribute arguments.
+        Method to update a book record by book_id and provided attribute arguments.
         :param book_id: the ID of the book to update.
         :param kwargs: Key value pairs of the book attributes to be updated.
         :return: a dictionary of the updated book.

@@ -85,7 +85,7 @@ class Books(Resource):
         Queries the books resource based on URL query string parameters. Valid query arguments are:
         title, first_name, last_name, middle_name, publish_date_start, publish_date_end, subject, genre.
         If no query string is provided all books are returned.
-        :return: JSON List of all books that match query parameters.
+        :return: JSON List of all books, in the format according to the book_marshaller, that match query parameters.
         """
         print('Received GET on resource /books')
         args = query_parser.parse_args()
@@ -94,11 +94,12 @@ class Books(Resource):
 
     @api.expect(book_marshaller, validate=True)
     @api.response(201, 'Created')
+    @api.response(400, 'Validation Error')
     @api.marshal_with(full_book_marshaller, 201)
     def post(self):
         """
         Creates a new book record for a single book.
-        :return: JSON of the created Book record.
+        :return: JSON of the created Book record according to the full_book_marshaller.
         """
         print('Received POST on resource /book')
         request_body = request.get_json()
@@ -116,7 +117,7 @@ class BookRecord(Resource):
         """
         Gets a specific book record based on book_id.
         :param book_id: Record of a book.
-        :return: JSON of requested book record.
+        :return: JSON of requested book record according to model full_book_marshaller.
         """
         print('Received GET on resource /books/<book_id>')
         if book_id.isdigit():
@@ -156,7 +157,7 @@ class BookRecord(Resource):
             result = BookChecker.delete_book(book_id)
             return result
         else:
-            abort(400)
+            abort(400, 'Invalid input received for book_id')
 
 
 @api.route('/<book_id>/notes')
@@ -176,7 +177,7 @@ class BookNotes(Resource):
             list_notes = NoteChecker.get_notes(book_id)
             return list_notes
         else:
-            abort(400, 'invalid input for book_id')
+            abort(400, 'Invalid input for book_id')
 
     @api.expect(note_marshaller, validate=True)
     @api.response(201, 'Created Note')
@@ -231,6 +232,7 @@ class BookNotes(Resource):
 
 
 @api.route('/<book_id>/copies')
+@api.doc(params={'book_id': 'A record for a book.'})
 class BookCopies(Resource):
     @api.marshal_with(list_copies_marshaller)
     def get(self, book_id):
@@ -262,6 +264,7 @@ class BookCopies(Resource):
 
 
 @api.route('/<book_id>/authors')
+@api.doc(params={'book_id': 'A record for a book.'})
 class BookAuthors(Resource):
     @api.expect(author_marshaller, validate=True)
     @api.marshal_with(author_marshaller)
@@ -277,10 +280,11 @@ class BookAuthors(Resource):
             author = AuthorChecker.create_author(book_id, author_json)
             return author
         else:
-            abort(400)
+            abort(400, 'Invalid input for book_id')
 
 
 @api.route('/<book_id>/authors/<author_id>')
+@api.doc(params={'book_id': 'A record for a book.','author_id': 'Id of an Author record.'})
 class BookAuthor(Resource):
     @api.marshal_with(author_marshaller)
     def put(self, book_id, author_id):
@@ -295,7 +299,7 @@ class BookAuthor(Resource):
             result = AuthorChecker.add_book_to_author(book_id, author_id)
             return result
         else:
-            abort(400)
+            abort(400, 'Invalid input for url parameters book_id or author_id')
 
     def delete(self, book_id, author_id):
         """
@@ -309,7 +313,7 @@ class BookAuthor(Resource):
             result = AuthorChecker.delete_author_from_book(book_id, author_id)
             return result
         else:
-            abort(400)
+            abort(400, 'Invalid input for url parameters book_id or author_id')
 
 
 
