@@ -1,6 +1,6 @@
 from model.collection import BookCollection
 from flask_restplus import abort
-from library_webservice import db
+from model import db
 
 
 def query_by_id(collections_id):

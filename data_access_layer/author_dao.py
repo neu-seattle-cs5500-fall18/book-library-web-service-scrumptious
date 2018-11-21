@@ -1,4 +1,4 @@
-from library_webservice import db
+from model import db
 from model.author import Author
 from model.book import Book
 from flask_restplus import abort

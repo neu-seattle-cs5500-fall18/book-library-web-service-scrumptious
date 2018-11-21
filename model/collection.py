@@ -1,4 +1,4 @@
-from library_webservice import db
+from model import db
 from model.book import Book
 
 collection_table = db.Table('collections',

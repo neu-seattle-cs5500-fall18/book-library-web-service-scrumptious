@@ -1,4 +1,4 @@
-from library_webservice import db
+from model import db
 
 # Helper table for many to many relationship.
 authorship_table = db.Table('authorship',
