@@ -1,4 +1,5 @@
 from library_webservice import db
+from model.book import Book
 
 collection_table = db.Table('collections',
                             db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
@@ -7,7 +8,7 @@ collection_table = db.Table('collections',
 
 class BookCollection(db.Model):
     collection_id = db.Column(db.Integer, primary_key=True)
-    book_ids = db.relationship('Collection', secondary=collection_table, backref=db.backref('books', lazy='dynamic'))
+    book_ids = db.relationship(Book, secondary=collection_table, backref=db.backref('books', lazy='dynamic'))
     title = db.Column(db.String, nullable=False, unique=True)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
 
