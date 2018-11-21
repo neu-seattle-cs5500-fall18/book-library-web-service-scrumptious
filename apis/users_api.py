@@ -55,6 +55,11 @@ class Users(Resource):
 class UserRecord(Resource):
     @api.marshal_with(user_marshaller)
     def get(self, user_id):
+        """
+        Gets a user record.
+        :param user_id: Record number to be retrieved.
+        :return: A user record.
+        """
         print('Received GET on resource /users/<user_id>')
 
         if user_id.isdigit():
