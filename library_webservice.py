@@ -11,6 +11,7 @@ from model.book import Book
 from model.book_copy import BookCopy
 from model.author import Author
 from model.note import Note
+from model.checkout import Checkout
 
 
 #This Creates the Table in the DB.
@@ -19,6 +20,7 @@ author = Author
 book = Book
 book_copy = BookCopy
 note = Note
+checkout = Checkout
 
 db.create_all()
 
