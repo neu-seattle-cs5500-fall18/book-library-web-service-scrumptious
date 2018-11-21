@@ -2,21 +2,21 @@ from flask import request
 from flask_restplus import abort, fields, Namespace, Resource
 from controller import collection_checker
 
-api = Namespace('collections', 'Book collections operations')
+ns = Namespace('collections', 'Book collections operations')
 
 # restplus automatically returns json object type.
-collection_marshaller = api.model('BookCollections', {
+collection_marshaller = ns.model('BookCollections', {
     'collection_id': fields.Integer('The collection record'),
     'book_ids': fields.List(fields.Integer('The book IDs')),
     'title': fields.String('The book title.')
 })
 
 
-@api.route('', endpoint='collections')
-@api.response(200, 'Success')
-@api.response(400, 'Validation Error')
+@ns.route('', endpoint='collections')
+@ns.response(200, 'Success')
+@ns.response(400, 'Validation Error')
 class BookCollections(Resource):
-    @api.marshal_with(collection_marshaller, code=200)
+    @ns.marshal_with(collection_marshaller, code=200)
     def get(self):
         """
         Gets all collections
@@ -27,8 +27,8 @@ class BookCollections(Resource):
         collection = collection_checker.get_collections()
         return collection
 
-    @api.expect(collection_marshaller, validate=True)
-    @api.response(201, 'Created')
+    @ns.expect(collection_marshaller, validate=True)
+    @ns.response(201, 'Created')
     def post(self):
         """
         Creates a new collection record for a single book.
@@ -41,12 +41,12 @@ class BookCollections(Resource):
         return collection_id
 
 
-@api.route('/<collection_id>')
-@api.doc(params={'collection_id': 'Record of a collection.'})
-@api.response(200, 'Success')
-@api.response(400, 'Invalid input received for collection_id')
+@ns.route('/<collection_id>')
+@ns.doc(params={'collection_id': 'Record of a collection.'})
+@ns.response(200, 'Success')
+@ns.response(400, 'Invalid input received for collection_id')
 class CollectionRecord(Resource):
-    @api.marshal_with(collection_marshaller, 200)
+    @ns.marshal_with(collection_marshaller, 200)
     def get(self, collection_id):
         """
         Gets a specific collection record based on collection_id.
@@ -60,8 +60,8 @@ class CollectionRecord(Resource):
         else:
             abort(400, 'Invalid input received for collection_id')
 
-    @api.expect(collection_marshaller, validate=True)
-    @api.marshal_with(collection_marshaller, code=200)
+    @ns.expect(collection_marshaller, validate=True)
+    @ns.marshal_with(collection_marshaller, code=200)
     def put(self, collection_id):
         """
         Updates an existing record  based on collection_id.
@@ -77,8 +77,8 @@ class CollectionRecord(Resource):
         else:
             abort(400, 'Invalid input received for collection_id')
 
-    @api.response(200, 'Deleted')
-    @api.marshal_with(collection_marshaller, code=200)
+    @ns.response(200, 'Deleted')
+    @ns.marshal_with(collection_marshaller, code=200)
     def delete(self, collection_id):
         """
         Delete a collection record based on collection_id.
@@ -88,9 +88,9 @@ class CollectionRecord(Resource):
         return
 
 
-# @api.route('/<collection_id>/add/<book_id>')
-# @api.response(code=400, description='Record not found')
-# @api.response(code=200, description='Success')
+# @ns.route('/<collection_id>/add/<book_id>')
+# @ns.response(code=400, description='Record not found')
+# @ns.response(code=200, description='Success')
 # class AddBookIntoCollection(Resource):
 #     def put(self, collection_id, book_id):
 #         """
@@ -106,7 +106,7 @@ class CollectionRecord(Resource):
 #             abort(400, 'Invalid input for book_id or collection_id')
 #
 #
-# @api.route('/<collection_id>/delete/<book_id>')
+# @ns.route('/<collection_id>/delete/<book_id>')
 # class RemoveBookFromCollection(Resource):
 #     def delete(self, collection_id, book_id):
 #         """

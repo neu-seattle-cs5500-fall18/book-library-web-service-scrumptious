@@ -3,9 +3,9 @@ from flask_restplus import abort, Namespace, Resource, fields
 from controller.user_checker import get_all_users, get_user, create_user, update_user, delete_user
 
 
-api = Namespace('users', description='User operations')
+ns = Namespace('users', description='User operations')
 
-user_marshaller = api.model('User', {
+user_marshaller = ns.model('User', {
     'user_id': fields.Integer(description='The user\'s unique identifying record'),
     'user_first_name': fields.String(required=True, max_length=25, description='The user\'s first name'),
     'user_last_name': fields.String(required=True, max_length=25, description='The user\'s last name'),
@@ -13,17 +13,17 @@ user_marshaller = api.model('User', {
     'is_deleted': fields.Boolean(description='Designates whether a user is deleted'),
 })
 
-user_input_marshaller = api.model('UserInput', {
+user_input_marshaller = ns.model('UserInput', {
     'user_first_name': fields.String(required=True, max_length=25, description='The user\'s first name'),
     'user_last_name': fields.String(required=True, max_length=25, description='The user\'s last name'),
     'user_email': fields.String(required=True, max_length=50, description='The user\'s email address'),
 })
 
 
-@api.route('')
-@api.response(400, 'Record not found')
-@api.response(201, 'Created new user.')
-@api.response(200, 'Successful request')
+@ns.route('')
+@ns.response(400, 'Record not found')
+@ns.response(201, 'Created new user.')
+@ns.response(200, 'Successful request')
 class Users(Resource):
     def get(self):
         """
@@ -34,7 +34,7 @@ class Users(Resource):
         response = get_all_users()
         return response, 200
 
-    @api.expect(user_input_marshaller)
+    @ns.expect(user_input_marshaller)
     def post(self):
         """
         Creates a new user record.
@@ -46,14 +46,14 @@ class Users(Resource):
         return response, 201
 
 
-@api.route('/<user_id>', endpoint='user_record')
-@api.doc(params={'user_id': 'An ID for a user record'})
-@api.response(400, 'Invalid input for user_id in url')
-@api.response(400, 'Record not found')
-@api.response(200, 'Success')
-@api.response(200, 'User deleted')
+@ns.route('/<user_id>', endpoint='user_record')
+@ns.doc(params={'user_id': 'An ID for a user record'})
+@ns.response(400, 'Invalid input for user_id in url')
+@ns.response(400, 'Record not found')
+@ns.response(200, 'Success')
+@ns.response(200, 'User deleted')
 class UserRecord(Resource):
-    @api.marshal_with(user_marshaller)
+    @ns.marshal_with(user_marshaller)
     def get(self, user_id):
         """
         Gets a user record.
@@ -69,7 +69,7 @@ class UserRecord(Resource):
         else:
             return abort(400, 'Invalid input for user_id in url')
 
-    @api.expect(user_input_marshaller, validate=True)
+    @ns.expect(user_input_marshaller, validate=True)
     def put(self, user_id):
         """
         Updates an existing user record based on user_id.
