@@ -2,7 +2,7 @@ from data_access_layer import book_copy_dao
 from model.checkout import Checkout
 from model.book import Book
 from flask_restplus import abort
-from library_webservice import db
+from model import db
 from datetime import datetime
 
 

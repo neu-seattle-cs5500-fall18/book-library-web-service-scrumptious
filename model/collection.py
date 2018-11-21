@@ -1,4 +1,4 @@
-from library_webservice import db
+from model import db
 
 collection_table = db.Table('collections',
                             db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),

@@ -1,5 +1,5 @@
 from sqlalchemy import UniqueConstraint
-from library_webservice import db
+from model import db
 import re
 
 
