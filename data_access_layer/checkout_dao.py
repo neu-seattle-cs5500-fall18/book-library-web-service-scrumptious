@@ -34,7 +34,6 @@ class CheckoutDao:
 
         print('Creating new checkout33')
 
-
         new_checkout = Checkout(user_id=user_id, book_id=book_id, book_copy_id=book_copy_id, checkout_date=datetime.now,
                                 due_date=datetime.now + lending_time)
 
