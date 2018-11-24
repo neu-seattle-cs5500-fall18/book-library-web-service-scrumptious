@@ -39,6 +39,11 @@ class BookDao:
         return a_book.to_dict()
 
     @staticmethod
+    def get_all():
+        results = Book.query.all()
+        return results
+
+    @staticmethod
     def query_books(query_params_dict):
         """
         Method to query books by a dictionary of given query arguments. If all query arguments are none, then all book

@@ -1,10 +1,11 @@
 from model.book import Book
 
+
 def test_book(new_book):
     """
 
-    :param new_book:
-    :return:
+    :param new_book: Fixture from conftest
+    :return: true if tests pass
     """
     assert new_book.book_id == 1
     assert new_book.genre == 'Novel'
@@ -17,6 +18,11 @@ def test_book(new_book):
 
 
 def test_to_dict(new_book):
+    """
+    Tests if to dict works for Book.
+    :param new_book: fixture from conftest
+    :return: true if test passes
+    """
     book_dict = {
         'book_id': 1,
         'title': 'Old Man',
@@ -32,6 +38,11 @@ def test_to_dict(new_book):
 
 
 def test_self_update(new_book):
+    """
+    Tests update method for a book
+    :param new_book: fixture from conftest
+    :return: true if tests pass
+    """
     update = {'title':'The Old Man and the Sea'}
     book_result = Book(book_id=1,title='The Old Man and the Sea',publish_date='1980',genre='Novel',subject='Fiction',
                        authors=[],notes=[],copies=[])
