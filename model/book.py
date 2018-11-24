@@ -1,6 +1,8 @@
 from model import db
 
-# Helper table for many to many relationship.
+"""
+Helper table to define the many to many relationship between books and authors.
+"""
 authorship_table = db.Table('authorship',
                             db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
                             db.Column('author_id', db.Integer, db.ForeignKey('author.author_id'), primary_key=True))
@@ -22,6 +24,10 @@ class Book(db.Model):
                                  self.authors, self.copies)
 
     def to_dict(self):
+        """
+        Method to transform Book to a dictionary object.
+        :return:
+        """
         print('Book to_dict')
         book_dict = {
             'book_id': self.book_id,
@@ -36,6 +42,11 @@ class Book(db.Model):
         return book_dict
 
     def update(self, **kwargs):
+        """
+        Method to update a Book's attributes
+        :param kwargs: Given a dictionary of valid key value pairs
+        :return: None
+        """
         print('Book.update()')
         for key, value in kwargs.items():
             setattr(self, key, value)
