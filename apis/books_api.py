@@ -7,6 +7,9 @@ from controller.note_checker import NoteChecker
 
 ns = Namespace('books', description='Book operations')
 
+#can use example in flags
+# add pattern=
+#max_length= min_length=
 
 note_marshaller = ns.model('Note', {
     'note_title': fields.String(required=True, description = 'Unique title of note'),
@@ -42,7 +45,7 @@ list_copies_marshaller = ns.model('ListBooksMarshaller', {
 book_marshaller = ns.model('Book', {
     'book_id': fields.Integer(required=False, description='The book record'),
     'title': fields.String(required=True, description='The book title.'),
-    'publish_date': fields.Date(required=True, description='The publish date of a book.'),
+    'publish_date': fields.Date(required=True, description='The publish year of a book.'),
     'subject': fields.String(required=True, description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
     'genre': fields.String(required=True, description='Genre classification for a fiction book (i.e. horror, science fiction'),
     'notes': fields.List(fields.Nested(note_marshaller), description = 'List of notes for a book'),

@@ -53,32 +53,35 @@ class BookDao:
         """
         print("book_dao.query_books()")
 
-        results = db.session.query(Book).join(authorship_table).join(Author)
+        results = db.session.query(Book)
+
+        if query_params_dict['publish_date_start'] is not None:
+            start = query_params_dict['publish_date_start']
+            results = results.filter(Book.publish_date >= start)
+        if query_params_dict['publish_date_end'] is not None:
+            end = query_params_dict['publish_date_end']
+            results.filter(Book.publish_date <= end)
+        if query_params_dict['title'] is not None:
+            title = query_params_dict['title']
+            results = results.filter(Book.title.contains(title))
+        if query_params_dict['subject'] is not None:
+            subject = query_params_dict['subject']
+            results = results.filter(Book.subject.contains(subject))
+        if query_params_dict['genre'] is not None:
+            genre = query_params_dict['genre']
+            results = results.filter(Book.genre.contains(genre))
+
+        results.join(authorship_table).join(Author)
 
         if query_params_dict['first_name'] is not None:
             first = query_params_dict['first_name']
-            results = results.filter(Author.first_name == first)
+            results = results.filter(Author.first_name.contains(first))
         if query_params_dict['middle_name'] is not None:
             middle = query_params_dict['middle_name']
-            results = results.filter(Author.middle_name == middle)
+            results = results.filter(Author.middle_name.contains(middle))
         if query_params_dict['last_name'] is not None:
             last = query_params_dict['last_name']
-            results = results.filter(Author.last_name == last)
-        if query_params_dict['publish_date_start'] is not None:
-            start = query_params_dict['publish_date_start']
-            results = results.filter(Book.publish_date > start)
-        if query_params_dict['publish_date_end'] is not None:
-            end = query_params_dict['publish_date_end']
-            results.filter(Book.publish_date < end)
-        if query_params_dict['title'] is not None:
-            title = query_params_dict['title']
-            results = results.filter(Book.title == title)
-        if query_params_dict['subject'] is not None:
-            subject = query_params_dict['subject']
-            results = results.filter(Book.subject == subject)
-        if query_params_dict['genre'] is not None:
-            genre = query_params_dict['genre']
-            results = results.filter(Book.genre == genre)
+            results = results.filter(Author.last_name.contains(last))
 
         results.all()
 
