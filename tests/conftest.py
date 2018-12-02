@@ -1,29 +1,37 @@
 import os
 import tempfile
+import sqlite3
 import pytest
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from apis import api
 
 # This file sets up fixtures to be used for scoped testing.
-
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 @pytest.fixture
 def client():
     test_app = Flask(__name__)
     test_app.config['TESTING'] = True
-    test_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///temp/test.db'
+    test_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir,'test.db')
     db = SQLAlchemy()
     client = test_app.test_client()
 
+    print('App Initialized')
+
     with test_app.app_context():
+        api.init_app(test_app)
         db.init_app(test_app)
         db.create_all()
+        print('db tables created')
 
     yield client
+    print('testing over')
 
+    db.drop_all()
     os.close(test_app.config['SQLALCHEMY_DATABASE_URI'])
     os.unlink(test_app.config['SQLALCHEMY_DATABASE_URI'])
+    print('unlinked from db')
 
 
 #
