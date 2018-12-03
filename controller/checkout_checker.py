@@ -1,5 +1,7 @@
 from data_access_layer import checkout_dao, book_copy_dao
 from flask_restplus import abort
+
+from data_access_layer.book_copy_dao import BookCopyDao
 from model.checkout import Checkout
 from model.book import Book
 
@@ -36,13 +38,13 @@ def create_checkout(user_id, book_id):
     """
     print('Checker layer')
 
-    existing_checkout = Checkout.query.filter_by(user_id=user_id, book_id=book_id)
+    existing_checkout = Checkout.query.filter_by(user_id=user_id, book_id=book_id).first()
 
     if existing_checkout is not None:
         abort(400, 'checkout already existed')
     else:
 
-        book_copy = book_copy_dao.get_next_available(book_id)
+        book_copy = BookCopyDao.get_next_available(book_id)
 
     if book_copy is None:
         abort(400, 'Book not available')
