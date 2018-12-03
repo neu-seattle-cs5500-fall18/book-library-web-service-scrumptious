@@ -49,7 +49,7 @@ class BookCopyDao:
     @staticmethod
     def get_next_available(book_id):
         db_results = BookCopy.query.filter(BookCopy.book_id == book_id)
-        copy = db_results.query.filter(BookCopy.is_checked_out is False).first()
+        copy = db_results.filter(BookCopy.is_checked_out is False).first()
         return copy
 
     @staticmethod
