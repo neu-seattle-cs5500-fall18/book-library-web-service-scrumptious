@@ -3,6 +3,10 @@ from model.book import Book, authorship_table
 from model.author import Author
 
 
+#make sure query handles wildcard
+#make sure authors can be added if existing
+#update publish datae.
+
 class BookDao:
     @staticmethod
     def contains(book_id):
