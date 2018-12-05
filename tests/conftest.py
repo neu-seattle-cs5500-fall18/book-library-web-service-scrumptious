@@ -1,26 +1,29 @@
 import pytest
 from model import db
+from model.book import Book
 
 from app_factory import create_app
 
 # # This file sets up fixtures to be used for scoped testing.
 
 @pytest.fixture(scope='session')
-def client(request):
+def client():
     print('test fixture client')
-
     # Create instance of app via factory and configure as test
     test_app = create_app(test_flag=True)
-    test_app.config['TESTING'] = True
+
+    #handles context locals
     client = test_app.test_client()
 
+    #application context
     context = test_app.app_context()
+    #add context to stack
     context.push()
 
-    print('db tables created')
-
+    #testing block for tests that call client fixture
     yield client
 
+    #remove from stack
     context.pop()
 
     return client
@@ -30,28 +33,39 @@ def client(request):
 def test_db(client):
     #app already has url to test db instance.
     test_db = db
-    # initialize db
+    # Associate db with current app.
     test_db.init_app(client)
+
+
+    # add initial objects here.
+    book1 = Book(title='Old Man', publish_date='1980', subject='Fiction', genre='Novel')
+    book2 = Book(title='The Left Hand of Darkness', publish_date='1975', subject='Fiction', genre='Science Fiction')
+
+    test_db.session.add(book1)
+    test_db.session.add(book2)
+    test_db.session.commit()
+
 
     return test_db
 
-# #
-# @pytest.fixture(scope='function')
-# def function_test(test_db, request):
-#
-#     # # connect to db
-#     # connection = test_db.engine.connect()
-#     # # creates transaction object on each connection.
-#     # transaction = connection.begin()
-#     #
-#     # #do need to commit?()
-#
-#
-#     yield test_db
-#
-#     test_db.session.rollback()
-#
-#     # request.addfinalizer(teardown())
+
+
+@pytest.fixture(scope='function')
+def function_test(test_db):
+
+    connection = test_db.engine.connect()
+    # creates transaction object on each connection.
+    transaction = connection.begin()
+    session = test_db.create_scoped_session()
+    test_db.session = session
+
+    yield test_db
+
+    transaction.rollback()
+    connection.close()
+    session.remove()
+
+    return session
 
 
 

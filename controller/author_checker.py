@@ -4,37 +4,45 @@ from flask_restplus import abort
 import re
 
 
-#pattern = re.compile('\A(\w\.)+')
-
-
 class AuthorChecker:
 
     @staticmethod
-    def add_new_author(book_id, author_json):
-        # an_author = AuthorChecker.clean_author(author_json)
+    def json_to_dict(author_json):
+        author = {
+            'first_name': author_json['first_name'],
+            'last_name': author_json['last_name'],
+            'middle_name': author_json['middle_name']
+        }
+        return author
 
+    @staticmethod
+    def add_new_author(book_id, author_json):
         if BookDao.contains(book_id):
-            # AuthorDao.create(book_id, an_author)
-            AuthorDao.create(book_id, author_json)
+            author_dict = AuthorDao.create(book_id, author_json)
+            return author_dict
         else:
-            abort(400)
+            abort(404)
 
     @staticmethod
     def add_book_to_author(book_id, author_id):
-
         if BookDao.contains(book_id) and AuthorDao.contains(author_id):
-            AuthorDao.add_book(book_id, author_id)
+            author_dict = AuthorDao.add_book(book_id, author_id)
+            return author_dict
         else:
-            abort(400)
+            abort(404)
 
     @staticmethod
     def create_author(book_id, author_json):
         print('author_checker.create_author()')
         if BookDao.contains(book_id):
-            # an_author = AuthorChecker.clean_author(author_json['first_name'], author_json['last_name'], author_json['middle_name'])
-            # an_author = AuthorDao.create(book_id, an_author)
-            an_author = AuthorDao.create(book_id, author_json)
-            return an_author
+            if AuthorDao.contains(author_json):
+                author_id = AuthorDao.get_author_ID(author_json)
+                author_dict = AuthorChecker.add_book_to_author(book_id, author_id)
+                return author_dict
+
+            else:
+                an_author = AuthorDao.create(book_id, author_json)
+                return an_author
         else:
             abort(404)
 
@@ -47,7 +55,6 @@ class AuthorChecker:
 
             for author in list_authors:
                 print(author)
-                # an_author = AuthorChecker.clean_author(author['first_name',author['last_name'], author['middle_name']])
                 an_author = AuthorDao.create(book_id, author)
                 list_new_authors.append(an_author)
             return list_new_authors
