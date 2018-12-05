@@ -21,6 +21,17 @@ class AuthorDao:
             return True
 
     @staticmethod
+    def contains(author_json):
+        """
+        Method to determine if an author exists based on parameters
+        :param author_json: json of Author parameters and values (first_name, last_name, middle_name)
+        :return: True if database contains a record that matches, false otherwise.
+        """
+        print('AuthorDao.contains(author_json)')
+        results = Author.query.filter_by(**author_json).all()
+        return results is not None
+
+    @staticmethod
     def get_author(author_id):
         """
         Method to get an Author based on id.
@@ -30,6 +41,17 @@ class AuthorDao:
         print("AuthorDao.get_author()")
         author = Author.query.get(author_id)
         return author.to_dict()
+
+
+    @staticmethod
+    def get_author_ID(author_dict):
+        """
+        Method to get the ID of an author based on the author's information. Requires exact match of fields
+        :param author_dict: Dictionary of author information to filter by.
+        :return: the ID of an author if present.  None otherwise.
+        """
+        results = Author.query.filter_by(**author_dict).first()
+        return results.author_id
 
     @staticmethod
     def create(book_id, author_dict):
@@ -42,17 +64,15 @@ class AuthorDao:
         print("AuthorDao.create()")
         book = Book.query.get(book_id)
         new_author = Author(**author_dict)
-        if new_author.valid_input(new_author.first_name, new_author.last_name, new_author.middle_name):
-            db.session.add(new_author)
-            db.session.commit()
-            print(new_author)
-            new_author.books.append(book)
-            db.session.commit()
-            print(new_author)
-            print("author_dao.create() ==> Complete")
-            return new_author.to_dict()
-        else:
-            abort(400)
+
+        db.session.add(new_author)
+        db.session.commit()
+        print(new_author)
+        new_author.books.append(book)
+        db.session.commit()
+        print(new_author)
+        print("author_dao.create() ==> Complete")
+        return new_author.to_dict()
 
     @staticmethod
     def add_book(book_id, author_id):

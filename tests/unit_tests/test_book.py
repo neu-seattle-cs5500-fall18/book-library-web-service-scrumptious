@@ -47,8 +47,8 @@
 #               'publish_date': 1981,
 #               'genre' : 'Literature',
 #               'subject': 'Still Fiction'}
-#     book_result = Book(book_id=1,title='The Old Man and the Sea',publish_date=1981,genre='Literature',subject='Still Fiction',
+#     expected_result = Book(book_id=1,title='The Old Man and the Sea',publish_date=1981,genre='Literature',subject='Still Fiction',
 #                        authors=[],notes=[],copies=[])
 #     new_book.update(**kwargs)
-#     assert new_book == book_result
+#     assert new_book == expected_result
 #
