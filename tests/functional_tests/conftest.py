@@ -1,22 +1,29 @@
+import datetime
+import json
 import pytest
 from model.author import Author
 from model.book import Book
 from model.book_copy import BookCopy
 from model.note import Note
 from model.user import User
-from data_access_layer.book_dao import BookDao
-from data_access_layer.author_dao import AuthorDao
-from data_access_layer.note_dao import NoteDao
-from data_access_layer.book_copy_dao import BookCopyDao
 
-
-# this file sets up fixtures for scoped testing
-# Label instances that haven't been added to db as 'new_Class#' ie new_book1.
-# Label instances that have been added to db as 'class#' ie book1.
 
 @pytest.fixture(scope='module')
 def book1_dict():
-    book = dict(book_id=1,title='Old Man', publish_date='1980', subject='Fiction', genre='Novel')
+    book = {
+        'title': 'Old Man',
+        'publish_date': '1980-05-12',
+        'subject': 'Fiction',
+        'genre': 'Novel',
+        'notes': [],
+        'authors': [
+            {
+                'first_name': 'Herman',
+                'last_name': 'Melville',
+                'middle_name': 'M'
+            }
+        ]
+    }
     return book
 
 
@@ -27,7 +34,7 @@ def book2_dict():
 
 @pytest.fixture(scope='module')
 def new_book1():
-    book = Book(title='Old Man', publish_date='1980', subject='Fiction', genre='Novel')
+    book = Book(title='Old Man', publish_date='1980-05-12', subject='Fiction', genre='Novel', authors=[])
     return book
 
 
@@ -39,7 +46,8 @@ def new_book2():
 
 @pytest.fixture(scope='module')
 def book1():
-    book = Book(book_id=1, title='Old Man', publish_date='1980', subject='Fiction', genre='Novel')
+    author = Author(author_id=1, first_name='Herman', last_name='Melville', middle_name='M')
+    book = Book(book_id=1, title='Old Man', publish_date='1980-05-12', subject='Fiction', genre='Novel', authors=[author])
     return book
 
 
@@ -109,4 +117,53 @@ def new_user():
     user = User(user_first_name='FirstaaName', user_last_name='LastName', email='asdf@some.com')
     return user
 
+
+@pytest.fixture(scope='module')
+def expect_book1_dict():
+    book = {
+        'book_id' : 1,
+        'title': 'Old Man',
+        'publish_date': '1980-05-12',
+        'subject': 'Fiction',
+        'genre': 'Novel',
+        'notes': [],
+        'authors': [
+            {'author_id': 1,
+             'first_name': 'Herman',
+             'last_name': 'Melville',
+             'middle_name': 'M'
+             }
+        ]
+    }
+    return book
+
+
+@pytest.fixture(scope='module')
+def expected_post_book1():
+    copies = {'copies': [
+            {
+                'book_copy_id': 1,
+                'book_id': 1,
+                'is_checked_out': False
+            }
+        ]}
+    authors = {'authors': [
+            {
+               'first_name': 'Herman',
+               'last_name': 'Melville',
+               'middle_name': 'M'
+            }
+        ]}
+    book = [{
+        'copies': copies,
+        'title': 'Old Man',
+        'publish_date': '1980-05-12',
+        'subject': 'Fiction',
+        'genre': 'Novel',
+        'notes': [],
+        'authors': authors
+    }]
+
+    book = json.dumps(book)
+    return book
 

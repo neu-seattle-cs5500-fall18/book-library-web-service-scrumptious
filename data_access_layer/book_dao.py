@@ -101,7 +101,9 @@ class BookDao:
         :return: a dictionary object of the created book.
         """
         print("BookDao.create()")
+        from dateutil import parser
         new_book = Book(**book_dict)
+        new_book.publish_date = parser.parse(new_book.publish_date)
         db.session.add(new_book)
         db.session.commit()
         print("book_dao.create() ==> Complete")

@@ -1,14 +1,11 @@
-from data_access_layer.book_dao import BookDao
-
-
-def test_contains(function_test, book1, new_book_dao):
-    id = book1.book_id
-    result = new_book_dao.contains(id)
-    assert result is True
-
-    id = 6
-    result = new_book_dao.contains(id)
-    assert result is False
+# def test_contains(client, book1, new_book_dao):
+#     id = book1.book_id
+#     result = new_book_dao.contains(id)
+#     assert result is True
+#
+#     id = 6
+#     result = new_book_dao.contains(id)
+#     assert result is False
 
 #
 # def test_create_list_dict(new_book_dao, book1, book2):
