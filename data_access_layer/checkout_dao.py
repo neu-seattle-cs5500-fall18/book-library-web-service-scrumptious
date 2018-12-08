@@ -23,7 +23,11 @@ class CheckoutDao:
     @staticmethod
     def get_all_checkouts():
         print('Get all checkouts')
-        list_of_checkouts = Checkout.query.all()
+        list_of_checkouts = []
+        query_results = Checkout.query.all()
+
+        for checkout in query_results:
+            list_of_checkouts.append(checkout.to_dict())
         return list_of_checkouts
 
     @staticmethod
