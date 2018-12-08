@@ -10,7 +10,10 @@ class Checkout(db.Model):
     due_date = db.Column(db.Date, nullable=False)
     return_date = db.Column(db.Date, nullable=True)
 
-    def __repr__(self): return'<Checkout %r>' %(self.checkout_id)
+    def __repr__(self): return"<Checkout(checkout_id='%s', user_id='%s', book_id='%s', book_copy_id='%s'," \
+                              "checkout_date='%s', due_date='%s', return_date='%s'>" % \
+                              (self.checkout_id, self.user_id, self.book_id, self.book_copy_id, self.checkout_date,
+                               self.due_date, self.return_date)
 
     def to_dict(self):
         print('Checkout to_dict')
@@ -18,6 +21,7 @@ class Checkout(db.Model):
             'checkout_id': self.checkout_id,
             'use_id': self.user_id,
             'book_id': self.book_id,
+            'book_copy_id': self.book_copy_id,
             'checkout_date': self.checkout_date,
             'due_date': self.due_date,
             'return_date': self.return_date,

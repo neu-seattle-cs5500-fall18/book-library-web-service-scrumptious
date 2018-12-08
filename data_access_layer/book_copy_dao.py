@@ -31,10 +31,10 @@ class BookCopyDao:
 
     @staticmethod
     def get_next_available(book_id):
-        results = BookCopy.query.filter(BookCopy.book_id == book_id);
-        copy = results.query.filter(BookCopy.is_checked_out is False).first()
-        copy.all()
-        return copy.to_dict()
+        print('get_next_avaiable')
+        copy = BookCopy.query.filter_by(book_id=book_id).first()
+        print(copy.to_dict)
+        return copy
 
     @staticmethod
     def get_book_copy(book_copy_id):
@@ -45,12 +45,6 @@ class BookCopyDao:
         """
         book_copy = BookCopy.query.get(book_copy_id)
         return book_copy
-
-    @staticmethod
-    def get_next_available(book_id):
-        db_results = BookCopy.query.filter(BookCopy.book_id == book_id)
-        copy = db_results.filter(BookCopy.is_checked_out is False).first()
-        return copy
 
     @staticmethod
     def get_book_copies(book_id):
