@@ -17,12 +17,12 @@ def test_to_dict(new_collection):
     :param new_collection: fixture from conftest
     :return: true if test passes
     """
-    book_global = Book(book_id=1, title='The Old Man and the Sea', publish_date='1980', genre='Novel', subject='Fiction',
+    book1 = Book(book_id=1, title='The Old Man and the Sea', publish_date='1980', genre='Novel', subject='Fiction',
                  authors=[], notes=[], copies=[])
 
     collection_dict = {
         'collection_id': 1,
-        'book_ids': book_global,
+        'book_ids': [book1],
         'title': 'New collection',
     }
     collection = new_collection.to_dict()
