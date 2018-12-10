@@ -1,7 +1,6 @@
 from model import db
 from model.author import Author
 from model.book import Book
-from flask_restplus import abort
 
 
 class AuthorDao:
@@ -21,15 +20,19 @@ class AuthorDao:
             return True
 
     @staticmethod
-    def contains(author_json):
+    def contains_author(author_dict):
         """
         Method to determine if an author exists based on parameters
         :param author_json: json of Author parameters and values (first_name, last_name, middle_name)
         :return: True if database contains a record that matches, false otherwise.
         """
-        print('AuthorDao.contains(author_json)')
-        results = Author.query.filter_by(**author_json).all()
-        return results is not None
+        print('AuthorDao.contains_author()')
+        results = Author.query.filter_by(first_name=author_dict['first_name'], last_name=author_dict['last_name'], middle_name=author_dict['middle_name']).first()
+        print(results)
+        if results is None:
+            return False
+        else:
+            return True
 
     @staticmethod
     def get_author(author_id):
@@ -41,7 +44,6 @@ class AuthorDao:
         print("AuthorDao.get_author()")
         author = Author.query.get(author_id)
         return author.to_dict()
-
 
     @staticmethod
     def get_author_ID(author_dict):
@@ -97,18 +99,10 @@ class AuthorDao:
         :param kwargs: Author attributes to be updated.
         :return: Dictionary of updated Author.
         """
+        print('AuthorDao.update()')
         author = Author.query.get(author_id)
         author.update(**kwargs)
         db.session.commit()
         return author.to_dict()
 
-    @staticmethod
-    def delete(author_id):
-        """
-        Method to delete an Author.
-        :param author_id: Record of Author.
-        :return: Null.
-        """
-        db.session.get(author_id).delete()
-        db.session.commit()
-        return None
+

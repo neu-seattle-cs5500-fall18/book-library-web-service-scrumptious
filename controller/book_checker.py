@@ -56,7 +56,7 @@ class BookChecker:
             a_book = BookDao.get(book_id)
             return a_book
         else:
-            abort(404, 'Resource not found for book_id')
+            abort(404, 'Resource not found: book_id')
 
     @staticmethod
     def get_books(dict_query_params):
@@ -70,12 +70,13 @@ class BookChecker:
             a_book = BookDao.update(book_id, **book_json)
             return a_book
         else:
-            abort(404, 'Resource not found')
+            abort(404, 'Resource not found: book_id')
 
     @staticmethod
     def delete_book(book_id):
 
         if BookDao.contains(book_id):
+            # authorship = AuthorshipDao.delete_book(book_id)
             return BookDao.delete(book_id)
         else:
-            abort(400, 'so such record')
+            abort(404, 'Resource not found: book_id')
