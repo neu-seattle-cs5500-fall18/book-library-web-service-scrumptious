@@ -59,6 +59,7 @@ class BookCopyDao:
 
         for book in db_results:
             list_of_copies.append(book.to_dict())
+
         print(list_of_copies)
         return list_of_copies
 

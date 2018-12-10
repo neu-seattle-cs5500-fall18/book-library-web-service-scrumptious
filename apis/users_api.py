@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, jsonify
 from flask_restplus import abort, Namespace, Resource, fields
 from controller.user_checker import get_all_users, get_user, create_user, update_user, delete_user
 
@@ -10,7 +10,6 @@ user_marshaller = ns.model('User', {
     'user_first_name': fields.String(required=True, max_length=25, description='The user\'s first name'),
     'user_last_name': fields.String(required=True, max_length=25, description='The user\'s last name'),
     'user_email': fields.String(required=True, max_length=25, description='The user\'s email address'),
-    'is_deleted': fields.Boolean(description='Designates whether a user is deleted'),
 })
 
 user_input_marshaller = ns.model('UserInput', {
@@ -20,8 +19,11 @@ user_input_marshaller = ns.model('UserInput', {
 })
 
 
+
+
+
 @ns.route('')
-@ns.response(400, 'Record not found')
+@ns.response(404, 'Record not found')
 @ns.response(201, 'Created new user.')
 @ns.response(200, 'Successful request')
 class Users(Resource):
@@ -31,10 +33,11 @@ class Users(Resource):
         :return: Json List of users of type Dict
         """
         print('Received GET on resources /users')
-        response = get_all_users()
-        return response, 200
+        response = jsonify(get_all_users())
+        return response
 
     @ns.expect(user_input_marshaller)
+    @ns.marshal_with(user_marshaller, 201)
     def post(self):
         """
         Creates a new user record.
@@ -51,7 +54,7 @@ class Users(Resource):
 @ns.response(400, 'Invalid input for user_id in url')
 @ns.response(400, 'Record not found')
 @ns.response(200, 'Success')
-@ns.response(200, 'User deleted')
+@ns.response(204, 'User deleted')
 class UserRecord(Resource):
     @ns.marshal_with(user_marshaller)
     def get(self, user_id):
@@ -70,18 +73,19 @@ class UserRecord(Resource):
             return abort(400, 'Invalid input for user_id in url')
 
     @ns.expect(user_input_marshaller, validate=True)
+    @ns.marshal_with(user_marshaller, 200)
     def put(self, user_id):
         """
         Updates an existing user record based on user_id.
         :param user_id: Record number to be updated.
-        :return: Json with user_id of updated record.
+        :return: JSON of updated user record.
         """
         print('Received PUT on resource /users/<user_id>')
 
         if user_id.isdigit():
             request_body = request.get_json()
-            user_id = update_user(user_id, request_body)
-            return user_id
+            user = update_user(user_id, request_body)
+            return user
         else:
             return abort(400, 'Invalid input for user_id in url')
 
@@ -95,6 +99,7 @@ class UserRecord(Resource):
 
         if user_id.isdigit():
             id_of_deleted = delete_user(user_id)
-            return id_of_deleted
+            return id_of_deleted, 204
+
         else:
             return abort(400, 'Invalid input for user_id in url')

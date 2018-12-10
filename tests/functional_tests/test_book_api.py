@@ -1,9 +1,4 @@
-# from flask import jsonify
-# # '/books'
-#
 import json
-
-from flask import jsonify
 
 
 def test_get_books(client, book1_dict, expect_book1_dict):
@@ -21,6 +16,7 @@ def test_get_books(client, book1_dict, expect_book1_dict):
     """
     response = client.get('/books')
     assert response.status_code == 200
+
     response = json.loads(response.data.decode('utf8'))
     assert [] == response
 
@@ -32,6 +28,7 @@ def test_get_books(client, book1_dict, expect_book1_dict):
     post_response = client.post("/books", data=json_data, headers={"Content-Type": "application/json"})
     response = client.get('/books')
     assert response.status_code == 200
+
     response = json.loads(response.data.decode('utf8'))
     book = response[0]
     assert expect_book1_dict == book

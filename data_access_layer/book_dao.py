@@ -43,6 +43,20 @@ class BookDao:
         return a_book.to_dict()
 
     @staticmethod
+    def contains_by_params(book_dict):
+        print('BookDao.contains_by_params()')
+
+        results = Book.query.filter(Book.title == book_dict['title'], Book.publish_date == book_dict['publish_date'],
+                                    Book.genre == book_dict['genre'], Book.subject == book_dict['subject']).first()
+
+        print('here')
+        print(results)
+        if results is None:
+            return False
+        else:
+            return True
+
+    @staticmethod
     def get_all():
         results = Book.query.all()
         return results

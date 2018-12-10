@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, jsonify
 from flask_restplus import abort, fields, inputs, Namespace, reqparse, Resource
 from controller.author_checker import AuthorChecker
 from controller.book_checker import BookChecker
@@ -20,9 +20,9 @@ return_note_marshaller = ns.inherit('ReturnNote', note_marshaller, {
     'book_id': fields.Integer(description='Book id note is associated with.')
 })
 
-list_notes_marshaller = ns.model('ListOfNotes', {
-    'notes' : fields.List(fields.Nested(note_marshaller))
-})
+# list_notes_marshaller = ns.model('ListOfNotes', {
+#     'notes' : fields.List(fields.Nested(note_marshaller))
+# })
 
 author_marshaller = ns.model('Author', {
     'author_id': fields.Integer(required=False, description='Id for an author record'),
@@ -36,11 +36,6 @@ book_copies_marshaller = ns.model('BookCopies', {
     'book_id': fields.Integer(required=True, description='Id for a book'),
     'is_checked_out' : fields.Boolean(required=True, description= 'Indicates whether a copy of a book is checked out'),
 })
-
-list_copies_marshaller = ns.model('ListBooksMarshaller', {
-    'copies': fields.List(fields.Nested(book_copies_marshaller))
-})
-
 
 book_marshaller = ns.model('Book', {
     'book_id': fields.Integer(required=False, description='The book record'),
@@ -88,7 +83,7 @@ class Books(Resource):
         Queries the books resource based on URL query string parameters. Valid query arguments are:
         title, first_name, last_name, middle_name, publish_date_start, publish_date_end, subject, genre.
         If no query string is provided all books are returned.
-        :return: JSON List of all books, in the format according to the book_marshaller, that match query parameters.
+        :return: JSON List of books that match query parameters, in the format according to the book_marshaller.
         """
         print('Received GET on resource /books')
         args = query_parser.parse_args()
@@ -102,7 +97,7 @@ class Books(Resource):
     def post(self):
         """
         Creates a new book record for a single book.
-        :return: JSON of the created Book record according to the full_book_marshaller.
+        :return: JSON of the created Book record in the format specified by the full_book_marshaller.
         """
         print('Received POST on resource /book')
         request_body = request.get_json()
@@ -146,8 +141,8 @@ class BookRecord(Resource):
         else:
             abort(400, 'Invalid input received for book_id')
 
-    @ns.response(200, 'Deleted')
-    @ns.marshal_with(book_marshaller, code=200)
+    @ns.response(204, 'Deleted')
+    @ns.marshal_with(book_marshaller, code=204)
     def delete(self, book_id):
         """
         Delete a book record based on book_id.
@@ -168,7 +163,7 @@ class BookRecord(Resource):
 @ns.response(200, 'Success')
 @ns.response(400, 'Validation Error')
 class BookNotes(Resource):
-    @ns.marshal_with(list_notes_marshaller, code=200)
+    # @ns.marshal_with(list_notes_marshaller, code=200)
     def get(self, book_id):
         """
         Gets the book notes for a specific book.
@@ -178,7 +173,7 @@ class BookNotes(Resource):
         print('Received GET on resource /books/<book_id>/notes')
         if book_id.isdigit():
             list_notes = NoteChecker.get_notes(book_id)
-            return list_notes
+            return list_notes, 200
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -210,6 +205,7 @@ class BookNotes(Resource):
         """
         Edit a specific note for a book. Valid input for JSON are fields in the note_marshaller model.
         :param book_id: Record for a book.
+        :param note_title: Record for a note.
         :return: JSON of note according to return_note_marshaller
         """
         print('Received PUT on resource /books/<book_id>/notes/<note_title>')
@@ -219,7 +215,8 @@ class BookNotes(Resource):
         else:
             abort(400, 'Invalid input for book_id')
 
-    @ns.response(200, 'Deleted Note')
+    @ns.response(204, 'Deleted')
+    @ns.marshal_with(return_note_marshaller, code=204)
     def delete(self, book_id, note_title):
         """
         Delete a specific note for a book
@@ -237,7 +234,6 @@ class BookNotes(Resource):
 @ns.route('/<book_id>/copies')
 @ns.doc(params={'book_id': 'A record for a book.'})
 class BookCopies(Resource):
-    @ns.marshal_with(list_copies_marshaller)
     def get(self, book_id):
         """
         Gets the copies of a given book.
@@ -247,11 +243,12 @@ class BookCopies(Resource):
         print('Received GET on resource /books/<book_id>/copies')
         if book_id.isdigit():
             list_of_copies = BookCopyChecker.get_copies(book_id)
-            return list_of_copies
+            print(list_of_copies)
+            return list_of_copies, 200
         else:
             abort(400, 'Invalid input for book_id')
 
-    @ns.marshal_with(book_copies_marshaller)
+    @ns.marshal_with(book_copies_marshaller, code=200)
     def post(self, book_id):
         """
         Create a new copy for an existing book.
@@ -270,7 +267,7 @@ class BookCopies(Resource):
 @ns.doc(params={'book_id': 'A record for a book.'})
 class BookAuthors(Resource):
     @ns.expect(author_marshaller, validate=True)
-    @ns.marshal_with(author_marshaller)
+    @ns.marshal_with(author_marshaller, code=200)
     def post(self, book_id):
         """
         Adds new author to an existing book, given a JSON of author attributes according to author_marshaller.
@@ -289,7 +286,7 @@ class BookAuthors(Resource):
 @ns.route('/<book_id>/authors/<author_id>')
 @ns.doc(params={'book_id': 'A record for a book.','author_id': 'Id of an Author record.'})
 class BookAuthor(Resource):
-    @ns.marshal_with(author_marshaller)
+    @ns.marshal_with(author_marshaller, code=200)
     def put(self, book_id, author_id):
         """
         Adds an existing Author to an existing Book.
@@ -304,6 +301,8 @@ class BookAuthor(Resource):
         else:
             abort(400, 'Invalid input for url parameters book_id or author_id')
 
+    @ns.response(code=204, description='Deleted')
+    @ns.marshal_with(author_marshaller, code=204)
     def delete(self, book_id, author_id):
         """
         Deletes an author from a book.
