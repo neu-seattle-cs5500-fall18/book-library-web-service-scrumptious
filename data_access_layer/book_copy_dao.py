@@ -31,10 +31,17 @@ class BookCopyDao:
 
     @staticmethod
     def get_next_available(book_id):
+        """
+        Method to retrieve the next copy of a book that is not checked out.
+        :param book_id: record of book to get a copy of
+        :return: dictionary of next copy where is_checked_out is false.  None otherwise.
+        """
         results = BookCopy.query.filter(BookCopy.book_id == book_id);
-        copy = results.query.filter(BookCopy.is_checked_out is False).first()
-        copy.all()
-        return copy.to_dict()
+        copy = results.filter(BookCopy.is_checked_out is False).first()
+        if copy is None:
+            return None
+        else:
+            return copy.to_dict()
 
     @staticmethod
     def get_book_copy(book_copy_id):
@@ -45,12 +52,6 @@ class BookCopyDao:
         """
         book_copy = BookCopy.query.get(book_copy_id)
         return book_copy
-
-    @staticmethod
-    def get_next_available(book_id):
-        db_results = BookCopy.query.filter(BookCopy.book_id == book_id)
-        copy = db_results.query.filter(BookCopy.is_checked_out is False).first()
-        return copy
 
     @staticmethod
     def get_book_copies(book_id):

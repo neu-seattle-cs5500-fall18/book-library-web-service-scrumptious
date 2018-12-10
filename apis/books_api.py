@@ -7,10 +7,6 @@ from controller.note_checker import NoteChecker
 
 ns = Namespace('books', description='Book operations')
 
-#can use example in flags
-# add pattern=
-#max_length= min_length=
-
 note_marshaller = ns.model('Note', {
     'note_title': fields.String(required=True, description = 'Unique title of note'),
     'note': fields.String(required=True, description='Note about a book.')
@@ -19,10 +15,6 @@ note_marshaller = ns.model('Note', {
 return_note_marshaller = ns.inherit('ReturnNote', note_marshaller, {
     'book_id': fields.Integer(description='Book id note is associated with.')
 })
-
-# list_notes_marshaller = ns.model('ListOfNotes', {
-#     'notes' : fields.List(fields.Nested(note_marshaller))
-# })
 
 author_marshaller = ns.model('Author', {
     'author_id': fields.Integer(required=False, description='Id for an author record'),
@@ -163,7 +155,6 @@ class BookRecord(Resource):
 @ns.response(200, 'Success')
 @ns.response(400, 'Validation Error')
 class BookNotes(Resource):
-    # @ns.marshal_with(list_notes_marshaller, code=200)
     def get(self, book_id):
         """
         Gets the book notes for a specific book.
@@ -226,7 +217,7 @@ class BookNotes(Resource):
         print('Received DELETE on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():
             result = NoteChecker.delete_note(book_id)
-            return result
+            return result, 204
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -289,33 +280,16 @@ class BookAuthor(Resource):
     @ns.marshal_with(author_marshaller, code=200)
     def put(self, book_id, author_id):
         """
-        Adds an existing Author to an existing Book.
+        Edits an existing Author record.
         :param book_id: Record of a Book.
         :param author_id: Record of an Author
         :return: JSON of author record according to author_marshaller model.
         """
         print('Received PUT on resource /books/<book_id>/authors/<author_id>')
         if book_id.isdigit() and author_id.isdigit():
-            result = AuthorChecker.add_book_to_author(book_id, author_id)
+            author_json = request.get_json()
+            result = AuthorChecker.update_author(book_id, author_id, author_json)
             return result
         else:
-            abort(400, 'Invalid input for url parameters book_id or author_id')
-
-    @ns.response(code=204, description='Deleted')
-    @ns.marshal_with(author_marshaller, code=204)
-    def delete(self, book_id, author_id):
-        """
-        Deletes an author from a book.
-        :param book_id: Record of a book.
-        :param author_id: Record of an Author.
-        :return: Null
-        """
-        print('Received DELETE on resource /books/<book_id>/authors/<author_id>')
-        if book_id.isdigit() and author_id.isdigit():
-            result = AuthorChecker.delete_author_from_book(book_id, author_id)
-            return result
-        else:
-            abort(400, 'Invalid input for url parameters book_id or author_id')
-
-
+            abort(400, 'Invalid input for url parameters book_id and/or author_id')
 

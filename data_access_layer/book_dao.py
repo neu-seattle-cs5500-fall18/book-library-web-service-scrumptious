@@ -3,10 +3,6 @@ from model.book import Book, authorship_table
 from model.author import Author
 
 
-#make sure query handles wildcard
-#make sure authors can be added if existing
-#update publish datae.
-
 class BookDao:
     @staticmethod
     def contains(book_id):
@@ -138,13 +134,14 @@ class BookDao:
         return book.to_dict()
 
     @staticmethod
-    def delete(a_book_id):
+    def delete(book_id):
         """
         Method to delete a book record.  Has cascading effect on copies and authors.
         :param a_book_id: id of book record to be deleted.
         :return: null.
         """
-        b = Book.query.filter_by(book_id=a_book_id).first()
+        print('BookDao.delete()')
+        b = Book.query.filter_by(book_id=book_id).first()
         b.authors = []
         db.session.commit()
         db.session.delete(b)
