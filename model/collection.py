@@ -10,10 +10,9 @@ class BookCollection(db.Model):
     collection_id = db.Column(db.Integer, primary_key=True)
     book_ids = db.relationship(Book, secondary=collection_table, backref=db.backref('books', lazy='dynamic'))
     title = db.Column(db.String, nullable=False, unique=True)
-    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
 
-    def __repr__(self): return "<Collection(collection_id='%s',books='%s'>" \
-                               % (self.collection_id, self.book.ids)
+    def __repr__(self): return "<Collection(collection_id='%s',books='%s',title='%s'>" \
+                               % (self.collection_id, self.book.ids,self.title)
 
     def to_dict(self):
         print('Book collections to_dict')

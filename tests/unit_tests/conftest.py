@@ -2,6 +2,7 @@ import pytest
 from model.author import Author
 from model.book import Book
 from model.book_copy import BookCopy
+from model.collection import BookCollection
 from model.note import Note
 from model.user import User
 from data_access_layer.book_dao import BookDao
@@ -11,6 +12,9 @@ from data_access_layer.book_copy_dao import BookCopyDao
 import pytest
 #from model import db
 from model.book import Book
+
+book_global = Book(book_id=1, title='The Old Man and the Sea', publish_date='1980', genre='Novel', subject='Fiction',
+                 authors=[], notes=[], copies=[])
 
 from app_factory import create_app
 
@@ -199,3 +203,9 @@ def new_note_dao():
 def new_book_copy_dao():
     book_copy_dao = BookCopyDao
     return book_copy_dao
+
+
+@pytest.fixture(scope = 'module')
+def new_collection():
+    collection = BookCollection(collection_id=1, book_ids= [book_global], title='New collection')
+    return collection

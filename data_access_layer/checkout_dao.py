@@ -1,12 +1,14 @@
 from data_access_layer import book_copy_dao
+from model.book_copy import BookCopy
 from model.checkout import Checkout
 from model.book import Book
 from flask_restplus import abort
 from model import db
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class CheckoutDao:
+
     @staticmethod
     def query_checkout(checkout_id):
 
@@ -25,24 +27,16 @@ class CheckoutDao:
         return list_of_checkouts
 
     @staticmethod
-    def create_new_checkout(user_id, book_id):
+    def create_new_checkout(checkout_dict):
         print('Creating new checkout')
-
-        book_copy = Book.query.filter_by(book_id).first()
-        book_copy_id = book_copy.book_copy_id
-        lending_time = datetime.timedelta(days=21)
-
-        print('Creating new checkout33')
-
-        new_checkout = Checkout(user_id=user_id, book_id=book_id, book_copy_id=book_copy_id, checkout_date=datetime.now,
-                                due_date=datetime.now + lending_time)
-
-        book_copy.is_checked_out = True
-
+        new_checkout = Checkout(**checkout_dict)
+        print("pre-add")
         db.session.add(new_checkout)
+        print("pre-commit")
         db.session.commit()
+        print('checkout created')
 
-        return new_checkout.user_id
+        return new_checkout.checkout_id
 
     @staticmethod
     def get_checkout(checkout_id):
@@ -51,7 +45,7 @@ class CheckoutDao:
 
         a_checkout = Checkout.query.get(checkout_id)
 
-        return a_checkout
+        return a_checkout.to_dict
 
     @staticmethod
     def update_checkout(checkout_id):
@@ -74,13 +68,7 @@ class CheckoutDao:
 
         print('Delete checkout')
 
-        a_checkout = Checkout.query.get(checkout_id)
+        a_checkout = Checkout.query.filter_by(checkout_id=checkout_id).delete()
         db.session.commit()
-        return a_checkout.checkout_id
+        return None
 
-    @staticmethod
-    def get_reminder():
-
-        checkouts = Checkout.query.filter_by(return_date=None)
-
-        return checkouts
