@@ -1,4 +1,3 @@
-import datetime
 import json
 import pytest
 from model.author import Author
@@ -27,9 +26,43 @@ def book1_dict():
     return book
 
 
+@pytest.fixture(scope='module')
 def book2_dict():
-    book = dict(book_id=2,title='The Left Hand of Darkness', publish_date='1975', subject='Fiction', genre='Science Fiction')
+    book = {
+        'title': 'Old Man and the Sea',
+        'publish_date': '1910-05-12',
+        'subject': 'Fiction',
+        'genre': 'Novel',
+        'notes': [],
+        'authors': [
+            {
+                'first_name': 'Herman',
+                'last_name': 'Melville',
+                'middle_name': 'M'
+            }
+        ]
+    }
     return book
+
+
+@pytest.fixture(scope='module')
+def book3_dict():
+    book = {
+        'title': 'Travels With Charlie',
+        'publish_date': '1970-05-12',
+        'subject': 'Fiction',
+        'genre': 'Literary Fiction',
+        'notes': [{'note_title':'Best Steinbeck', 'note': 'It has a dog'}],
+        'authors': [
+            {
+                'first_name': 'John',
+                'last_name': 'Steinbeck',
+                'middle_name': ''
+            }
+        ]
+    }
+    return book
+
 
 
 @pytest.fixture(scope='module')
@@ -136,6 +169,46 @@ def expect_book1_dict():
         ]
     }
     return book
+
+@pytest.fixture(scope='module')
+def expect_book2_dict():
+    book = {
+        'book_id' : 2,
+        'title': 'Old Man and the Sea',
+        'publish_date': '1910-05-12',
+        'subject': 'Fiction',
+        'genre': 'Novel',
+        'notes': [],
+        'authors': [
+            {'author_id': 1,
+             'first_name': 'Herman',
+             'last_name': 'Melville',
+             'middle_name': 'M'
+             }
+        ]
+    }
+    return book
+
+@pytest.fixture(scope='module')
+def expect_book3_dict():
+    book = {
+        'book_id' : 3,
+        'title': 'Travels With Charlie',
+        'publish_date': '1970-05-12',
+        'subject': 'Fiction',
+        'genre': 'Literary Fiction',
+        'notes': [{'note_title': 'Best Steinbeck', 'note': 'It has a dog'}],
+        'authors': [
+            {
+                'author_id' : 2,
+                'first_name': 'John',
+                'last_name': 'Steinbeck',
+                'middle_name': ''
+            }
+        ]
+    }
+    return book
+
 
 
 @pytest.fixture(scope='module')

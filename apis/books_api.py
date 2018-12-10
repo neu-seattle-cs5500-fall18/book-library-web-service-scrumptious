@@ -65,10 +65,10 @@ query_parser.add_argument('genre', type=str, required=False)
 
 
 @ns.route('', endpoint='books')
-@ns.response(200, 'Success')
 @ns.response(400, 'Validation Error')
 class Books(Resource):
     @ns.doc(body=query_parser, validate=True)
+    @ns.response(200, 'Success')
     @ns.marshal_with(book_marshaller, code=200)
     def get(self):
         """
@@ -80,12 +80,12 @@ class Books(Resource):
         print('Received GET on resource /books')
         args = query_parser.parse_args()
         list_of_books = BookChecker.get_books(args)
-        return list_of_books
+        return list_of_books, 200
 
     @ns.expect(book_marshaller, validate=True)
     @ns.response(201, 'Created')
     @ns.response(400, 'Validation Error')
-    @ns.marshal_with(full_book_marshaller, 201)
+    @ns.marshal_with(full_book_marshaller, code=201)
     def post(self):
         """
         Creates a new book record for a single book.
@@ -94,7 +94,7 @@ class Books(Resource):
         print('Received POST on resource /book')
         request_body = request.get_json()
         a_book = BookChecker.create_book(request_body)
-        return a_book
+        return a_book, 201
 
 
 @ns.route('/<book_id>')
@@ -112,7 +112,7 @@ class BookRecord(Resource):
         print('Received GET on resource /books/<book_id>')
         if book_id.isdigit():
             a_book = BookChecker.get_book(book_id)
-            return a_book
+            return a_book, 200
         else:
             abort(400, 'Invalid input received for book_id')
 
@@ -129,7 +129,7 @@ class BookRecord(Resource):
         if book_id.isdigit():
             request_body = request.get_json()
             book = BookChecker.update_book(book_id, request_body)
-            return book
+            return book, 200
         else:
             abort(400, 'Invalid input received for book_id')
 
@@ -145,7 +145,7 @@ class BookRecord(Resource):
         if book_id.isdigit():
             # delete relationship in authorship table
             result = BookChecker.delete_book(book_id)
-            return result
+            return result, 204
         else:
             abort(400, 'Invalid input received for book_id')
 
@@ -180,7 +180,7 @@ class BookNotes(Resource):
         print('Received POST on resource /books/<book_id>/notes')
         if book_id.isdigit():
             note = NoteChecker.create_note(book_id, request.get_json())
-            return note
+            return note, 201
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -202,7 +202,7 @@ class BookNotes(Resource):
         print('Received PUT on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():
             note = NoteChecker.update_note(book_id, request.get_json())
-            return note
+            return note, 200
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -239,7 +239,7 @@ class BookCopies(Resource):
         else:
             abort(400, 'Invalid input for book_id')
 
-    @ns.marshal_with(book_copies_marshaller, code=200)
+    @ns.marshal_with(book_copies_marshaller, code=201)
     def post(self, book_id):
         """
         Create a new copy for an existing book.
@@ -249,7 +249,7 @@ class BookCopies(Resource):
         print('Received POST on resource /books/<book_id>/copies')
         if book_id.isdigit():
             book = BookCopyChecker.create_copy(book_id)
-            return book
+            return book, 201
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -269,7 +269,7 @@ class BookAuthors(Resource):
         if book_id.isdigit():
             author_json = request.get_json()
             author = AuthorChecker.create_author(book_id, author_json)
-            return author
+            return author, 200
         else:
             abort(400, 'Invalid input for book_id')
 
@@ -289,7 +289,7 @@ class BookAuthor(Resource):
         if book_id.isdigit() and author_id.isdigit():
             author_json = request.get_json()
             result = AuthorChecker.update_author(book_id, author_id, author_json)
-            return result
+            return result, 200
         else:
             abort(400, 'Invalid input for url parameters book_id and/or author_id')
 
