@@ -37,14 +37,17 @@ class BookChecker:
         print(authors)
 
         a_book = {'title': title, 'publish_date': publish_date, 'subject': subject, 'genre': genre}
+        print(a_book)
 
-        new_book = BookDao.create(a_book)
-        print(new_book)
-        book_copy = BookCopyChecker.create_copy(new_book['book_id'])
-        new_authors = AuthorChecker.create_authors(new_book['book_id'], authors)
+        if BookDao.contains_by_params(a_book):
+            abort(400, 'Book already exists')
+        else:
+            new_book = BookDao.create(a_book)
+            book_copy = BookCopyChecker.create_copy(new_book['book_id'])
+            new_authors = AuthorChecker.create_authors(new_book['book_id'], authors)
 
-        print("book_checker.create_book() ==> Complete")
-        return BookDao.get(new_book['book_id'])
+            print("book_checker.create_book() ==> Complete")
+            return BookDao.get(new_book['book_id'])
 
     @staticmethod
     def get_book(book_id):
@@ -53,7 +56,7 @@ class BookChecker:
             a_book = BookDao.get(book_id)
             return a_book
         else:
-            abort(400, 'Invalid input for book_id')
+            abort(404, 'Resource not found for book_id')
 
     @staticmethod
     def get_books(dict_query_params):
