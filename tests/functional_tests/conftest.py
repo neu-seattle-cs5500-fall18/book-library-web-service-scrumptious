@@ -154,17 +154,17 @@ def new_user():
 @pytest.fixture(scope='module')
 def expect_book1_dict():
     book = {
-        'book_id' : 1,
-        'title': 'Old Man',
-        'publish_date': '1980-05-12',
-        'subject': 'Fiction',
-        'genre': 'Novel',
-        'notes': [],
-        'authors': [
-            {'author_id': 1,
-             'first_name': 'Herman',
-             'last_name': 'Melville',
-             'middle_name': 'M'
+        "book_id" : 1,
+        "title": "Old Man",
+        "publish_date": "1980-05-12",
+        "subject": "Fiction",
+        "genre": "Novel",
+        "notes": [],
+        "authors": [
+            {"author_id": 1,
+             "first_name": "Herman",
+             "last_name": "Melville",
+             "middle_name": "M"
              }
         ]
     }

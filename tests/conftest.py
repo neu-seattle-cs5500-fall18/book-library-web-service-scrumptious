@@ -8,7 +8,6 @@ from model import db as _db
 TESTDB = 'test_project.db'
 TESTDB_PATH = "{}".format(TESTDB)
 TEST_DATABASE_URI = 'sqlite:///' + TESTDB_PATH
-#TEST_DATABASE_URI = 'postgres://postgres@localhost:5432/booklibrary'
 
 
 @pytest.fixture(scope='session')
