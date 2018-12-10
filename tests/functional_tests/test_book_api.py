@@ -1,40 +1,155 @@
 import json
 
 
-def test_get_books(client, book1_dict, expect_book1_dict):
+def test_post_book(client, book1_dict,  book2_dict, book3_dict):
     """
-    Test query books via a get request.
-    case1: empty resource
-    case2: resource with book
-    :param client: Instance of application
-    :param book1_dict: Dictionary of a book to be loaded into application via a post request
-    :param expect_book1_dict: the expected resulting dictionary from a get request on resource
-    :return: passed if all tests are valid
+    Test Post of books resource.
+    :param client:
+    :param book1_dict:
+    :return:
     """
-    """
-    Test case for resource that contains no records
-    """
-    response = client.get('/books')
-    assert response.status_code == 200
 
-    response = json.loads(response.data.decode('utf8'))
-    assert [] == response
-
-    """
-    Test case for resource that contains records.
-    """
-    # case with data loaded
+    """New Resource"""
     json_data = json.dumps(book1_dict)
     post_response = client.post("/books", data=json_data, headers={"Content-Type": "application/json"})
-    response = client.get('/books')
-    assert response.status_code == 200
+    assert  201 == post_response.status_code
+    print('here1')
+    print(post_response.data)
 
-    response = json.loads(response.data.decode('utf8'))
-    book = response[0]
-    assert expect_book1_dict == book
+    """Re-posting resource"""
+    post_response = client.post("/books", data=json_data, headers={"Content-Type": "application/json"})
+    assert post_response.status_code == 400
+    assert b"Book already exists" in post_response.data
+    print('here2')
+    print(post_response.data)
+
+    """Post book two same author"""
+    json_data = json.dumps(book2_dict)
+    post_response = client.post("/books", data=json_data, headers={"Content-Type": "application/json"})
+    assert  201 == post_response.status_code
+
+    """Post with missing required fields in body"""
+    test_dict = {
+        'publish_date': '1980-05-12',
+        'subject': 'Fiction',
+        'genre': 'Novel',
+        'notes': [],
+        'authors': [
+            {
+                'first_name': 'Herman',
+                'last_name': 'Melville',
+                'middle_name': 'M'
+            }
+        ]
+    }
+    json_data = json.dumps(test_dict)
+    post_response = client.post("/books", data=json_data, headers = {"Content-Type": "application/json"})
+    print('here3')
+    print(post_response)
+    assert 400 == post_response.status_code
 
 
 
+
+
+
+
+
+#
+# def test_get_books(client, book1_dict, expect_book1_dict):
+#     """
+#     Test query of books resource via a get request on /books
+#     case1: empty resource
+#     case2: resource with book, no query string.
+#     case3: resource with books, query strings.
+#     """
+#     expected_payload = []
+#
+#     """
+#     Test case for resource that contains no records
+#     """
+#     response = client.get('/books')
+#     assert response.status_code == 200
+#
+#     response = json.loads(response.data.decode('utf8'))
+#     assert expected_payload == response
+#
+#     """
+#     Test case for resource that contains records.
+#     """
+#     # Add book to database
+#     json_data = json.dumps(book1_dict)
+#     post_response = client.post("/books", data=json_data, headers={"Content-Type": "application/json"})
+#
+#     get_response = client.get('/books')
+#     print('here')
+#     print(get_response)
+#     print(get_response.json())
+#     assert get_response.status_code == 200
+#     assert json_data == get_response.json()
+
+    # """
+    # adding Second book
+    # """
+    # json_data = json.dumps(book2_dict)
+    # post_response = client.post("/books", data=json_data, headers={"Content-Type": "application/json"})
+    # expected_payload.append(expect_book2_dict)
+    #
+    # get_response = client.get('/books')
+    # assert get_response.status_code == 200
+    # payload = json.loads(get_response.data.decode('utf8'))
+    # assert expected_payload == payload
+    # #
+    # # """
+    # # *
+    # *
+    # Testing query parameters
+    # *
+    # *
+    # """
+    #
+    # """
+    # title
+    # """
+    # expected_payload = []
+    # expected_payload.append(book2_dict)
+    # get_response = client.get("/books?title=Old Man and the Sea")
+    # assert get_response == 200
+    # payload = json.loads(get_response.data.decode('utf8'))
+    # assert expected_payload == payload
+    #
+    #
+    # """
+    # first_name
+    # """
+    #
+    # """
+    # last_name
+    # """
+    #
+    # """
+    # middle_name
+    # """
+    #
+    # """
+    # publish_date_start
+    # """
+    #
+    # """
+    # publish_date_end
+    # """
+    #
+    # """
+    # subject
+    # """
+    #
+    # """
+    # genre
+    # """
+    #
+    #
+    #
+    #
 
 # #
 # # def test_query_books(client):
