@@ -60,7 +60,10 @@ def create_user(json_user_info):
 
     fname = json_user_info['user_first_name']
     lname = json_user_info['user_last_name']
-    email = json_user_info['email']
+    email = json_user_info['user_email']
+    print(fname)
+    print(lname)
+    print(email)
 
     if email_exists(email):
         abort(400, 'Must provide a unique email')
@@ -99,11 +102,14 @@ def update_user(user_id, json_user_info):
     lname = json_user_info['user_last_name']
     email = json_user_info['user_email']
 
-    if valid_input(fname, lname, email):
-        user = clean_user(fname, lname, email)
-        return update_user(user_id, user)
+    if UserDao.contains(user_id):
+        if valid_input(fname, lname, email):
+            user = clean_user(fname, lname, email)
+            return UserDao.update(user_id, user)
+        else:
+            abort(400, 'Invalid input')
     else:
-        abort(400, 'Invalid input')
+        abort(404, 'Resource not found: user_id')
 
 
 def delete_user(user_id):

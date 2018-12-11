@@ -1,13 +1,12 @@
-from model.book import Book
 
 
 def test_book(new_book1):
     """
-
+    Test default constructor for a book
     :param new_book1: Fixture from conftest
     :return: true if tests pass
     """
-    assert new_book1.book_id == None
+    assert new_book1.book_id is None
     assert new_book1.genre == 'Novel'
     assert new_book1.subject == 'Fiction'
     assert new_book1.title == 'Old Man'
