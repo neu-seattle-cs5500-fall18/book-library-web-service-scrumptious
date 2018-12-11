@@ -1,3 +1,4 @@
+from controller.note_checker import NoteChecker
 from data_access_layer.book_dao import BookDao
 from controller.author_checker import AuthorChecker
 from controller.book_copy_checker import BookCopyChecker
@@ -13,7 +14,6 @@ class BookChecker:
     @staticmethod
     def clean_book(book_dict):
         book_dict['title'] = book_dict.title.lower().title()
-        # how do we want to store publish date???
         book_dict['subject'] = book_dict.subject.lower().title()
         book_dict['genre'] = book_dict.genre.lower().title()
         title = book_dict['title'].lower().title()
@@ -34,17 +34,19 @@ class BookChecker:
         genre = book_json['genre']
         notes = book_json['notes']
         authors = book_json['authors']
-        print(authors)
 
         a_book = {'title': title, 'publish_date': publish_date, 'subject': subject, 'genre': genre}
 
-        new_book = BookDao.create(a_book)
-        print(new_book)
-        book_copy = BookCopyChecker.create_copy(new_book['book_id'])
-        new_authors = AuthorChecker.create_authors(new_book['book_id'], authors)
+        if BookDao.contains_by_params(a_book):
+            abort(400, 'Book already exists')
+        else:
+            new_book = BookDao.create(a_book)
+            book_copy = BookCopyChecker.create_copy(new_book['book_id'])
+            created_notes = NoteChecker.create_notes(new_book['book_id'], notes)
+            new_authors = AuthorChecker.create_authors(new_book['book_id'], authors)
 
-        print("book_checker.create_book() ==> Complete")
-        return BookDao.get(new_book['book_id'])
+            print("book_checker.create_book() ==> Complete")
+            return BookDao.get(new_book['book_id'])
 
     @staticmethod
     def get_book(book_id):
@@ -53,26 +55,29 @@ class BookChecker:
             a_book = BookDao.get(book_id)
             return a_book
         else:
-            abort(400, 'Invalid input for book_id')
+            abort(404, 'Resource not found: book_id')
 
     @staticmethod
     def get_books(dict_query_params):
+        print('get books')
         list_books = BookDao.query_books(dict_query_params)
         return list_books
 
     @staticmethod
     def update_book(book_id, book_json):
-        print(book_json)
+        print('BookChecker.update_book()')
+
         if BookDao.contains(book_id):
             a_book = BookDao.update(book_id, **book_json)
             return a_book
         else:
-            abort(404, 'Resource not found')
+            abort(404, 'Resource not found: book_id')
 
     @staticmethod
     def delete_book(book_id):
 
         if BookDao.contains(book_id):
+
             return BookDao.delete(book_id)
         else:
-            abort(400, 'so such record')
+            abort(404, 'Resource not found: book_id')

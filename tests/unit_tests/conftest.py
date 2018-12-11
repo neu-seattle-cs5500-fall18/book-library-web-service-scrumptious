@@ -1,18 +1,20 @@
-import pytest
 from model.author import Author
 from model.book import Book
 from model.book_copy import BookCopy
+from model.collection import BookCollection
 from model.note import Note
 from model.user import User
 from data_access_layer.book_dao import BookDao
 from data_access_layer.author_dao import AuthorDao
 from data_access_layer.note_dao import NoteDao
 from data_access_layer.book_copy_dao import BookCopyDao
+import pytest
+from model.book import Book
+
+book_global = Book(book_id=1, title='The Old Man and the Sea', publish_date='1980', genre='Novel', subject='Fiction',
+                 authors=[], notes=[], copies=[])
 
 
-# this file sets up fixtures for scoped testing
-# Label instances that haven't been added to db as 'new_Class#' ie new_book1.
-# Label instances that have been added to db as 'class#' ie book1.
 
 @pytest.fixture(scope='module')
 def book1_dict():
@@ -105,8 +107,8 @@ def new_note():
 
 
 @pytest.fixture(scope='module')
-def new_user():
-    user = User(user_first_name='FirstaaName', user_last_name='LastName', email='asdf@some.com')
+def new_user1():
+    user = User(user_id = None, user_first_name='FirstName', user_last_name='LastName', email='asdf@some.com')
     return user
 
 
@@ -132,3 +134,9 @@ def new_note_dao():
 def new_book_copy_dao():
     book_copy_dao = BookCopyDao
     return book_copy_dao
+
+
+@pytest.fixture(scope = 'module')
+def new_collection():
+    collection = BookCollection(collection_id=1, book_ids= [book_global], title='New collection')
+    return collection

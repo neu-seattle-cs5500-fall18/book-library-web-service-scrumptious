@@ -6,30 +6,69 @@ from data_access_layer.note_dao import NoteDao
 class NoteChecker:
     @staticmethod
     def get_notes(book_id):
+        print('NoteChecker.get_notes()')
         if BookDao.contains(book_id):
             list_notes = NoteDao.get_notes(book_id)
             return list_notes
         else:
-            abort(404, 'Resource not found')
+            abort(404, 'Resource not found: book_id')
 
     @staticmethod
     def create_note(book_id, note):
+        print('NoteChecker.create_note()')
         if BookDao.contains(book_id):
-            note = NoteDao.create(book_id, note)
-            return note
+            if NoteDao.contains(note.get('note_title')):
+                abort(400, 'Duplicate key violates unique constraint: note_title')
+            else:
+                note = NoteDao.create(book_id, note)
+                return note
         else:
-            abort(404,'Resource not found')
+            abort(404, 'Resource not found: book_id')
 
     @staticmethod
-    def update_note(book_id, note):
+    def create_notes(book_id, notes_array):
+        print('NoteChecker.create_notes()')
+        list_notes = []
         if BookDao.contains(book_id):
-            return NoteDao.update(note)
+            for note in notes_array:
+                print(note)
+                created_note = NoteChecker.create_note(book_id, note)
+                list_notes.append(created_note)
+            return list_notes
         else:
-            abort(404, 'Resource not found')
+            abort(404, 'Resource not found: book_id')
 
     @staticmethod
-    def delete_note(note_title):
-        if NoteDao.contains(note_title):
-            return NoteDao.delete(note_title)
+    def update_note(book_id, note_title, note):
+        """
+        Method to update a note record if book id, note title are valid and there is a relationship between them.
+        :param book_id: record of a book.
+        :param note_title: record of a note.
+        :param note: the amended note text.
+        :return: dictionary of note object.
+        """
+        print('NoteChecker.update_note()')
+        if BookDao.contains(book_id):
+            if NoteDao.contains_relationship(book_id, note_title):
+                return NoteDao.update(note_title, note)
+            else:
+                abort(404, 'Resource not found: note_title & book_id do not share a record')
         else:
-            abort(404, 'Resource not found')
+            abort(404, 'Resource not found: book_id')
+
+    @staticmethod
+    def delete_note(book_id, note_title):
+        """
+        Method to delete a note if book id, note title are valid and there is a relationship between them.
+        :param book_id: record of a book.
+        :param note_title: record of a note.
+        :return: None
+        """
+        print('NoteChecker.delete()')
+        if BookDao.contains(book_id):
+            if NoteDao.contains_relationship(book_id, note_title):
+                return NoteDao.delete(note_title)
+            else:
+                abort(404, 'Resource not found: note_title & book_id do not share a record')
+        else:
+            abort(404, 'Resource not found: book_id')

@@ -1,11 +1,7 @@
 from model import db
 from model.book import Book, authorship_table
 from model.author import Author
-
-
-#make sure query handles wildcard
-#make sure authors can be added if existing
-#update publish datae.
+from dateutil import parser
 
 class BookDao:
     @staticmethod
@@ -43,6 +39,17 @@ class BookDao:
         return a_book.to_dict()
 
     @staticmethod
+    def contains_by_params(book_dict):
+        print('BookDao.contains_by_params()')
+
+        results = Book.query.filter(Book.title == book_dict['title'], Book.publish_date == book_dict['publish_date'],
+                                    Book.genre == book_dict['genre'], Book.subject == book_dict['subject']).first()
+        if results is None:
+            return False
+        else:
+            return True
+
+    @staticmethod
     def get_all():
         results = Book.query.all()
         return results
@@ -57,25 +64,7 @@ class BookDao:
         """
         print("book_dao.query_books()")
 
-        results = db.session.query(Book)
-
-        if query_params_dict['publish_date_start'] is not None:
-            start = query_params_dict['publish_date_start']
-            results = results.filter(Book.publish_date >= start)
-        if query_params_dict['publish_date_end'] is not None:
-            end = query_params_dict['publish_date_end']
-            results.filter(Book.publish_date <= end)
-        if query_params_dict['title'] is not None:
-            title = query_params_dict['title']
-            results = results.filter(Book.title.contains(title))
-        if query_params_dict['subject'] is not None:
-            subject = query_params_dict['subject']
-            results = results.filter(Book.subject.contains(subject))
-        if query_params_dict['genre'] is not None:
-            genre = query_params_dict['genre']
-            results = results.filter(Book.genre.contains(genre))
-
-        results.join(authorship_table).join(Author)
+        results = db.session.query(Book).join(authorship_table).join(Author)
 
         if query_params_dict['first_name'] is not None:
             first = query_params_dict['first_name']
@@ -86,6 +75,24 @@ class BookDao:
         if query_params_dict['last_name'] is not None:
             last = query_params_dict['last_name']
             results = results.filter(Author.last_name.contains(last))
+
+        if query_params_dict['publish_date_start'] is not None:
+            start = query_params_dict['publish_date_start']
+            results = results.filter(Book.publish_date > start.date())
+
+        if query_params_dict['publish_date_end'] is not None:
+            end = query_params_dict['publish_date_end']
+            results = results.filter(Book.publish_date < end.date())
+
+        if query_params_dict['title'] is not None:
+            title = query_params_dict['title']
+            results = results.filter(Book.title.contains(title))
+        if query_params_dict['subject'] is not None:
+            subject = query_params_dict['subject']
+            results = results.filter(Book.subject.contains(subject))
+        if query_params_dict['genre'] is not None:
+            genre = query_params_dict['genre']
+            results = results.filter(Book.genre.contains(genre))
 
         results.all()
 
@@ -101,7 +108,9 @@ class BookDao:
         :return: a dictionary object of the created book.
         """
         print("BookDao.create()")
+
         new_book = Book(**book_dict)
+        new_book.publish_date = parser.parse(new_book.publish_date)
         db.session.add(new_book)
         db.session.commit()
         print("book_dao.create() ==> Complete")
@@ -116,19 +125,28 @@ class BookDao:
         :return: a dictionary of the updated book.
         """
         print('BookDao.update()')
+        print(kwargs)
         book = Book.query.get(book_id)
+        print(book)
         book.update(**kwargs)
+        print('got here')
+        print(book)
         db.session.commit()
-        return book.to_dict()
+        print('commit worked')
+        book = book.to_dict()
+        print('to dict worked')
+        print(book)
+        return book
 
     @staticmethod
-    def delete(a_book_id):
+    def delete(book_id):
         """
         Method to delete a book record.  Has cascading effect on copies and authors.
         :param a_book_id: id of book record to be deleted.
         :return: null.
         """
-        b = Book.query.filter_by(book_id=a_book_id).first()
+        print('BookDao.delete()')
+        b = Book.query.filter_by(book_id=book_id).first()
         b.authors = []
         db.session.commit()
         db.session.delete(b)
