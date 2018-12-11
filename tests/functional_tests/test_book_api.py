@@ -109,17 +109,14 @@ def test_query_books(session, client, book1_dict, book2_dict, book3_dict, expect
     assert 201 == post_response.status_code
 
     """get title"""
-    expected_payload = []
-    expected_payload.append(expect_book2_dict)
+    expected_payload = [expect_book2_dict]
     get_response = client.get("/books?title=Old Man and the Sea")
     assert get_response == 200
     payload = get_response.get_json()
     assert expected_payload == payload
 
     """get by first_name"""
-    expected_payload = []
-    expected_payload.append(expect_book1_dict)
-    expected_payload.append(expect_book2_dict)
+    expected_payload = [expect_book1_dict, expect_book2_dict]
 
     get_response = client.get("/books?first_name=Herman")
     assert get_response == 200
@@ -127,8 +124,7 @@ def test_query_books(session, client, book1_dict, book2_dict, book3_dict, expect
     assert expected_payload == payload
 
     """get by last_name"""
-    expected_payload = []
-    expected_payload.append(expect_book3_dict)
+    expected_payload = [expect_book3_dict]
 
     get_response = client.get("/books?last_name=Steinbeck")
     assert 200 == get_response.status_code
@@ -136,20 +132,14 @@ def test_query_books(session, client, book1_dict, book2_dict, book3_dict, expect
     assert expected_payload == payload
 
     """get by middle_name"""
-    expected_payload = []
-    expected_payload.append(expect_book1_dict)
-    expected_payload.append(expect_book2_dict)
-
+    expected_payload = [expect_book1_dict, expect_book2_dict]
     get_response = client.get("/books?middle_name=M")
     assert 200 == get_response.status_code
     payload = get_response.get_json()
     assert expected_payload == payload
 
-
     """get by publish_date_start"""
-    expected_payload = []
-    expected_payload.append(expect_book1_dict)
-    expected_payload.append(expect_book3_dict)
+    expected_payload = [expect_book1_dict, expect_book3_dict]
     get_response = client.get("/books?publish_date_start=1910-05-13")
     assert 200 == get_response.status_code
     payload = get_response.get_json()
@@ -157,32 +147,28 @@ def test_query_books(session, client, book1_dict, book2_dict, book3_dict, expect
     print(expected_payload)
     assert expected_payload == payload
 
-    # """get by publish_date_end"""
-    # expected_payload = []
-    # expected_payload.append(expect_book2_dict)
-    # get_response = client.get("/books?publish_date_end=1910-05-13")
-    # assert 200 == get_response.status_code
-    # payload = get_response.get_json()
-    # assert  expected_payload == payload
+    """get by publish_date_end"""
+    expected_payload = [expect_book2_dict]
+    get_response = client.get("/books?publish_date_end=1910-05-13")
+    assert 200 == get_response.status_code
+    payload = get_response.get_json()
+    assert  expected_payload == payload
 
     """get by subject"""
-    expected_payload = []
-    expected_payload.append(expect_book1_dict)
+    expected_payload = [expect_book1_dict]
     get_response = client.get("/books?subject=Non-Fiction")
     assert 200 == get_response.status_code
     payload = get_response.get_json()
     assert expected_payload == payload
 
     """get by genre"""
-    expected_payload = []
-    expected_payload.append(expect_book3_dict)
+    expected_payload = [expect_book3_dict]
     get_response = client.get("/books?genre=Literary Fiction")
     assert 200 == get_response.status_code
     payload = get_response.get_json()
     assert expected_payload == payload
 
 
-# # # '/books/<book_id>
 def test_get_book(session, client, book1_dict, book2_dict, book3_dict, expected_book3_fulldict):
     """get on empty resource"""
     get_response = client.get("/books/1")
@@ -252,7 +238,7 @@ def test_put_book(session, client, book1_dict):
         ]
     }
 
-    """put with non-existant resource"""
+    """put with non-existent resource"""
     get_response = client.put("/books/8", data=json_data, headers={"Content-Type": "application/json"})
     assert 404 == get_response.status_code
 
@@ -263,15 +249,16 @@ def test_put_book(session, client, book1_dict):
     """put with no content"""
     get_response = client.put("books/1", headers={"Content-Type": "application/json"})
     assert 400 == get_response.status_code
-
+    # This works with postman but not here.
     # """put with correct info."""
+    # json_data = json.dumps(change_dict)
     # get_response = client.put("/books/1", data=json_data, headers={"Content-Type": "application/json"})
-    # # print('here!!!!!!')
-    # # print(get_response)
-    # # print(get_response.status_code)
-    # # print(get_response.get_json)
+    # print('here!!!!!!')
+    # print(get_response)
+    # print(get_response.status_code)
+    # print(get_response.get_json)
     # assert 200 == get_response.status_code
-    #
+
 
 def test_delete_book(session, client, book1_dict, book2_dict, book3_dict, expect_book2_dict, expect_book3_dict):
     """Add data to db"""
