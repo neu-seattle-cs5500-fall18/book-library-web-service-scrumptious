@@ -1,9 +1,9 @@
 from data_access_layer import book_copy_dao
-from model.book_copy import BookCopy
+from data_access_layer.book_copy_dao import BookCopyDao
 from model.checkout import Checkout
-from model.book import Book
 from flask_restplus import abort
 from model import db
+from model.checkout import Checkout
 from datetime import datetime, timedelta
 
 
@@ -23,16 +23,17 @@ class CheckoutDao:
     @staticmethod
     def get_all_checkouts():
         print('Get all checkouts')
-        list_of_checkouts = Checkout.query.all()
+        list_of_checkouts = []
+        query_results = Checkout.query.all()
+
+        for checkout in query_results:
+            list_of_checkouts.append(checkout.to_dict())
         return list_of_checkouts
 
     @staticmethod
     def create_new_checkout(checkout_dict):
-        print('Creating new checkout')
         new_checkout = Checkout(**checkout_dict)
-        print("pre-add")
         db.session.add(new_checkout)
-        print("pre-commit")
         db.session.commit()
         print('checkout created')
 
@@ -48,20 +49,17 @@ class CheckoutDao:
         return a_checkout.to_dict
 
     @staticmethod
-    def update_checkout(checkout_id):
+    def update(checkout_id, checkout_info_dict):
 
         print('Updating checkout')
-
         a_checkout = Checkout.query.get(checkout_id)
-
-        a_checkout.return_date = datetime.now
-        book_copy_id = a_checkout.book_copy_id
-        book_copy = book_copy_dao.get_book_copy(book_copy_id)
-        book_copy.is_checked_out = False
-
+        # book_copy_id = a_checkout.book_copy_id
+        # book_copy = BookCopyDao.get_book_copy(book_copy_id)
+        # book_copy.is_checked_out = False
+        a_checkout.update(**checkout_info_dict)
         db.session.commit()
+        return a_checkout.to_dict()
 
-        return a_checkout.checkout_id
 
     @staticmethod
     def delete_checkout(checkout_id):
@@ -70,5 +68,5 @@ class CheckoutDao:
 
         a_checkout = Checkout.query.filter_by(checkout_id=checkout_id).delete()
         db.session.commit()
-        return None
+        return a_checkout
 
