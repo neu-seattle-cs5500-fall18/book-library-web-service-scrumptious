@@ -16,6 +16,10 @@ return_note_marshaller = ns.inherit('ReturnNote', note_marshaller, {
     'book_id': fields.Integer(description='Book id note is associated with.')
 })
 
+amend_note_marshaller = ns.model('AmendNote', {
+    'note': fields.String(required=True, description='Text of note to be amended.')
+})
+
 author_marshaller = ns.model('Author', {
     'author_id': fields.Integer(required=False, description='Id for an author record'),
     'first_name': fields.String(required=True, description='First name of an author'),
@@ -143,7 +147,6 @@ class BookRecord(Resource):
         """
         print('Received DELETE on resource /books/<book_id>')
         if book_id.isdigit():
-            # delete relationship in authorship table
             result = BookChecker.delete_book(book_id)
             return result, 204
         else:
@@ -190,18 +193,18 @@ class BookNotes(Resource):
 @ns.response(200, 'Success')
 @ns.response(400, 'Validation Error')
 class BookNotes(Resource):
-    @ns.expect(note_marshaller, validate=True)
+    @ns.expect(amend_note_marshaller, validate=True)
     @ns.marshal_with(return_note_marshaller, code=200)
     def put(self, book_id, note_title):
         """
-        Edit a specific note for a book. Valid input for JSON are fields in the note_marshaller model.
+        Edit a specific note for a book. Valid input for JSON are fields in the amend_note_marshaller model.
         :param book_id: Record for a book.
         :param note_title: Record for a note.
         :return: JSON of note according to return_note_marshaller
         """
         print('Received PUT on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():
-            note = NoteChecker.update_note(book_id, request.get_json())
+            note = NoteChecker.update_note(book_id,note_title, request.get_json())
             return note, 200
         else:
             abort(400, 'Invalid input for book_id')
@@ -216,7 +219,7 @@ class BookNotes(Resource):
         """
         print('Received DELETE on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():
-            result = NoteChecker.delete_note(book_id)
+            result = NoteChecker.delete_note(book_id, note_title)
             return result, 204
         else:
             abort(400, 'Invalid input for book_id')

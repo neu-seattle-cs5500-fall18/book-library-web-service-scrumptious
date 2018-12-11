@@ -273,9 +273,6 @@ def test_put_book(session, client, book1_dict):
     # assert 200 == get_response.status_code
     #
 
-
-
-
 def test_delete_book(session, client, book1_dict, book2_dict, book3_dict, expect_book2_dict, expect_book3_dict):
     """Add data to db"""
     json_data = json.dumps(book1_dict)
