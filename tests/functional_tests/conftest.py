@@ -1,7 +1,5 @@
-import json
 import pytest
 from model.author import Author
-from model.book import Book
 from model.book_copy import BookCopy
 from model.note import Note
 from model.user import User
@@ -64,30 +62,27 @@ def book3_dict():
     return book
 
 
-
 @pytest.fixture(scope='module')
-def new_book1():
-    book = Book(title='Old Man', publish_date='1980-05-12', subject='Fiction', genre='Novel', authors=[])
-    return book
-
-
-@pytest.fixture(scope='module')
-def new_book2():
-    book = Book(title='The Left Hand of Darkness', publish_date='1975', subject='Fiction', genre='Science Fiction')
-    return book
-
-
-@pytest.fixture(scope='module')
-def book1():
-    author = Author(author_id=1, first_name='Herman', last_name='Melville', middle_name='M')
-    book = Book(book_id=1, title='Old Man', publish_date='1980-05-12', subject='Fiction', genre='Novel', authors=[author])
-    return book
-
-
-@pytest.fixture(scope='module')
-def book2():
-    book = Book(book_id=2, title='The Left Hand of Darkness', publish_date='1975', subject='Fiction',
-                genre='Science Fiction')
+def book4_dict():
+    book = {
+        'title': '1984',
+        'publish_date': '1940-05-12',
+        'subject': 'Fiction',
+        'genre': 'Literary Fiction',
+        'notes': [
+            {
+                'note_title': 'Dystopia',
+                'note': 'THE dystopian novel.'
+            }
+        ],
+        'authors': [
+            {
+                'first_name': 'George',
+                'last_name': 'Orwell',
+                'middle_name': ''
+            }
+        ]
+    }
     return book
 
 

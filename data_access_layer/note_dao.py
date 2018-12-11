@@ -17,6 +17,22 @@ class NoteDao:
             return True
 
     @staticmethod
+    def contains_relationship(book_id, note_title):
+        """
+        Method to determine if a record with book id and note title exists
+        :param book_id: record of a book
+        :param note_title: record of a note
+        :return: true if exists, false otherwise.
+        """
+        print('NoteDao.contains_relationship()')
+        results = Note.query.filter_by(book_id=book_id, note_title=note_title).first()
+        print(results)
+        if results is None:
+            return False
+        else:
+            return True
+
+    @staticmethod
     def create(book_id, note_dict):
         """
         Method to create a Note and associate it to a Book.
@@ -59,25 +75,30 @@ class NoteDao:
         return list_notes
 
     @staticmethod
-    def update(note_dict):
+    def update(note_title, note):
         """
         Method to update a Note.
-        :param note_dict: Attributes of a Note to be updated.
+        :param note_title: Key for a note
+        :param note: Attributes of a Note to be updated.
         :return: Dictionary of updated Note.
         """
-        a_note = Note.query.get(note_dict['note_title'])
-        a_note.update(**note_dict)
+        print('NoteDao.update()')
+        a_note = Note.query.get(note_title)
+        print(a_note)
+        print(note)
+        a_note.update(**note)
         db.session.commit()
         return a_note.to_dict()
 
     @staticmethod
-    def delete(note):
+    def delete(note_title):
         """
         Method to delete a Note.
-        :param note: Note to be deleted.
+        :param note_title: Note to be deleted.
         :return: Null.
         """
-        db.session.get(note.note_title).delete()
+        note = Note.query.get(note_title)
+        db.session.delete(note)
         db.session.commit()
         return None
 

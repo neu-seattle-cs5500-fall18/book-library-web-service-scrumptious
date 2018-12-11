@@ -1,3 +1,4 @@
+from controller.note_checker import NoteChecker
 from data_access_layer.book_dao import BookDao
 from controller.author_checker import AuthorChecker
 from controller.book_copy_checker import BookCopyChecker
@@ -44,6 +45,7 @@ class BookChecker:
         else:
             new_book = BookDao.create(a_book)
             book_copy = BookCopyChecker.create_copy(new_book['book_id'])
+            created_notes = NoteChecker.create_notes(new_book['book_id'], notes)
             new_authors = AuthorChecker.create_authors(new_book['book_id'], authors)
 
             print("book_checker.create_book() ==> Complete")
