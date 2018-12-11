@@ -107,8 +107,8 @@ def new_note():
 
 
 @pytest.fixture(scope='module')
-def new_user():
-    user = User(user_first_name='FirstaaName', user_last_name='LastName', email='asdf@some.com')
+def new_user1():
+    user = User(user_id = None, user_first_name='FirstName', user_last_name='LastName', email='asdf@some.com')
     return user
 
 
