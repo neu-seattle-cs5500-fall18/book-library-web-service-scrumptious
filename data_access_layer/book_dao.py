@@ -1,7 +1,7 @@
 from model import db
 from model.book import Book, authorship_table
 from model.author import Author
-
+from dateutil import parser
 
 class BookDao:
     @staticmethod
@@ -44,9 +44,6 @@ class BookDao:
 
         results = Book.query.filter(Book.title == book_dict['title'], Book.publish_date == book_dict['publish_date'],
                                     Book.genre == book_dict['genre'], Book.subject == book_dict['subject']).first()
-
-        print('here')
-        print(results)
         if results is None:
             return False
         else:
@@ -66,7 +63,6 @@ class BookDao:
         :return: a List of book dictionaries based on query arguments.
         """
         print("book_dao.query_books()")
-        print(query_params_dict)
 
         results = db.session.query(Book).join(authorship_table).join(Author)
 
@@ -82,11 +78,11 @@ class BookDao:
 
         if query_params_dict['publish_date_start'] is not None:
             start = query_params_dict['publish_date_start']
-            results = results.filter(Book.publish_date > start)
+            results = results.filter(Book.publish_date > start.date())
 
         if query_params_dict['publish_date_end'] is not None:
             end = query_params_dict['publish_date_end']
-            results.filter(Book.publish_date < end)
+            results = results.filter(Book.publish_date < end.date())
 
         if query_params_dict['title'] is not None:
             title = query_params_dict['title']
@@ -112,7 +108,7 @@ class BookDao:
         :return: a dictionary object of the created book.
         """
         print("BookDao.create()")
-        from dateutil import parser
+
         new_book = Book(**book_dict)
         new_book.publish_date = parser.parse(new_book.publish_date)
         db.session.add(new_book)
@@ -129,10 +125,18 @@ class BookDao:
         :return: a dictionary of the updated book.
         """
         print('BookDao.update()')
+        print(kwargs)
         book = Book.query.get(book_id)
+        print(book)
         book.update(**kwargs)
+        print('got here')
+        print(book)
         db.session.commit()
-        return book.to_dict()
+        print('commit worked')
+        book = book.to_dict()
+        print('to dict worked')
+        print(book)
+        return book
 
     @staticmethod
     def delete(book_id):
