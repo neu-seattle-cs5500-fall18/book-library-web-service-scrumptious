@@ -234,3 +234,46 @@ def expected_author2():
         'middle_name': 'Lyle'
     }
     return author
+
+
+@pytest.fixture(scope='module')
+def user_dict1():
+    user = {
+        'user_first_name' : 'Nathan',
+        'user_last_name' : 'Doe',
+        'user_email' : 'aUser@something.com'
+    }
+    return user
+
+
+@pytest.fixture(scope='module')
+def user_dict2():
+    user = {
+        'user_first_name' : 'Jane',
+        'user_last_name' : 'Doe',
+        'user_email' : 'Anotheruser@something.com'
+    }
+    return user
+
+
+@pytest.fixture(scope='module')
+def expected_user1():
+    user = {
+        'user_id' : 1,
+        'user_first_name': 'Nathan',
+        'user_last_name': 'Doe',
+        'user_email': 'aUser@something.com'
+    }
+    return user
+
+
+@pytest.fixture(scope='module')
+def expected_user2():
+    user = {
+        'user_id': 2,
+        'user_first_name': 'Jane',
+        'user_last_name': 'Doe',
+        'user_email': 'Anotheruser@something.com'
+    }
+    return user
+

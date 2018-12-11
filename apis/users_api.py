@@ -19,9 +19,6 @@ user_input_marshaller = ns.model('UserInput', {
 })
 
 
-
-
-
 @ns.route('')
 @ns.response(404, 'Record not found')
 @ns.response(201, 'Created new user.')
@@ -45,6 +42,7 @@ class Users(Resource):
         """
         print('Received POST on resource /users')
         user_info = request.get_json()
+        print(user_info)
         response = create_user(user_info)
         return response, 201
 
