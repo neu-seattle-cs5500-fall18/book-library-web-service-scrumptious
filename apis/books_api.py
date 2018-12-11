@@ -261,7 +261,7 @@ class BookCopies(Resource):
 @ns.doc(params={'book_id': 'A record for a book.'})
 class BookAuthors(Resource):
     @ns.expect(author_marshaller, validate=True)
-    @ns.marshal_with(author_marshaller, code=200)
+    @ns.marshal_with(author_marshaller, code=201)
     def post(self, book_id):
         """
         Adds new author to an existing book, given a JSON of author attributes according to author_marshaller.
@@ -272,7 +272,7 @@ class BookAuthors(Resource):
         if book_id.isdigit():
             author_json = request.get_json()
             author = AuthorChecker.create_author(book_id, author_json)
-            return author, 200
+            return author, 201
         else:
             abort(400, 'Invalid input for book_id')
 

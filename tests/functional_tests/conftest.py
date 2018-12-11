@@ -87,29 +87,6 @@ def book4_dict():
 
 
 @pytest.fixture(scope='module')
-def new_author1():
-    author = Author(first_name='Herman', last_name='Melville', middle_name='M')
-    return author
-
-
-@pytest.fixture(scope='module')
-def new_author2():
-    author = Author(first_name='Ursela', last_name='LeGuin', middle_name='K')
-    return author
-
-
-@pytest.fixture(scope='module')
-def existing_author1():
-    author = Author(author_id=1, first_name='Herman', last_name='Melville', middle_name='M')
-    return author
-
-
-@pytest.fixture(scope='module')
-def existing_author2():
-    author = Author(author_id=2, first_name='Ursela', last_name='LeGuin', middle_name='K')
-    return author
-
-@pytest.fixture(scope='module')
 def expect_book1_dict():
     book = {
         "book_id" : 1,
@@ -214,7 +191,46 @@ def expected_copies2():
             'book_id': 1,
             'is_checked_out' : False,
     }
-
-
     return copy
 
+
+@pytest.fixture(scope='module')
+def author_dict():
+    author = {
+        'first_name': 'Shadow',
+        'last_name': 'Writer',
+        'middle_name': ''
+    }
+    return author
+
+
+@pytest.fixture(scope='module')
+def expected_author():
+    author = {
+        'author_id' : 2,
+        'first_name': 'Shadow',
+        'last_name': 'Writer',
+        'middle_name': ''
+    }
+    return author
+
+
+@pytest.fixture(scope='module')
+def author_dict2():
+    author = {
+        'first_name': 'Shadow',
+        'last_name': 'Writer',
+        'middle_name': 'Lyle'
+    }
+    return author
+
+
+@pytest.fixture(scope='module')
+def expected_author2():
+    author = {
+        'author_id' : 1,
+        'first_name': 'Shadow',
+        'last_name': 'Writer',
+        'middle_name': 'Lyle'
+    }
+    return author
