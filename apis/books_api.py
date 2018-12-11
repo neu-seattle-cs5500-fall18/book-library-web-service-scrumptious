@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request
 from flask_restplus import abort, fields, inputs, Namespace, reqparse, Resource
 from controller.author_checker import AuthorChecker
 from controller.book_checker import BookChecker
