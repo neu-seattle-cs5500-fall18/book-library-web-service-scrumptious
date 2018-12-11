@@ -109,43 +109,6 @@ def existing_author2():
     author = Author(author_id=2, first_name='Ursela', last_name='LeGuin', middle_name='K')
     return author
 
-
-@pytest.fixture(scope='module')
-def new_book_copy1():
-    copy = BookCopy(book_id=1, is_checked_out=False)
-    return copy
-
-
-@pytest.fixture(scope='module')
-def new_book_copy2():
-    copy = BookCopy(book_id=2, is_checked_out=False)
-    return copy
-
-
-@pytest.fixture(scope='module')
-def book_copy1():
-    copy = BookCopy(book_copy_id=1, book_id=1, is_checked_out=False)
-    return copy
-
-
-@pytest.fixture(scope='module')
-def book_copy2():
-    copy = BookCopy(book_copy_id=2, book_id=2, is_checked_out=False)
-    return copy
-
-
-@pytest.fixture(scope='module')
-def new_note():
-    note = Note(note_title='Cool Book', note='Really enjoyed the book', book_id=1)
-    return note
-
-
-@pytest.fixture(scope='module')
-def new_user():
-    user = User(user_first_name='FirstaaName', user_last_name='LastName', email='asdf@some.com')
-    return user
-
-
 @pytest.fixture(scope='module')
 def expect_book1_dict():
     book = {
@@ -231,4 +194,27 @@ def expected_book3_fulldict():
 
         }
     return book
+
+
+@pytest.fixture(scope= 'module')
+def expected_copies1():
+    copy = {
+            'book_copy_id': 1,
+            'book_id': 1,
+            'is_checked_out' : False,
+        }
+
+    return copy
+
+
+@pytest.fixture(scope= 'module')
+def expected_copies2():
+    copy = {
+            'book_copy_id': 2,
+            'book_id': 1,
+            'is_checked_out' : False,
+    }
+
+
+    return copy
 
