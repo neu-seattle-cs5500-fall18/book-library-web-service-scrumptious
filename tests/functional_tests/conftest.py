@@ -12,7 +12,7 @@ def book1_dict():
     book = {
         'title': 'Old Man',
         'publish_date': '1980-05-12',
-        'subject': 'Fiction',
+        'subject': 'Non-Fiction',
         'genre': 'Novel',
         'notes': [],
         'authors': [
@@ -52,7 +52,7 @@ def book3_dict():
         'publish_date': '1970-05-12',
         'subject': 'Fiction',
         'genre': 'Literary Fiction',
-        'notes': [{'note_title':'Best Steinbeck', 'note': 'It has a dog'}],
+        'notes': [],
         'authors': [
             {
                 'first_name': 'John',
@@ -157,7 +157,7 @@ def expect_book1_dict():
         "book_id" : 1,
         "title": "Old Man",
         "publish_date": "1980-05-12",
-        "subject": "Fiction",
+        "subject": "Non-Fiction",
         "genre": "Novel",
         "notes": [],
         "authors": [
@@ -197,7 +197,7 @@ def expect_book3_dict():
         'publish_date': '1970-05-12',
         'subject': 'Fiction',
         'genre': 'Literary Fiction',
-        'notes': [{'note_title': 'Best Steinbeck', 'note': 'It has a dog'}],
+        'notes': [],
         'authors': [
             {
                 'author_id' : 2,
@@ -212,31 +212,28 @@ def expect_book3_dict():
 
 
 @pytest.fixture(scope='module')
-def expected_post_book1():
-    copies = {'copies': [
+def expected_book3_fulldict():
+    book = {'copies': [
             {
-                'book_copy_id': 1,
-                'book_id': 1,
+                'book_copy_id': 3,
+                'book_id': 3,
                 'is_checked_out': False
-            }
-        ]}
-    authors = {'authors': [
-            {
-               'first_name': 'Herman',
-               'last_name': 'Melville',
-               'middle_name': 'M'
-            }
-        ]}
-    book = [{
-        'copies': copies,
-        'title': 'Old Man',
-        'publish_date': '1980-05-12',
-        'subject': 'Fiction',
-        'genre': 'Novel',
-        'notes': [],
-        'authors': authors
-    }]
+            }],
+            'book_id': 3,
+            'title': 'Travels With Charlie',
+            'publish_date': '1970-05-12',
+            'subject': 'Fiction',
+            'genre': 'Literary Fiction',
+            'notes': [],
+            'authors': [
+                {
+                    'author_id': 2,
+                    'first_name': 'John',
+                    'last_name': 'Steinbeck',
+                    'middle_name': ''
+                }
+            ]
 
-    book = json.dumps(book)
+        }
     return book
 
