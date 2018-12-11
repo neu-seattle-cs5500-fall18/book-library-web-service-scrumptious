@@ -11,6 +11,10 @@ class BookCopy(db.Model):
                % (self.book_copy_id, self.book_id, self.is_checked_out))
 
     def to_dict(self):
+        """
+        Method to convert a book copy to a python dictionary data object
+        :return: dict
+        """
         print('Book Copy to_dict')
         copy_dict = {
             'book_copy_id': self.book_copy_id,
@@ -20,6 +24,11 @@ class BookCopy(db.Model):
         return copy_dict
 
     def update(self, **kwargs):
+        """
+        Method to update a book copy's attributes
+        :param kwargs: A dict of valid key-value pairs
+        :return: None
+        """
         print('BookCopy.update()')
         for key, value in kwargs.items():
             setattr(self, key, value)

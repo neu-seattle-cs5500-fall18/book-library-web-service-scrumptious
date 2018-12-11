@@ -6,6 +6,11 @@ from data_access_layer.note_dao import NoteDao
 class NoteChecker:
     @staticmethod
     def get_notes(book_id):
+        """
+        Method to retrieve a list of notes about a book
+        :param book_id: the unique book identifier
+        :return: list of notes for a book
+        """
         print('NoteChecker.get_notes()')
         if BookDao.contains(book_id):
             list_notes = NoteDao.get_notes(book_id)
@@ -15,6 +20,12 @@ class NoteChecker:
 
     @staticmethod
     def create_note(book_id, note):
+        """
+        Method to create a note about a particular book
+        :param book_id: the unique book identifier
+        :param note: String representation of the note
+        :return: The book note
+        """
         print('NoteChecker.create_note()')
         if BookDao.contains(book_id):
             if NoteDao.contains(note.get('note_title')):
@@ -27,6 +38,12 @@ class NoteChecker:
 
     @staticmethod
     def create_notes(book_id, notes_array):
+        """
+        Method to create a list of notes about a particular book
+        :param book_id: the unique book identifier
+        :param notes_array: list of Strings representing the notes to add
+        :return: a list of notes
+        """
         print('NoteChecker.create_notes()')
         list_notes = []
         if BookDao.contains(book_id):
