@@ -6,9 +6,9 @@ class Checkout(db.Model):
     user_id = db.Column(db.Integer, nullable=False)
     book_id = db.Column(db.Integer, nullable=False)
     book_copy_id = db.Column(db.Integer, nullable=False)
-    checkout_date = db.Column(db.Date, nullable=False)
-    due_date = db.Column(db.Date, nullable=False)
-    return_date = db.Column(db.Date, nullable=True)
+    checkout_date = db.Column(db.String, nullable=False)
+    due_date = db.Column(db.String, nullable=False)
+    return_date = db.Column(db.String, nullable=True)
 
     def __repr__(self): return"<Checkout(checkout_id='%s', user_id='%s', book_id='%s', book_copy_id='%s'," \
                               "checkout_date='%s', due_date='%s', return_date='%s'>" % \
@@ -19,7 +19,7 @@ class Checkout(db.Model):
         print('Checkout to_dict')
         checkout_dict = {
             'checkout_id': self.checkout_id,
-            'use_id': self.user_id,
+            'user_id': self.user_id,
             'book_id': self.book_id,
             'book_copy_id': self.book_copy_id,
             'checkout_date': self.checkout_date,
@@ -28,3 +28,7 @@ class Checkout(db.Model):
         }
         return checkout_dict
 
+    def update(self, **kwargs):
+        print('Checkout.update()')
+        for key, value in kwargs.items():
+            setattr(self, key, value)

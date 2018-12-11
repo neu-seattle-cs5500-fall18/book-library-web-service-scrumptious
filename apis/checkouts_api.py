@@ -1,6 +1,7 @@
 from flask import request
-from flask_restplus import Namespace, fields, Resource, reqparse
+from flask_restplus import Namespace, fields, Resource, reqparse, abort
 from controller import checkout_checker
+from controller.checkout_checker import get_all_checkouts, get_checkout, create_checkout, update_checkout, delete_checkout
 
 ns = Namespace('checkouts', description='Checkouts operations')
 
@@ -9,26 +10,25 @@ checkout_marshaller = ns.model('Checkout', {
     'user_id': fields.Integer(required=True, description='user who checks out the book'),
     'book_id': fields.Integer(required=True, description='the book that user checks out'),
     'book_copy_id': fields.Integer(required=True, description="the specific copy of the book for checkout"),
-    'checkout_date': fields.Date(required=True, description='the date that the book is checked out'),
-    'due_date': fields.Date(required=True, desciription='the date that the checkout book is due'),
-    'return_date': fields.Date(required=True, description='the date that the checkout book is returned'),
+    'checkout_date': fields.String(required=True, description='the date that the book is checked out'),
+    'due_date': fields.String(required=True, desciription='the date that the checkout book is due'),
+    'return_date': fields.String(required=False, description='the date that the checkout book is returned'),
 })
 
-query_parser = reqparse.RequestParser()
-query_parser.add_argument('checkout_id', required=False)
-query_parser.add_argument('user_id', required=False)
-query_parser.add_argument('book_id', required=False)
-query_parser.add_argument('book_copy_id', required=False)
-query_parser.add_argument('checkout_date', required=False)
-query_parser.add_argument('due_date', required=False)
-query_parser.add_argument('return_date', required=False)
+checkout_input_marshaller = ns.model('CheckoutInput', {
+    'user_id': fields.Integer(required=True, description='user who checks out the book'),
+    'book_id': fields.Integer(required=True, description='the book that user checks out'),
+    'book_copy_id': fields.Integer(required=True, description="the specific copy of the book for checkout"),
+    'checkout_date': fields.String(required=True, description='the date that the book is checked out'),
+    'due_date': fields.String(required=True, desciription='the date that the checkout book is due'),
+    'return_date': fields.String(required=False, description='the date that the checkout book is returned'),
+})
 
 
 @ns.route('', endpoint='checkouts')
 @ns.response(code=400, description='Validation Error')
 class Checkouts(Resource):
 
-    @ns.doc(body=query_parser, validate=True)
     @ns.marshal_with(checkout_marshaller, code=200, description='Success')
     def get(self):
         """
@@ -40,19 +40,14 @@ class Checkouts(Resource):
         print('got all checkouts')
         return response
 
-
-@ns.route('/user/<user_id>/book/<book_id>')
-@ns.response(code=400, description='Validation Error')
-class CreateCheckout(Resource):
-
-    @ns.marshal_with(checkout_marshaller, code=201, description='Success')
-    def post(self, user_id, book_id):
+    @ns.expect(checkout_input_marshaller)
+    def post(self):
         """
         Create a new checkout for the book.
         :return: checkout_id for the create book
         """
-        response = checkout_checker.create_checkout(user_id, book_id)
-
+        checkout_info = request.get_json()
+        response = create_checkout(checkout_info)
         return response, 201
 
 
@@ -70,8 +65,8 @@ class CheckoutRecord(Resource):
         checkout_record = checkout_checker.get_checkout(checkout_id)
         return checkout_record
 
-    @ns.doc(body=checkout_marshaller, validate=True)
-    @ns.response(code=200, description='Success')
+    @ns.doc(body=checkout_input_marshaller, validate=True)
+    @ns.marshal_with(checkout_marshaller, 200)
     def put(self, checkout_id):
         """
         Update an existing checkout when the checked-out book is returned.
@@ -80,9 +75,12 @@ class CheckoutRecord(Resource):
         """
         print('Received PUT on resource /checkout/<checkout_id>')
 
-        checkout_id = checkout_checker.update_checkout(checkout_id)
-
-        return checkout_id
+        if checkout_id.isdigit():
+            request_body = request.get_json()
+            checkout = update_checkout(checkout_id, request_body)
+            return checkout
+        else:
+            return abort(400, 'Invalid input for user_id in url')
 
     @ns.response(code=200, description='Checkout deleted')
     def delete(self, checkout_id):
