@@ -1,4 +1,5 @@
 from data_access_layer import book_copy_dao
+from data_access_layer.book_copy_dao import BookCopyDao
 from data_access_layer.checkout_dao import CheckoutDao
 from flask_restplus import abort
 
@@ -24,14 +25,17 @@ def get_all_checkouts():
     :return: a Json list of Checkout Dicts.
     """
     list_of_checkouts = CheckoutDao.get_all_checkouts()
+    print("after get all checkouts in the checker layer")
     return list_of_checkouts
 
 
 def create_checkout(json_checkout_info):
+    book_copy_id = json_checkout_info['book_copy_id']
+    if BookCopyDao.get_book_copy(book_copy_id).is_checked_out is True:
+        return abort(400, 'book already checked out')
 
     user_id = json_checkout_info['user_id']
     book_id = json_checkout_info['book_id']
-    book_copy_id = json_checkout_info['book_copy_id']
     checkout_date = json_checkout_info['checkout_date']
     due_date = json_checkout_info['due_date']
     return_date = json_checkout_info['return_date']
@@ -84,3 +88,14 @@ def delete_checkout(checkout_id):
     if a_checkout is None:
         abort(400, 'Invalid input')
     return CheckoutDao.delete_checkout(checkout_id)
+
+
+def get_reminders():
+    """
+    Return the list of checkouts and user's emails that need reminders.
+    :return: the list of checkouts that need to be sent email notifications alogn with the user emails.
+    """
+
+    list_of_reminders = CheckoutDao.get_reminders()
+    return list_of_reminders
+

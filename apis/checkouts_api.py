@@ -1,7 +1,7 @@
 from flask import request
-from flask_restplus import Namespace, fields, Resource, reqparse, abort
+from flask_restplus import Namespace, fields, Resource, abort
 from controller import checkout_checker
-from controller.checkout_checker import get_all_checkouts, get_checkout, create_checkout, update_checkout, delete_checkout
+from controller.checkout_checker import get_all_checkouts, create_checkout, update_checkout, get_reminders
 
 ns = Namespace('checkouts', description='Checkouts operations')
 
@@ -10,18 +10,18 @@ checkout_marshaller = ns.model('Checkout', {
     'user_id': fields.Integer(required=True, description='user who checks out the book'),
     'book_id': fields.Integer(required=True, description='the book that user checks out'),
     'book_copy_id': fields.Integer(required=True, description="the specific copy of the book for checkout"),
-    'checkout_date': fields.String(required=True, description='the date that the book is checked out'),
-    'due_date': fields.String(required=True, desciription='the date that the checkout book is due'),
-    'return_date': fields.String(required=False, description='the date that the checkout book is returned'),
+    'checkout_date': fields.Date(required=True, description='the date that the book is checked out'),
+    'due_date': fields.Date(required=True, desciription='the date that the checkout book is due'),
+    'return_date': fields.Date(required=False, description='the date that the checkout book is returned'),
 })
 
 checkout_input_marshaller = ns.model('CheckoutInput', {
     'user_id': fields.Integer(required=True, description='user who checks out the book'),
     'book_id': fields.Integer(required=True, description='the book that user checks out'),
     'book_copy_id': fields.Integer(required=True, description="the specific copy of the book for checkout"),
-    'checkout_date': fields.String(required=True, description='the date that the book is checked out'),
-    'due_date': fields.String(required=True, desciription='the date that the checkout book is due'),
-    'return_date': fields.String(required=False, description='the date that the checkout book is returned'),
+    'checkout_date': fields.Date(required=True, description='the date that the book is checked out'),
+    'due_date': fields.Date(required=True, desciription='the date that the checkout book is due'),
+    'return_date': fields.Date(required=False, description='the date that the checkout book is returned'),
 })
 
 
@@ -35,9 +35,7 @@ class Checkouts(Resource):
         Queries the checkouts resource based on URL.
         :return: Json object of all checkouts that match the query parameter.
         """
-        response = checkout_checker.get_all_checkouts
-
-        print('got all checkouts')
+        response = get_all_checkouts()
         return response
 
     @ns.expect(checkout_input_marshaller)
@@ -94,6 +92,21 @@ class CheckoutRecord(Resource):
         id_of_deleted = checkout_checker.delete_checkout(checkout_id)
 
         return id_of_deleted
+
+
+@ns.route('/reminder')
+@ns.response(code=400, description='Validation Error')
+class Checkouts(Resource):
+
+    @ns.marshal_with(checkout_marshaller, code=200, description='Success')
+    def get(self):
+        """
+        Queries the checkouts resource based on URL.
+        :return: all the checkouts whose return date is null with users's information joined
+        :return: Json object of all checkouts that match the query parameter.
+        """
+        response = get_reminders()
+        return response
 
 
 
