@@ -1,7 +1,7 @@
-from flask import request, jsonify
-from flask_restplus import Namespace, fields, Resource, reqparse, abort
+from flask import request
+from flask_restplus import Namespace, fields, Resource, abort
 from controller import checkout_checker
-from controller.checkout_checker import get_all_checkouts, get_checkout, create_checkout, update_checkout, delete_checkout
+from controller.checkout_checker import get_all_checkouts, create_checkout, update_checkout, get_reminders
 
 ns = Namespace('checkouts', description='Checkouts operations')
 
@@ -92,6 +92,21 @@ class CheckoutRecord(Resource):
         id_of_deleted = checkout_checker.delete_checkout(checkout_id)
 
         return id_of_deleted
+
+
+@ns.route('/reminder')
+@ns.response(code=400, description='Validation Error')
+class Checkouts(Resource):
+
+    @ns.marshal_with(checkout_marshaller, code=200, description='Success')
+    def get(self):
+        """
+        Queries the checkouts resource based on URL.
+        :return: all the checkouts whose return date is null with users's information joined
+        :return: Json object of all checkouts that match the query parameter.
+        """
+        response = get_reminders()
+        return response
 
 
 
