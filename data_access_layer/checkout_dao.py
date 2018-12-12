@@ -20,6 +20,7 @@ class CheckoutDao:
     @staticmethod
     def get_all_checkouts():
         print('Get all checkouts')
+
         list_of_checkouts = []
         query_results = Checkout.query.all()
 
@@ -29,7 +30,12 @@ class CheckoutDao:
 
     @staticmethod
     def create_new_checkout(checkout_dict):
+
         new_checkout = Checkout(**checkout_dict)
+        book_copy_id = new_checkout.book_copy_id
+        book_copy = BookCopyDao.get_book_copy(book_copy_id)
+        book_copy.is_checked_out = False
+
         db.session.add(new_checkout)
         db.session.commit()
         print('checkout created')

@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, jsonify
 from flask_restplus import Namespace, fields, Resource, reqparse, abort
 from controller import checkout_checker
 from controller.checkout_checker import get_all_checkouts, get_checkout, create_checkout, update_checkout, delete_checkout
@@ -35,9 +35,7 @@ class Checkouts(Resource):
         Queries the checkouts resource based on URL.
         :return: Json object of all checkouts that match the query parameter.
         """
-        response = checkout_checker.get_all_checkouts
-
-        print('got all checkouts')
+        response = get_all_checkouts()
         return response
 
     @ns.expect(checkout_input_marshaller)

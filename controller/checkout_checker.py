@@ -24,6 +24,7 @@ def get_all_checkouts():
     :return: a Json list of Checkout Dicts.
     """
     list_of_checkouts = CheckoutDao.get_all_checkouts()
+    print("after get all checkouts in the checker layer")
     return list_of_checkouts
 
 
