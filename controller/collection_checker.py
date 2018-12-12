@@ -16,7 +16,7 @@ def create_collection(collection_json):
     print("collection_checker.create_collection()")
     title = collection_json['title']
     collection_id = collection_json['collection_id']
-    book_ids = collection_json['books'] #TODO:
+    book_ids = collection_json['books_ids'] #TODO:
     a_collection = {'title': title, 'collection_id': collection_id, 'book_ids': book_ids}
     new_collection = collection_dao.create(a_collection)
     print("collection_checker.create_collection() ==> Complete")
@@ -63,7 +63,7 @@ def add_book_to_collection_id(collection_id, book_id):
         abort(404, 'This book does not exist in the collection.')
     else:
         updated_collection = collection_dao.insert_book(a_book)
-        return update_collection()
+        return updated_collection
 
 
 def delete_book_from_collection_id(collection_id, book_id):
