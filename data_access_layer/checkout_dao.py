@@ -34,7 +34,7 @@ class CheckoutDao:
         new_checkout = Checkout(**checkout_dict)
         book_copy_id = new_checkout.book_copy_id
         book_copy = BookCopyDao.get_book_copy(book_copy_id)
-        book_copy.is_checked_out = False
+        book_copy.is_checked_out = True
 
         db.session.add(new_checkout)
         db.session.commit()
