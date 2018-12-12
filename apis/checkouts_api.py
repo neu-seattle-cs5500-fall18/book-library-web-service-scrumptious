@@ -10,18 +10,18 @@ checkout_marshaller = ns.model('Checkout', {
     'user_id': fields.Integer(required=True, description='user who checks out the book'),
     'book_id': fields.Integer(required=True, description='the book that user checks out'),
     'book_copy_id': fields.Integer(required=True, description="the specific copy of the book for checkout"),
-    'checkout_date': fields.String(required=True, description='the date that the book is checked out'),
-    'due_date': fields.String(required=True, desciription='the date that the checkout book is due'),
-    'return_date': fields.String(required=False, description='the date that the checkout book is returned'),
+    'checkout_date': fields.Date(required=True, description='the date that the book is checked out'),
+    'due_date': fields.Date(required=True, desciription='the date that the checkout book is due'),
+    'return_date': fields.Date(required=False, description='the date that the checkout book is returned'),
 })
 
 checkout_input_marshaller = ns.model('CheckoutInput', {
     'user_id': fields.Integer(required=True, description='user who checks out the book'),
     'book_id': fields.Integer(required=True, description='the book that user checks out'),
     'book_copy_id': fields.Integer(required=True, description="the specific copy of the book for checkout"),
-    'checkout_date': fields.String(required=True, description='the date that the book is checked out'),
-    'due_date': fields.String(required=True, desciription='the date that the checkout book is due'),
-    'return_date': fields.String(required=False, description='the date that the checkout book is returned'),
+    'checkout_date': fields.Date(required=True, description='the date that the book is checked out'),
+    'due_date': fields.Date(required=True, desciription='the date that the checkout book is due'),
+    'return_date': fields.Date(required=False, description='the date that the checkout book is returned'),
 })
 
 

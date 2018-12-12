@@ -1,10 +1,7 @@
-from data_access_layer import book_copy_dao
 from data_access_layer.book_copy_dao import BookCopyDao
-from model.checkout import Checkout
 from flask_restplus import abort
 from model import db
 from model.checkout import Checkout
-from datetime import datetime, timedelta
 
 
 class CheckoutDao:

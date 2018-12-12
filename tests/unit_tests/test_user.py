@@ -10,6 +10,7 @@ def test_user(new_user1):
     assert new_user1.user_last_name == 'LastName'
     assert new_user1.email == 'asdf@some.com'
 
+
 def test_to_dict(new_user1):
     """
     Tests to_dict method for a user.
