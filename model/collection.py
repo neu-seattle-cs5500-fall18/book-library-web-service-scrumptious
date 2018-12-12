@@ -1,8 +1,9 @@
 from model import db
 from model.book import Book
 
+# book_id column should contain a list of ids?
 collection_table = db.Table('collections',
-                            db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
+                            db.Column('book_id', db.Integer, db.ForeignKey('book.book_id')),
                             db.Column('collection_id', db.Integer, db.ForeignKey('book_collection.collection_id'), primary_key=True))
 
 
