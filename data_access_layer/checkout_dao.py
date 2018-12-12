@@ -1,10 +1,7 @@
-from data_access_layer import book_copy_dao
 from data_access_layer.book_copy_dao import BookCopyDao
-from model.checkout import Checkout
 from flask_restplus import abort
 from model import db
 from model.checkout import Checkout
-from datetime import datetime, timedelta
 
 
 class CheckoutDao:
@@ -53,9 +50,9 @@ class CheckoutDao:
 
         print('Updating checkout')
         a_checkout = Checkout.query.get(checkout_id)
-        # book_copy_id = a_checkout.book_copy_id
-        # book_copy = BookCopyDao.get_book_copy(book_copy_id)
-        # book_copy.is_checked_out = False
+        book_copy_id = a_checkout.book_copy_id
+        book_copy = BookCopyDao.get_book_copy(book_copy_id)
+        book_copy.is_checked_out = False
         a_checkout.update(**checkout_info_dict)
         db.session.commit()
         return a_checkout.to_dict()
