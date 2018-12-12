@@ -3,21 +3,22 @@ from flask_restplus import abort
 from model.collection import BookCollection
 
 
-def get_collections(**query_params):
-    list_collections = []
-    results = collection_dao.query_collections(**query_params)
-    for collection in results:
-        list_collections.append(collection.to_dict())
-
-    return list_collections
+# def get_collections(**query_params):
+#     list_collections = []
+#     results = collection_dao.query_collections(**query_params)
+#     for collection in results:
+#         list_collections.append(collection.to_dict())
+#
+#     return list_collections
 
 
 def create_collection(collection_json):
     print("collection_checker.create_collection()")
     title = collection_json['title']
-    collection_id = collection_json['collection_id']
+    #collection_id = collection_json['collection_id']
     book_ids = collection_json['books_ids'] #TODO:
-    a_collection = {'title': title, 'collection_id': collection_id, 'book_ids': book_ids}
+    #a_collection = {'title': title, 'collection_id': collection_id, 'book_ids': book_ids}
+    a_collection = {'title': title, 'book_ids': book_ids}
     new_collection = collection_dao.create(a_collection)
     print("collection_checker.create_collection() ==> Complete")
     print(new_collection)

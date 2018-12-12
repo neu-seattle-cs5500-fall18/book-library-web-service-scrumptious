@@ -16,19 +16,19 @@ collection_marshaller = ns.model('BookCollections', {
 @ns.response(200, 'Success')
 @ns.response(400, 'Validation Error')
 class BookCollections(Resource):
-    @ns.marshal_with(collection_marshaller, code=200)
-    def get(self):
-        """
-        Gets all collections
-        :return: Json object of all collections
-        """
-        print('Received GET on resource /collections')
-        # this should throw error if arg doesn't match the parser
-        collection = collection_checker.get_collections()
-        return collection
+#     @ns.marshal_with(collection_marshaller, code=200)
+#     def get(self):
+#         """
+#         Gets all collections
+#         :return: Json object of all collections
+#         """
+#         print('Received GET on resource /collections')
+#         # this should throw error if arg doesn't match the parser
+#         collection = collection_checker.get_collections()
+#         return collection
 
-    @ns.expect(collection_marshaller, validate=True)
-    @ns.response(201, 'Created')
+   # @ns.expect(collection_marshaller, validate=True)
+    # @ns.response(201, 'Created')
     def post(self):
         """
         Creates a new collection record for a single book.
