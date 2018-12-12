@@ -88,3 +88,14 @@ def delete_checkout(checkout_id):
     if a_checkout is None:
         abort(400, 'Invalid input')
     return CheckoutDao.delete_checkout(checkout_id)
+
+
+def get_reminders():
+    """
+    Return the list of checkouts and user's emails that need reminders.
+    :return: the list of checkouts that need to be sent email notifications alogn with the user emails.
+    """
+
+    list_of_reminders = CheckoutDao.get_reminders()
+    return list_of_reminders
+

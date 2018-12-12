@@ -3,6 +3,7 @@ from model.book import Book, authorship_table
 from model.author import Author
 from dateutil import parser
 
+
 class BookDao:
     @staticmethod
     def contains(book_id):
