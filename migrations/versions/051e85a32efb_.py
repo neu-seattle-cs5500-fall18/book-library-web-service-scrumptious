@@ -22,7 +22,7 @@ def upgrade():
     op.create_foreign_key(None, 'checkout', 'user', ['user_id'], ['user_id'])
     op.alter_column('collections', 'book_id',
                existing_type=sa.INTEGER(),
-               nullable=True)
+               nullable=False)
     op.drop_constraint('user_user_first_name_user_last_name_email_key', 'user', type_='unique')
     op.create_unique_constraint(None, 'user', ['email'])
     # ### end Alembic commands ###

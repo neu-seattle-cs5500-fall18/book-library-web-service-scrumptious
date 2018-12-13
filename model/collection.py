@@ -2,7 +2,7 @@ from model import db
 from model.book import Book
 
 collection_table = db.Table('collections',
-                            db.Column('book_id', db.Integer, db.ForeignKey('book.book_id')),
+                            db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
                             db.Column('collection_id', db.Integer, db.ForeignKey('book_collection.collection_id'), primary_key=True))
 
 
