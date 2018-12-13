@@ -72,6 +72,7 @@ class CollectionRecord(Resource):
         :param collection_id: Record to be deleted.
         :return: Json of collection_id of deleted record.
         """
+        # to do! Need to do it like books where books set to empty array
         return
 
 

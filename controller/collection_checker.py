@@ -69,12 +69,10 @@ def get_collection(collection_id):
 
 
 def delete_collection(collection_id):
-    collection = collection_dao.get_collection(collection_id)
-    if collection is None:
-        abort(400, 'Collection does not exist')
+    if collection_dao.contains(collection_id):
+        return collection_dao.delete_collection(collection_id)
     else:
-        id = collection_dao.delete_collection(collection_id) #TODO:
-        return id
+        abort(400, 'Collection does not exist')
 
 
 def add_book_to_collection_id(collection_id, book_id):

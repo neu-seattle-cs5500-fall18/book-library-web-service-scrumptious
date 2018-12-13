@@ -97,12 +97,9 @@ def get_collection(collection_id):
 
 def delete_collection(collection_id):
     print('Delete collection')
-
     a_collection = BookCollection.query.get(collection_id)
-
-    if a_collection is None:
-        abort(400, 'Record not found')
-    else:
-        a_collection.is_deleted = True
-        db.session.commit()
-        return a_collection.collection_id
+    a_collection.book_ids = []
+    db.session.commit()
+    db.session.delete(a_collection)
+    db.session.commit()
+    return
