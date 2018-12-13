@@ -76,6 +76,7 @@ class CheckoutDao:
     @staticmethod
     def joint_to_dict(checkout_id, user_id, book_id, book_copy_id, checkout_date, due_date, return_date,
                       user_first_name, user_last_name, user_email):
+
         joint_dict = {
             'checkout_id': checkout_id,
             'user_id': user_id,
@@ -88,6 +89,7 @@ class CheckoutDao:
             'user_last_name': user_last_name,
             'user_email': user_email,
         }
+        'Turning table into a joint dict'
         return joint_dict
 
     @staticmethod
@@ -114,6 +116,7 @@ class CheckoutDao:
         results.all()
 
         for checkout in results:
+            print(checkout)
             list_of_checkouts.append(checkout.joint_to_dict)
         return list_of_checkouts
 
