@@ -152,7 +152,7 @@ class BookDao:
     def delete(book_id):
         """
         Method to delete a book record.  Has cascading effect on copies and authors.
-        :param a_book_id: id of book record to be deleted.
+        :param book_id: id of book record to be deleted.
         :return: null.
         """
         print('BookDao.delete()')
