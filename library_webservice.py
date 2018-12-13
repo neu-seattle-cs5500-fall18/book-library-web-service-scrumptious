@@ -7,6 +7,7 @@ app = create_app(__name__)
 
 from model import db
 db.init_app(app)
+db.create_all()
 
 migrate = Migrate(app, db)
 
