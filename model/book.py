@@ -5,7 +5,8 @@ Helper table to define the many to many relationship between books and authors.
 """
 authorship_table = db.Table('authorship',
                             db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
-                            db.Column('author_id', db.Integer, db.ForeignKey('author.author_id'), primary_key=True))
+                            db.Column('author_id', db.Integer, db.ForeignKey('author.author_id'), primary_key=True)
+                            )
 
 
 class Book(db.Model):

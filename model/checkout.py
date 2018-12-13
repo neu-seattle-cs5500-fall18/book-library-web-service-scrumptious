@@ -3,9 +3,9 @@ from model import db
 
 class Checkout(db.Model):
     checkout_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
-    book_id = db.Column(db.Integer, nullable=False)
-    book_copy_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.book_id'), nullable=False)
+    book_copy_id = db.Column(db.Integer, db.ForeignKey('book_copy.book_copy_id'), nullable=False)
     checkout_date = db.Column(db.String, nullable=False)
     due_date = db.Column(db.String, nullable=False)
     return_date = db.Column(db.String, nullable=True)
