@@ -26,7 +26,7 @@ user_input_marshaller = ns.model('UserInput', {
 class Users(Resource):
     def get(self):
         """
-        Gets all users
+        Gets all users.
         :return: Json List of users of type Dict
         """
         print('Received GET on resources /users')

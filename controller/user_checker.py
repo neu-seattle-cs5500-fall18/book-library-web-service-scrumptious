@@ -4,7 +4,7 @@ from flask_restplus import abort
 def email_exists(email):
     """
     Helper function to see if DAO has a record with the same email.
-    :param email: string email
+    :param email: string email.
     :return: True if email already exists, false otherwise.
     """
     print('user_checker.email_exists()')
@@ -13,10 +13,10 @@ def email_exists(email):
 
 def valid_input(first_name, last_name, email):
     """
-    Helper function to validate user information
-    :param first_name: String first name, where name only contains alpha characters
-    :param last_name: String last name where name onlu contains alpha characters
-    :param email: String email where email contains '@'
+    Helper function to validate user information.
+    :param first_name: String first name, where name only contains alpha characters.
+    :param last_name: String last name where name onlu contains alpha characters.
+    :param email: String email where email contains '@'.
     :return: True if parameters match, false otherwise.
     """
     print('Validate user info input')
@@ -25,7 +25,7 @@ def valid_input(first_name, last_name, email):
 
 def clean_user(first_name, last_name, email):
     """
-    Helper function to prepare user information for entry to DAO
+    Helper function to prepare user information for entry to DAO.
     :param first_name: String first name of user.
     :param last_name: String last name of user.
     :param email: string email of user.
@@ -95,7 +95,7 @@ def update_user(user_id, json_user_info):
     Function to update an existing user record.
     :param user_id: Integer of user record to be updated.
     :param json_user_info: Json of user information to be updated.
-    :return:
+    :return: null.
     """
     print(json_user_info)
     fname = json_user_info['user_first_name']
@@ -115,8 +115,8 @@ def update_user(user_id, json_user_info):
 def delete_user(user_id):
     """
     Function to delete a user.
-    :param user_id: Integer of user record
-    :return: None
+    :param user_id: Integer of user record.
+    :return: null.
     """
     if UserDao.contains(user_id):
         print('Delete user %r' % user_id)

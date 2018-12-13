@@ -22,8 +22,8 @@ class AuthorDao:
     @staticmethod
     def contains_author(author_dict):
         """
-        Method to determine if an author exists based on parameters
-        :param author_json: json of Author parameters and values (first_name, last_name, middle_name)
+        Method to determine if an author exists based on parameters.
+        :param author_json: json of Author parameters and values (first_name, last_name, middle_name).
         :return: True if database contains a record that matches, false otherwise.
         """
         print('AuthorDao.contains_author()')
@@ -48,7 +48,7 @@ class AuthorDao:
     @staticmethod
     def get_author_ID(author_dict):
         """
-        Method to get the ID of an author based on the author's information. Requires exact match of fields
+        Method to get the ID of an author based on the author's information. Requires exact match of fields.
         :param author_dict: Dictionary of author information to filter by.
         :return: the ID of an author if present.  None otherwise.
         """
@@ -80,8 +80,8 @@ class AuthorDao:
     def add_book(book_id, author_id):
         """
         Method to add a Book to an Author.
-        :param book_id: Record of Book
-        :param author_id: Record of Author
+        :param book_id: Record of Book.
+        :param author_id: Record of Author.
         :return: Dictionary of Author.
         """
         print("AuthorDao.add_book()")

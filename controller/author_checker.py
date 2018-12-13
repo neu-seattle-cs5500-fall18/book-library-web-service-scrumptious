@@ -9,7 +9,7 @@ class AuthorChecker:
     def json_to_dict(author_json):
         """
         Helper method to create dictionary of author parameters from json object.
-        :param author_json: Json object
+        :param author_json: Json object.
         :return: Dictionary of an author.
         """
         author = {
@@ -23,8 +23,8 @@ class AuthorChecker:
     def add_book_to_author(book_id, author_id):
         """
         Method to add an existing book to an existing author.
-        :param book_id: id of existing book
-        :param author_id: id of existing author
+        :param book_id: id of existing book.
+        :param author_id: id of existing author.
         :return: dictionary of updated author object.
         """
         if BookDao.contains(book_id):
@@ -39,7 +39,7 @@ class AuthorChecker:
     @staticmethod
     def create_author(book_id, author_json):
         """
-        Method to create a new author and attribute a book to author.  If author record already exists, book is added
+        Method to create a new author and attribute a book to author.  If author record already exists, book is added.
         to existing author record.
         :param book_id:  id of existing book.
         :param author_json: json of author information.
@@ -61,7 +61,7 @@ class AuthorChecker:
     @staticmethod
     def create_authors(book_id, list_authors):
         """
-        Method ot generate a list of authors. Depends on create_author() to create the correct author record.
+        Method to generate a list of authors. Depends on create_author() to create the correct author record.
         :param book_id: record of book to add to authors.
         :param list_authors: json list of authors to be created and book added to.
         :return: list of dictionary of created authors.

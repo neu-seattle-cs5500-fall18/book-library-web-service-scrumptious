@@ -1,6 +1,9 @@
+from datetime import datetime
+
 from data_access_layer.book_copy_dao import BookCopyDao
 from flask_restplus import abort
 from model import db
+from model.book import Book
 from model.checkout import Checkout
 from model.user import User
 
@@ -49,8 +52,9 @@ class CheckoutDao:
         print('Get a checkout')
 
         a_checkout = Checkout.query.get(checkout_id)
+        print(a_checkout)
 
-        return a_checkout.to_dict
+        return a_checkout.to_dict()
 
     @staticmethod
     def update(checkout_id, checkout_info_dict):
@@ -70,52 +74,22 @@ class CheckoutDao:
         print('Delete checkout')
 
         a_checkout = Checkout.query.filter_by(checkout_id=checkout_id).delete()
+        book_copy_id = a_checkout.book_copy_id
+        book_copy = BookCopyDao.get_book_copy(book_copy_id)
+        book_copy.is_checked_out = False
         db.session.commit()
-        return a_checkout
-
-    @staticmethod
-    def joint_to_dict(checkout_id, user_id, book_id, book_copy_id, checkout_date, due_date, return_date,
-                      user_first_name, user_last_name, user_email):
-        joint_dict = {
-            'checkout_id': checkout_id,
-            'user_id': user_id,
-            'book_id': book_id,
-            'book_copy_id': book_copy_id,
-            'checkout_date': checkout_date,
-            'due_date': due_date,
-            'return_date': return_date,
-            'user_first_name': user_first_name,
-            'user_last_name': user_last_name,
-            'user_email': user_email,
-        }
-        return joint_dict
+        return a_checkout, 204
 
     @staticmethod
     def get_reminders():
         list_of_checkouts = []
-        # userList = users.query.join(friendships, users.id == friendships.user_id)
-        # .add_columns(users.userId, users.name, users.email, friends.userId, friendId).filter(
-        #     users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
-        results = db.session.query(Checkout).join(Book).join(User)
-        # results = Checkout.query.join(User, Checkout.user_id == User.user_id).add_columns(Checkout.checkout_id,
-        #                                                                                   Checkout.user_id,
-        #                                                                                   Checkout.book_id,
-        #                                                                                   Checkout.book_copy_id,
-        #                                                                                   User.user_first_name,
-        #                                                                                   User.user_last_name,
-        #                                                                                   Checkout.due_date,
-        #                                                                                   Checkout.return_date,
-        #                                                                                   User.email)\
-        #     .filter(Checkout.return_date is None, User.user_id == Checkout.user_id)
 
-
-        results = results.filter(Checkout.return_date is None)
-
+        results = Checkout.query.filter(Checkout.return_date==None).all()
         print(results)
-        results.all()
 
+        print("before printing")
         for checkout in results:
-            list_of_checkouts.append(checkout.joint_to_dict)
+            list_of_checkouts.append(checkout.to_dict())
         return list_of_checkouts
 
 

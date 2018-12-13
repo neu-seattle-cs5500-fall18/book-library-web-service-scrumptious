@@ -9,13 +9,18 @@ def query_by_id(collections_id):
     return a_collection.to_dict()
 
 
-def query_by_title(title):
-    a_collection = BookCollection.query.filter_by(title=title)
-    return a_collection.to_dict
+# def query_by_title(title):
+#     a_collection = BookCollection.query.filter_by(title=title)
+#     return a_collection.to_dict
 
-#
-#new
-#
+
+def contains(collection_id):
+    result = BookCollection.query.get(collection_id)
+    if result is None:
+        return False
+    return True
+
+
 def create_collection(collection_title):
     """
     Instantiates a BookCollectiona and creates new record in database to attribute books to
@@ -28,7 +33,7 @@ def create_collection(collection_title):
     db.session.commit()
     return collection.collection_id
 
-# new
+
 def append_collection(collection_id, book):
     """
     Appends a book to a collection
@@ -43,33 +48,38 @@ def append_collection(collection_id, book):
     return
 
 
+# def create(collection_dict):
+#     print("collection_dao.create()")
+#     new_collection = BookCollection(**collection_dict)
+#     db.session.add(new_collection)
+#     print("collection_dao.create() ==> Complete")
+#     db.session.commit()
+#     return new_collection
 
-def create(collection_dict):
-    print("collection_dao.create()")
-    new_collection = BookCollection(**collection_dict)
-    db.session.add(new_collection)
-    print("collection_dao.create() ==> Complete")
-    db.session.commit()
-    return new_collection
+
+# def update(collection_id, **kwargs):
+#     collection = BookCollection.query.get(collection_id)
+#     collection.update(**kwargs)
+#     db.session.commit()
+#     return collection
 
 
-def update(collection_id, **kwargs):
+# def insert_book(collection_id, a_book):
+#     collection = BookCollection.query.get(collection_id)
+#     collection.books.append(a_book)
+#     db.session.commit()
+#     return collection.to_dict()
+
+
+def delete_book(collection_id, a_book_id):
     collection = BookCollection.query.get(collection_id)
-    collection.update(**kwargs)
-    db.session.commit()
-    return collection
-
-
-def insert_book(collection_id, a_book):
-    collection = BookCollection.query.get(collection_id)
-    collection.books.append(a_book)
-    db.session.commit()
-    return collection.to_dict()
-
-
-def delete_book(collection_id, a_book):
-    collection = BookCollection.query.get(collection_id)
-    # collection.books.remove(a_book)
+    books = collection.book_ids
+    ind = 0
+    for i, book in enumerate(books):
+        if book['book_id'] == a_book_id:
+            ind = i
+    new_list = books.pop(ind)
+    collection.book_ids = new_list
     db.session.commit()
     return collection.to_dict()
 

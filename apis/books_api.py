@@ -159,7 +159,7 @@ class BookRecord(Resource):
         """
         Delete a book record based on book_id.
         :param book_id: Record to be deleted.
-        :return: Null.
+        :return: null.
         """
         print('Received DELETE on resource /books/<book_id>')
         if book_id.isdigit():
@@ -218,7 +218,7 @@ class BookNotes(Resource):
         Edit a specific note for a book. Valid input for JSON are fields in the amend_note_marshaller model.
         :param book_id: Record for a book.
         :param note_title: Record for a note.
-        :return: JSON of note according to return_note_marshaller
+        :return: JSON of note according to return_note_marshaller.
         """
         print('Received PUT on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():
@@ -231,9 +231,9 @@ class BookNotes(Resource):
     @ns.marshal_with(return_note_marshaller, code=204)
     def delete(self, book_id, note_title):
         """
-        Delete a specific note for a book
+        Delete a specific note for a book.
         :param book_id: Record for a book.
-        :return: Null.
+        :return: null.
         """
         print('Received DELETE on resource /books/<book_id>/notes/<note_title>')
         if book_id.isdigit():

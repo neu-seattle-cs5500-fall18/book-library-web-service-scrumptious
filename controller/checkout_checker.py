@@ -1,6 +1,12 @@
+from datetime import date
+
+from data_access_layer import book_copy_dao
 from data_access_layer.book_copy_dao import BookCopyDao
+from data_access_layer.book_dao import BookDao
 from data_access_layer.checkout_dao import CheckoutDao
 from flask_restplus import abort
+
+from data_access_layer.user_dao import UserDao
 
 
 def clean_checkout(user_id, book_id, book_copy_id, checkout_date, due_date, return_date):
@@ -57,20 +63,24 @@ def get_checkout(checkout_id):
     return a_checkout
 
 
-def update_checkout(checkout_id, json_checkout_info):
+def update_checkout(checkout_id):
     """
     method to update a checkout since the checkout is returned.
-    :param json_checkout_info:
     :return: the to-be-update information of checkout
-    :param checkout_id: the checkout_id that has been returned.
     :return: the updated checkout id adding the return date of the record.
     """
-    user_id = json_checkout_info['user_id']
-    book_id = json_checkout_info['book_id']
-    book_copy_id = json_checkout_info['book_copy_id']
-    checkout_date = json_checkout_info['checkout_date']
-    due_date = json_checkout_info['due_date']
-    return_date = json_checkout_info['return_date']
+
+    a_checkout = CheckoutDao.get_checkout(checkout_id)
+    print(a_checkout)
+    user_id = a_checkout['user_id']
+    book_id = a_checkout['book_id']
+    book_copy_id = a_checkout['book_copy_id']
+    checkout_date = a_checkout['checkout_date']
+    due_date = a_checkout['due_date']
+    today = date.today().isoformat()
+    print(1)
+    print(today)
+    return_date = today
 
     checkout_dict = clean_checkout(user_id, book_id, book_copy_id, checkout_date, due_date, return_date)
     return CheckoutDao.update(checkout_id, checkout_dict)
@@ -89,13 +99,45 @@ def delete_checkout(checkout_id):
     return CheckoutDao.delete_checkout(checkout_id)
 
 
+def joint_to_dict(checkout_date, due_date, user_first_name, user_last_name, user_email, title):
+    """
+    Turning the instance to a ductionary.
+    :param checkout_date: the checkout date of the book.
+    :param due_date: the due_date of the book.
+    :param user_first_name: user's first name.
+    :param user_last_name: user's last name.
+    :param user_email: user's email.
+    :param title: borrowed book's title.
+    :return: the dictionary of the reminder information needed to be sent to the user.
+    """
+    joint_dict = {
+        'checkout_date': checkout_date,
+        'due_date': due_date,
+        'user_first_name': user_first_name,
+        'user_last_name': user_last_name,
+        'user_email': user_email,
+        'title': title,
+    }
+
+    return joint_dict
+
+
 def get_reminders():
     """
     Return the list of checkouts and user's emails that need reminders.
-    :return: the list of checkouts that need to be sent email notifications alogn with the user emails.
+    :return: the list of checkouts that need to be sent email notifications along with the user emails.
     """
     new_list = []
     list_of_reminders = CheckoutDao.get_reminders()
 
-    return list_of_reminders
+    for checkout in list_of_reminders:
+        book = BookDao.get(checkout['book_id'])
+        user = UserDao.get(checkout['user_id'])
+        title = book['title']
+        user_first_name = user['user_first_name']
+        user_last_name = user['user_last_name']
+        user_email = user['user_email']
+        entry = joint_to_dict(checkout['checkout_date'], checkout['due_date'], user_first_name, user_last_name, user_email, title)
+        new_list.append(entry)
 
+    return new_list
