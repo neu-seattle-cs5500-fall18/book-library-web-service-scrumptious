@@ -24,6 +24,15 @@ checkout_input_marshaller = ns.model('CheckoutInput', {
     'return_date': fields.Date(required=False, description='the date that the checkout book is returned'),
 })
 
+checkout_reminder_marshaller = ns.model('Reminder', {
+    'checkout_date': fields.Date(required=True, description='the checkout date of the book'),
+    'due_date': fields.Date(required=True, description='the due date of the checked out book'),
+    'user_first_name': fields.String(required=True, description='the first name of the user'),
+    'user_last_name': fields.String(required=True, description='the last name of the user'),
+    'user_email': fields.String(required=True, description='the email to be sent of the user'),
+    'title': fields.String(required=True, description='the title of the book borrowed'),
+})
+
 
 @ns.route('', endpoint='checkouts')
 @ns.response(code=400, description='Validation Error')
@@ -84,7 +93,7 @@ class CheckoutRecord(Resource):
         else:
             return abort(400, 'Invalid input for user_id in url')
 
-    @ns.response(code=200, description='Checkout deleted')
+    @ns.response(code=204, description='Checkout deleted')
     def delete(self, checkout_id):
         """
         Delete a checkout record based on checkout_id.
@@ -103,7 +112,7 @@ class CheckoutRecord(Resource):
 @ns.response(400, 'Validation Error')
 class Checkouts(Resource):
 
-    @ns.marshal_with(checkout_marshaller, code=200, description='Success')
+    @ns.marshal_with(checkout_reminder_marshaller, code=200, description='Success')
     def get(self):
         """
         Queries the checkouts resource based on URL.
