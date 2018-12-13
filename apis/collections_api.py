@@ -70,7 +70,7 @@ class CollectionRecord(Resource):
         return
 
 
-@ns.route('/collections/<collection_id>/books/<book_id>')
+@ns.route('/<collection_id>/books/<book_id>')
 @ns.doc(params={'collection_id': 'A record for a collection.', 'book_id': 'A record for a book.'})
 @ns.response(200, 'Success')
 @ns.response(400, 'Validation Error')
