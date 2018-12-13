@@ -12,7 +12,7 @@ book_title_marshaller = ns.model('BookTitleMarshaller',{
 # restplus automatically returns json object type.
 collection_marshaller = ns.model('BookCollections', {
     'collection_id': fields.Integer('The collection record'),
-    'books': fields.List(fields.Nested(book_title_marshaller), description='The book IDs'),
+    'book_ids': fields.List(fields.Nested(book_title_marshaller), description='The book IDs and title'),
     'title': fields.String('The book title.')
 })
 

@@ -22,7 +22,7 @@ class BookCollection(db.Model):
         print(list_of_books)
         collection_dict = {
             'collection_id': self.collection_id,
-            'books': list_of_books,
+            'book_ids': list_of_books,
             'title': self.title
         }
         print(collection_dict)
