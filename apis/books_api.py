@@ -27,6 +27,12 @@ author_marshaller = ns.model('Author', {
     'middle_name': fields.String(required=True, description='Middle name of an author')
 })
 
+new_author_marshaller = ns.model('NewAuthor', {
+    'first_name': fields.String(required=True, description='First name of an author'),
+    'last_name': fields.String(required=True, description='Last name of an author'),
+    'middle_name': fields.String(required=True, description='Middle name of an author')
+})
+
 book_copies_marshaller = ns.model('BookCopies', {
     'book_copy_id': fields.Integer(required=True, description='Id for a book copy'),
     'book_id': fields.Integer(required=True, description='Id for a book'),
@@ -41,6 +47,15 @@ book_marshaller = ns.model('Book', {
     'genre': fields.String(required=True, description='Genre classification for a fiction book (i.e. horror, science fiction'),
     'notes': fields.List(fields.Nested(note_marshaller), description = 'List of notes for a book'),
     'authors': fields.List(fields.Nested(author_marshaller), required=True, description='List of authors for a book')
+})
+
+new_book_marshaller = ns.model('NewBook', {
+    'title': fields.String(required=True, description='The book title.'),
+    'publish_date': fields.Date(required=True, description='The publish year of a book.'),
+    'subject': fields.String(required=True, description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
+    'genre': fields.String(required=True, description='Genre classification for a fiction book (i.e. horror, science fiction'),
+    'notes': fields.List(fields.Nested(note_marshaller), description = 'List of notes for a book'),
+    'authors': fields.List(fields.Nested(new_author_marshaller), required=True, description='List of authors for a book')
 })
 
 full_book_marshaller = ns.inherit('FullBook', book_marshaller, {
@@ -86,9 +101,9 @@ class Books(Resource):
         list_of_books = BookChecker.get_books(args)
         return list_of_books, 200
 
-    @ns.expect(book_marshaller, validate=True)
+
     @ns.response(201, 'Created')
-    @ns.response(400, 'Validation Error')
+    @ns.expect(new_book_marshaller, validate=True)
     @ns.marshal_with(full_book_marshaller, code=201)
     def post(self):
         """
@@ -105,6 +120,7 @@ class Books(Resource):
 @ns.doc(params={'book_id': 'Record of a book.'})
 @ns.response(200, 'Success')
 @ns.response(400, 'Invalid input received for book_id')
+@ns.response(404, 'Resource Not Found')
 class BookRecord(Resource):
     @ns.marshal_with(full_book_marshaller, 200)
     def get(self, book_id):
@@ -156,7 +172,8 @@ class BookRecord(Resource):
 @ns.route('/<book_id>/notes')
 @ns.doc(params={'book_id': 'A record for a book.'})
 @ns.response(200, 'Success')
-@ns.response(400, 'Validation Error')
+@ns.response(400, 'Invalid input for book_id')
+@ns.response(404, 'Resource Not Found')
 class BookNotes(Resource):
     def get(self, book_id):
         """
@@ -191,7 +208,8 @@ class BookNotes(Resource):
 @ns.route('/<book_id>/notes/<note_title>')
 @ns.doc(params={'book_id': 'A record for a book.','note_title': 'Title of a note in the book.'})
 @ns.response(200, 'Success')
-@ns.response(400, 'Validation Error')
+@ns.response(400, 'Invalid input for book_id')
+@ns.response(404, 'Resource not found')
 class BookNotes(Resource):
     @ns.expect(amend_note_marshaller, validate=True)
     @ns.marshal_with(return_note_marshaller, code=200)
@@ -226,6 +244,10 @@ class BookNotes(Resource):
 
 
 @ns.route('/<book_id>/copies')
+@ns.response(200, 'Success')
+@ns.response(201, 'Created')
+@ns.response(400, 'Invalid input for book_id')
+@ns.response(404, 'Resource not found book_id')
 @ns.doc(params={'book_id': 'A record for a book.'})
 class BookCopies(Resource):
     def get(self, book_id):
@@ -258,9 +280,12 @@ class BookCopies(Resource):
 
 
 @ns.route('/<book_id>/authors')
+@ns.response(201, 'Created')
+@ns.response(400, 'Invalid input for book_id')
+@ns.response(404, 'Resource not found: book_id')
 @ns.doc(params={'book_id': 'A record for a book.'})
 class BookAuthors(Resource):
-    @ns.expect(author_marshaller, validate=True)
+    @ns.expect(new_author_marshaller, validate=True)
     @ns.marshal_with(author_marshaller, code=201)
     def post(self, book_id):
         """
@@ -278,6 +303,9 @@ class BookAuthors(Resource):
 
 
 @ns.route('/<book_id>/authors/<author_id>')
+@ns.response(200, 'Success')
+@ns.response(400, 'Invalid input for url parameters book_id and/or author_id')
+@ns.response(404, 'Resource not found')
 @ns.doc(params={'book_id': 'A record for a book.','author_id': 'Id of an Author record.'})
 class BookAuthor(Resource):
     @ns.marshal_with(author_marshaller, code=200)

@@ -1,4 +1,3 @@
-from data_access_layer import book_copy_dao
 from data_access_layer.book_copy_dao import BookCopyDao
 from data_access_layer.checkout_dao import CheckoutDao
 from flask_restplus import abort
@@ -95,7 +94,8 @@ def get_reminders():
     Return the list of checkouts and user's emails that need reminders.
     :return: the list of checkouts that need to be sent email notifications alogn with the user emails.
     """
-
+    new_list = []
     list_of_reminders = CheckoutDao.get_reminders()
+
     return list_of_reminders
 

@@ -69,7 +69,7 @@ def insert_book(collection_id, a_book):
 
 def delete_book(collection_id, a_book):
     collection = BookCollection.query.get(collection_id)
-    collection.books.remove(a_book)
+    # collection.books.remove(a_book)
     db.session.commit()
     return collection.to_dict()
 

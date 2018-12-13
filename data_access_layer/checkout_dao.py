@@ -96,7 +96,7 @@ class CheckoutDao:
         # userList = users.query.join(friendships, users.id == friendships.user_id)
         # .add_columns(users.userId, users.name, users.email, friends.userId, friendId).filter(
         #     users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
-        results = db.session.query(Checkout).join(User, Checkout.user_id == User.user_id)
+        results = db.session.query(Checkout).join(Book).join(User)
         # results = Checkout.query.join(User, Checkout.user_id == User.user_id).add_columns(Checkout.checkout_id,
         #                                                                                   Checkout.user_id,
         #                                                                                   Checkout.book_id,
@@ -107,6 +107,7 @@ class CheckoutDao:
         #                                                                                   Checkout.return_date,
         #                                                                                   User.email)\
         #     .filter(Checkout.return_date is None, User.user_id == Checkout.user_id)
+
 
         results = results.filter(Checkout.return_date is None)
 

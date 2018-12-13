@@ -108,5 +108,5 @@ class AuthorChecker:
             else:
                 abort(404, 'Resource not found: author_id')
         else:
-            abort(404, 'Resource not found: author_id')
+            abort(404, 'Resource not found: book_id')
 
