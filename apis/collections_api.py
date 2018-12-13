@@ -4,10 +4,15 @@ from controller import collection_checker
 
 ns = Namespace('collections', 'Book collections operations')
 
+book_title_marshaller = ns.model('BookTitleMarshaller',{
+    'book_id': fields.Integer('Id of a book record.'),
+    'title' : fields.String('Title of a book')
+})
+
 # restplus automatically returns json object type.
 collection_marshaller = ns.model('BookCollections', {
     'collection_id': fields.Integer('The collection record'),
-    'book_ids': fields.List(fields.Integer('The book IDs')),
+    'book_ids': fields.List(fields.Nested(book_title_marshaller), description='The book IDs and title'),
     'title': fields.String('The book title.')
 })
 
