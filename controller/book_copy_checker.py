@@ -8,7 +8,7 @@ class BookCopyChecker:
     def create_copy(book_id):
         """
         Method to create a new copy for a book.
-        :param book_id: Book record to create a copy for
+        :param book_id: Book record to create a copy for.
         :return: Dictionary of created Copy.
         """
         print('BookCopyChecker.create_copy()')
@@ -32,7 +32,7 @@ class BookCopyChecker:
     @staticmethod
     def get_copies(book_id):
         """
-        Method to get all copies of a book
+        Method to get all copies of a book.
         :param book_id: Integer record of a book.
         :return: List of dictionaries of copies.
         """

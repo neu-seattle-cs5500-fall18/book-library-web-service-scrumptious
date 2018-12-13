@@ -8,7 +8,7 @@ class NoteDao:
     def contains(note_title):
         """
         Method to determine if Note exists.
-        :param note_title: Record of Note
+        :param note_title: Record of Note.
         :return: True if Note exists, False otherwise.
         """
         if Note.query.get(note_title) is None:
@@ -19,9 +19,9 @@ class NoteDao:
     @staticmethod
     def contains_relationship(book_id, note_title):
         """
-        Method to determine if a record with book id and note title exists
-        :param book_id: record of a book
-        :param note_title: record of a note
+        Method to determine if a record with book id and note title exists.
+        :param book_id: record of a book.
+        :param note_title: record of a note.
         :return: true if exists, false otherwise.
         """
         print('NoteDao.contains_relationship()')
@@ -78,7 +78,7 @@ class NoteDao:
     def update(note_title, note):
         """
         Method to update a Note.
-        :param note_title: Key for a note
+        :param note_title: Key for a note.
         :param note: Attributes of a Note to be updated.
         :return: Dictionary of updated Note.
         """
@@ -95,7 +95,7 @@ class NoteDao:
         """
         Method to delete a Note.
         :param note_title: Note to be deleted.
-        :return: Null.
+        :return: null.
         """
         note = Note.query.get(note_title)
         db.session.delete(note)

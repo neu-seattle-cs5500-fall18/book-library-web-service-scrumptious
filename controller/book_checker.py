@@ -8,11 +8,21 @@ from flask_restplus import abort
 class BookChecker:
     @staticmethod
     def valid_input(book_dict):
+        """
+        Function to check if a book object is being create with the right params.
+        :param book_dict: Dictionary of a book.
+        :return: boolean: True or False.
+        """
         return None not in book_dict['title'] and None not in book_dict['publish_date'] and \
                None not in book_dict['subject']
 
     @staticmethod
     def clean_book(book_dict):
+        """
+        Function that converts all properties of a book into desirable properties.
+        :param book_dict: Old Dictionary of a book.
+        :return: New Dictionary of a book.
+        """
         book_dict['title'] = book_dict.title.lower().title()
         book_dict['subject'] = book_dict.subject.lower().title()
         book_dict['genre'] = book_dict.genre.lower().title()
@@ -27,6 +37,11 @@ class BookChecker:
 
     @staticmethod
     def create_book(book_json):
+        """
+        Creates a book from Json object.
+        :param book_json: Json book object.
+        :return: A new book.
+        """
         print("book_checker.create_book()")
         title = book_json['title']
         publish_date = book_json['publish_date']
@@ -50,7 +65,11 @@ class BookChecker:
 
     @staticmethod
     def get_book(book_id):
-
+        """
+        Gets a book.
+        :param book_id: Book ID.
+        :return: The book.
+        """
         if BookDao.contains(book_id):
             a_book = BookDao.get(book_id)
             return a_book
@@ -59,12 +78,23 @@ class BookChecker:
 
     @staticmethod
     def get_books(dict_query_params):
+        """
+        Gets multiple books.
+        :param dict_query_params: Dictionary params for these books.
+        :return: list of these queried books.
+        """
         print('get books')
         list_books = BookDao.query_books(dict_query_params)
         return list_books
 
     @staticmethod
     def update_book(book_id, book_json):
+        """
+        Updates a books information.
+        :param book_id: ID of the book that needs to be updated.
+        :param book_json: Book Json object.
+        :return: Updated book.
+        """
         print('BookChecker.update_book()')
 
         if BookDao.contains(book_id):
@@ -75,7 +105,11 @@ class BookChecker:
 
     @staticmethod
     def delete_book(book_id):
-
+        """
+        Deletes a book.
+        :param book_id: ID of the book that needs to be deleted.
+        :return: an operation for BookDAO to delete the book.
+        """
         if BookDao.contains(book_id):
 
             return BookDao.delete(book_id)

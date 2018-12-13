@@ -6,7 +6,7 @@ class UserDao:
     def contains(user_id):
         """
         Method to determine whether a user_id exists.
-        :param user_id: Integer of a user record
+        :param user_id: Integer of a user record.
         :return: True if present, false otherwise.
         """
         print('UserDao.contains(int)')
@@ -63,7 +63,7 @@ class UserDao:
         """
         Method to create a new user record.
         :param user_info_dict: User information as a dictionary.
-        :return: Dictionary of created user
+        :return: Dictionary of created user.
         """
         print('UserDao.create()')
         new_user = User(**user_info_dict)
@@ -74,7 +74,7 @@ class UserDao:
     @staticmethod
     def update(user_id, user_info_dict):
         """
-        Method to amend a user record
+        Method to amend a user record.
         :param user_id: Integer identifier for a user record.
         :param user_info_dict: Dictionary of updated user values.
         :return: Dictionary of amended record.
@@ -91,7 +91,7 @@ class UserDao:
         """
         Method to remove a user.
         :param user_id: Integer identifier for a user record.
-        :return: None
+        :return: null.
         """
         print('UserDao.delete()')
         user = User.query.filter_by(user_id=user_id).delete()

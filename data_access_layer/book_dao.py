@@ -21,7 +21,7 @@ class BookDao:
     def create_list_dict(book_query):
         """
         Method to create a list of book dictionaries given a query object. Used internally to BookDao only.
-        :param book_query: results of Session.query(query parameters)
+        :param book_query: results of Session.query(query parameters).
         :return: a List of book dictionaries.
         """
         new_list = []
@@ -32,7 +32,7 @@ class BookDao:
     @staticmethod
     def get(book_id):
         """
-        Method to retrieve a book by book_id
+        Method to retrieve a book by book_id.
         :param book_id: Record id of a book.
         :return: a Dictionary of the queried book.
         """
@@ -52,6 +52,10 @@ class BookDao:
 
     @staticmethod
     def get_all():
+        """
+        Method to get all books.
+        :return: all books.
+        """
         results = Book.query.all()
         return results
 

@@ -33,7 +33,7 @@ class BookCopyDao:
     def get_next_available(book_id):
         """
         Method to retrieve the next copy of a book that is not checked out.
-        :param book_id: record of book to get a copy of
+        :param book_id: record of book to get a copy of.
         :return: dictionary of next copy where is_checked_out is false.  None otherwise.
         """
         print('get_next_avaiable')    
@@ -48,8 +48,8 @@ class BookCopyDao:
     def get_book_copy(book_copy_id):
         """
         Method to retrieve a BookCopy.
-        :param book_copy_id: Record of a BookCopy
-        :return: Dictionary of BookCopy
+        :param book_copy_id: Record of a BookCopy.
+        :return: Dictionary of BookCopy.
         """
         book_copy = BookCopy.query.get(book_copy_id)
         return book_copy
@@ -57,9 +57,9 @@ class BookCopyDao:
     @staticmethod
     def get_book_copies(book_id):
         """
-        Method to get all BookCopies of a Book
-        :param book_id: Record of Book
-        :return: List of Dictionaries of BookCopies
+        Method to get all BookCopies of a Book.
+        :param book_id: Record of Book.
+        :return: List of Dictionaries of BookCopies.
         """
         print('BookCopyDao.get_book_copies()')
         list_of_copies = []
@@ -76,7 +76,7 @@ class BookCopyDao:
         """
         Method to delete a BookCopy from a Book.
         :param copy_id: Record of a BookCopy to delete.
-        :return: Null.
+        :return: null.
         """
         BookCopy.get(copy_id).delete()
         db.session.commit()
