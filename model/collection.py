@@ -19,11 +19,13 @@ class BookCollection(db.Model):
         list_of_books = []
         for book in self.book_ids:
             list_of_books.append({'book_id':book.book_id, 'title':book.title})
+        print(list_of_books)
         collection_dict = {
             'collection_id': self.collection_id,
             'books': list_of_books,
             'title': self.title
         }
+        print(collection_dict)
         return collection_dict
 
     def update(self, **kwargs):

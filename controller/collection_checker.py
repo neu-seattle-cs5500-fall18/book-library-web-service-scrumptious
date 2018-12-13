@@ -46,11 +46,13 @@ def create_collection(collection_json):
 
 
 def get_collection(collection_id):
+    print('collection_checker.get_collection()')
     collection = collection_dao.get_collection(collection_id)
     if collection is None:
-        abort(400, 'Collection does not exist')
+        abort(404, 'Collection does not exist')
     else:
         collection = collection_dao.get_collection(collection_id)
+        print(collection)
         return collection
 
 
