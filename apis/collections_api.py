@@ -59,23 +59,6 @@ class CollectionRecord(Resource):
         else:
             abort(400, 'Invalid input received for collection_id')
 
-    @ns.expect(collection_marshaller, validate=True)
-    @ns.marshal_with(collection_marshaller, code=200)
-    def put(self, collection_id):
-        """
-        Updates an existing record  based on collection_id.
-        :param collection_id: Record number to be updated.
-        :return: collection_id of updated record.
-        """
-        print('Received PUT on resource /collections/<collection_id>')
-
-        if collection_id.isdigit():
-            request_body = request.get_json()
-            updated_id = collection_checker.update_collection(collection_id, request_body)
-            return updated_id
-        else:
-            abort(400, 'Invalid input received for collection_id')
-
     @ns.response(200, 'Deleted')
     @ns.marshal_with(collection_marshaller, code=200)
     def delete(self, collection_id):
@@ -86,6 +69,38 @@ class CollectionRecord(Resource):
         """
         return
 
+
+@ns.route('/collections/<collection_id>/books/<book_id>')
+@ns.doc(params={'collection_id': 'A record for a collection.', 'book_id': 'A record for a book.'})
+@ns.response(200, 'Success')
+@ns.response(400, 'Validation Error')
+class BookCollections(Resource):
+    @ns.expect(collection_marshaller, validate=True)
+    @ns.marshal_with(collection_marshaller, code=200)
+    def put(self, collection_id, book_id):
+        """
+        Updates an existing record  based on collection_id.
+        :param collection_id: Record number to be updated.
+        :param book_id: Record number to be added.
+        :return: collection_id of updated record.
+        """
+        print('Received PUT on resource /collections/<collection_id>/books/<book_id>')
+
+        if collection_id.isdigit() and book_id.isdigit():
+            updated_collection = collection_checker.add_book_to_collection_id(collection_id, book_id)
+            return updated_collection
+        else:
+            abort(400, 'Invalid input received for collection_id or book_id')
+
+    @ns.response(204, 'Deleted')
+    @ns.marshal_with(collection_marshaller, code=204)
+    def delete(self, collection_id, book_id):
+        print('Received DELETE on resource /collections/<collection_id>/books/<book_id>')
+        if book_id.isdigit() and collection_id.isdigit():
+            result = collection_checker.delete_book_from_collection_id(collection_id, book_id)
+            return result, 204
+        else:
+            abort(400, 'Invalid input for book_id or collection_id')
 
 # @ns.route('/<collection_id>/add/<book_id>')
 # @ns.response(code=400, description='Record not found')
