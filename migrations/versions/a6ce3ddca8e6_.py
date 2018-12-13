@@ -37,7 +37,7 @@ def upgrade():
     op.create_table('book_collection',
     sa.Column('collection_id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(), nullable=False),
-    sa.Column('is_deleted', sa.Boolean(), nullable=False),
+    # sa.Column('is_deleted', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('collection_id'),
     sa.UniqueConstraint('title')
     )

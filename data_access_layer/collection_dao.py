@@ -1,4 +1,5 @@
 from model.collection import BookCollection
+from model.book import Book
 from flask_restplus import abort
 from model import db
 
@@ -11,6 +12,36 @@ def query_by_id(collections_id):
 def query_by_title(title):
     a_collection = BookCollection.query.filter_by(title=title)
     return a_collection.to_dict
+
+#
+#new
+#
+def create_collection(collection_title):
+    """
+    Instantiates a BookCollectiona and creates new record in database to attribute books to
+    :param collection_title: The title of the collection.
+    :return: Id of the created book collection
+    """
+    print('CollectionDao.create_collection')
+    collection = BookCollection(title=collection_title)
+    db.session.add(collection)
+    db.session.commit()
+    return collection.collection_id
+
+# new
+def append_collection(collection_id, book):
+    """
+    Appends a book to a collection
+    :param collection_id: id of collection to update
+    :param book: instance of Book class to add to collection
+    :return: dict of collection.
+    """
+
+    collection = BookCollection.query.get(collection_id)
+    collection.book_ids.append(book)
+    db.session.commit()
+    return
+
 
 
 def create(collection_dict):

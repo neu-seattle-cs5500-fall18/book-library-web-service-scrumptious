@@ -26,9 +26,8 @@ class BookCollections(Resource):
 #         # this should throw error if arg doesn't match the parser
 #         collection = collection_checker.get_collections()
 #         return collection
-
-   # @ns.expect(collection_marshaller, validate=True)
-    # @ns.response(201, 'Created')
+    @ns.expect(collection_marshaller, validate=True)
+    @ns.response(201, 'Created')
     def post(self):
         """
         Creates a new collection record for a single book.

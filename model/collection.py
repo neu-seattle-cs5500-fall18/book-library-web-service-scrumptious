@@ -1,7 +1,6 @@
 from model import db
 from model.book import Book
 
-# book_id column should contain a list of ids?
 collection_table = db.Table('collections',
                             db.Column('book_id', db.Integer, db.ForeignKey('book.book_id')),
                             db.Column('collection_id', db.Integer, db.ForeignKey('book_collection.collection_id'), primary_key=True))
@@ -17,9 +16,12 @@ class BookCollection(db.Model):
 
     def to_dict(self):
         print('Book collections to_dict')
+        list_of_books = []
+        for book in self.book_ids:
+            list_of_books.append({'book_id':book.book_id, 'title':book.title})
         collection_dict = {
             'collection_id': self.collection_id,
-            'book_ids': self.book_ids,
+            'books': list_of_books,
             'title': self.title
         }
         return collection_dict

@@ -1,4 +1,5 @@
 from data_access_layer import book_dao, collection_dao
+from data_access_layer.book_dao import BookDao
 from flask_restplus import abort
 from model.collection import BookCollection
 
@@ -12,17 +13,31 @@ from model.collection import BookCollection
 #     return list_collections
 
 
+### Updated
 def create_collection(collection_json):
     print("collection_checker.create_collection()")
     title = collection_json['title']
-    #collection_id = collection_json['collection_id']
-    book_ids = collection_json['books_ids'] #TODO:
-    #a_collection = {'title': title, 'collection_id': collection_id, 'book_ids': book_ids}
-    a_collection = {'title': title, 'book_ids': book_ids}
-    new_collection = collection_dao.create(a_collection)
-    print("collection_checker.create_collection() ==> Complete")
-    print(new_collection)
-    return new_collection.to_dict()
+    collection_id = collection_dao.create_collection(title)
+
+    #
+    # Need a check on each book id here to make sure its valid first.  Use BookDao.contains(book_id).
+    # if not present then throw a 404 with a message that makes sense.
+    #
+    list_book_ids = collection_json['book_ids']
+
+    # this iterates through each book id, gets the Book of the id and appends it to the collections db.
+    for book_id in list_book_ids:
+        book = BookDao.get_book_object(book_id)
+        collection_dao.append_collection(collection_id, book)
+    return collection_dao.query_by_id(collection_id)
+
+
+    # #a_collection = {'title': title, 'collection_id': collection_id, 'book_ids': book_ids}
+    # a_collection = {'title': title, 'book_ids': book_ids}
+    # new_collection = collection_dao.create(a_collection)
+    # print("collection_checker.create_collection() ==> Complete")
+    # print(new_collection)
+    # return new_collection.to_dict()
 
 
 def get_collection(collection_id):

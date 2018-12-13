@@ -40,6 +40,11 @@ class BookDao:
         return a_book.to_dict()
 
     @staticmethod
+    def get_book_object(book_id):
+        book = Book.query.get(book_id)
+        return book
+
+    @staticmethod
     def contains_by_params(book_dict):
         print('BookDao.contains_by_params()')
 
