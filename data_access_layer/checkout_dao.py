@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from data_access_layer.book_copy_dao import BookCopyDao
 from flask_restplus import abort
 from model import db
@@ -50,8 +52,9 @@ class CheckoutDao:
         print('Get a checkout')
 
         a_checkout = Checkout.query.get(checkout_id)
+        print(a_checkout)
 
-        return a_checkout.to_dict
+        return a_checkout.to_dict()
 
     @staticmethod
     def update(checkout_id, checkout_info_dict):
@@ -86,8 +89,6 @@ class CheckoutDao:
 
         print("before printing")
         for checkout in results:
-            print(5)
-            print(checkout)
             list_of_checkouts.append(checkout.to_dict())
         return list_of_checkouts
 
