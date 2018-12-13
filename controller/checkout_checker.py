@@ -1,3 +1,5 @@
+from datetime import date
+
 from data_access_layer import book_copy_dao
 from data_access_layer.book_copy_dao import BookCopyDao
 from data_access_layer.book_dao import BookDao
@@ -61,20 +63,24 @@ def get_checkout(checkout_id):
     return a_checkout
 
 
-def update_checkout(checkout_id, json_checkout_info):
+def update_checkout(checkout_id):
     """
     method to update a checkout since the checkout is returned.
-    :param json_checkout_info:
     :return: the to-be-update information of checkout
-    :param checkout_id: the checkout_id that has been returned.
     :return: the updated checkout id adding the return date of the record.
     """
-    user_id = json_checkout_info['user_id']
-    book_id = json_checkout_info['book_id']
-    book_copy_id = json_checkout_info['book_copy_id']
-    checkout_date = json_checkout_info['checkout_date']
-    due_date = json_checkout_info['due_date']
-    return_date = json_checkout_info['return_date']
+
+    a_checkout = CheckoutDao.get_checkout(checkout_id)
+    print(a_checkout)
+    user_id = a_checkout['user_id']
+    book_id = a_checkout['book_id']
+    book_copy_id = a_checkout['book_copy_id']
+    checkout_date = a_checkout['checkout_date']
+    due_date = a_checkout['due_date']
+    today = date.today().isoformat()
+    print(1)
+    print(today)
+    return_date = today
 
     checkout_dict = clean_checkout(user_id, book_id, book_copy_id, checkout_date, due_date, return_date)
     return CheckoutDao.update(checkout_id, checkout_dict)

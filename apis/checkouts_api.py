@@ -76,7 +76,6 @@ class CheckoutRecord(Resource):
         checkout_record = checkout_checker.get_checkout(checkout_id)
         return checkout_record
 
-    @ns.doc(body=checkout_input_marshaller, validate=True)
     @ns.marshal_with(checkout_marshaller, 200)
     def put(self, checkout_id):
         """
@@ -87,8 +86,7 @@ class CheckoutRecord(Resource):
         print('Received PUT on resource /checkout/<checkout_id>')
 
         if checkout_id.isdigit():
-            request_body = request.get_json()
-            checkout = update_checkout(checkout_id, request_body)
+            checkout = update_checkout(checkout_id)
             return checkout
         else:
             return abort(400, 'Invalid input for user_id in url')
