@@ -79,7 +79,7 @@ class CheckoutRecord(Resource):
     @ns.marshal_with(checkout_marshaller, 200)
     def put(self, checkout_id):
         """
-        Update an existing checkout when the checked-out book is returned.
+        Update an existing checkout when the checked-out book is returned, setting the return date as the today's date.
         :param checkout_id: Record checkout id to be updated.
         :return: Json with checkout_id of updated record.
         """

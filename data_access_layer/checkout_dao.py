@@ -1,12 +1,10 @@
-from datetime import datetime
+
 
 from data_access_layer.book_copy_dao import BookCopyDao
 from flask_restplus import abort
 from model import db
-from model.book import Book
-from model.checkout import Checkout
-from model.user import User
 
+from model.checkout import Checkout
 
 class CheckoutDao:
 
