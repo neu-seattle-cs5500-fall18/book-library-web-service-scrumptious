@@ -29,6 +29,7 @@ checkout_input_marshaller = ns.model('CheckoutInput', {
 @ns.response(code=400, description='Validation Error')
 class Checkouts(Resource):
 
+    @ns.response(200, 'Success')
     @ns.marshal_with(checkout_marshaller, code=200, description='Success')
     def get(self):
         """
@@ -39,6 +40,8 @@ class Checkouts(Resource):
         return response
 
     @ns.expect(checkout_input_marshaller)
+    @ns.response(201, 'Created')
+    @ns.response(400, 'Validation Error')
     def post(self):
         """
         Create a new checkout for the book.
@@ -51,7 +54,8 @@ class Checkouts(Resource):
 
 @ns.route('/<checkout_id>')
 @ns.doc(params={'checkout_id': 'Record of a checkout'})
-@ns.response(code=400, description='Validation error')
+@ns.response(200, 'Success')
+@ns.response(400, 'Invalid input received for checkout_id')
 class CheckoutRecord(Resource):
     @ns.marshal_with(checkout_marshaller, code=200, description='Success')
     def get(self, checkout_id):
@@ -95,7 +99,8 @@ class CheckoutRecord(Resource):
 
 
 @ns.route('/reminder')
-@ns.response(code=400, description='Validation Error')
+@ns.response(200, 'Success')
+@ns.response(400, 'Validation Error')
 class Checkouts(Resource):
 
     @ns.marshal_with(checkout_marshaller, code=200, description='Success')
