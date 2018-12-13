@@ -4,9 +4,9 @@ from flask_restplus import abort
 from model import db
 
 
-def query_by_id(collections_id):
-    a_collection = BookCollection.query.get(collections_id)
-    return a_collection.to_dict()
+# def query_by_id(collections_id):
+#     a_collection = BookCollection.query.get(collections_id)
+#     return a_collection.to_dict()
 
 
 # def query_by_title(title):
@@ -45,7 +45,7 @@ def append_collection(collection_id, book):
     collection = BookCollection.query.get(collection_id)
     collection.book_ids.append(book)
     db.session.commit()
-    return
+    return collection
 
 
 # def create(collection_dict):
@@ -90,9 +90,9 @@ def get_collection(collection_id):
     a_collection = BookCollection.query.get(collection_id)
 
     if a_collection is None:
-        abort(400, 'Collection not found')
+        abort(404, 'Collection not found')
     else:
-        return a_collection
+        return a_collection.to_dict()
 
 
 def delete_collection(collection_id):

@@ -24,12 +24,17 @@ def create_collection(collection_json):
     # if not present then throw a 404 with a message that makes sense.
     #
     list_book_ids = collection_json['book_ids']
+    for book_id in list_book_ids:
+        if BookDao.contains(book_id):
+            continue
+        else:
+            abort(404, 'Invalid book ID')
 
     # this iterates through each book id, gets the Book of the id and appends it to the collections db.
     for book_id in list_book_ids:
         book = BookDao.get_book_object(book_id)
         collection_dao.append_collection(collection_id, book)
-    return collection_dao.query_by_id(collection_id)
+    return collection_dao.get_collection(collection_id)
 
 
     # #a_collection = {'title': title, 'collection_id': collection_id, 'book_ids': book_ids}
@@ -45,20 +50,20 @@ def get_collection(collection_id):
     if collection is None:
         abort(400, 'Collection does not exist')
     else:
-        collection = collection_dao.query_book_id(collection_id)
+        collection = collection_dao.get_collection(collection_id)
         return collection
 
 
-def update_collection(collection_id, collection_json):
-    collection = collection_dao.get_collection(collection_id)
-    if collection is None:
-        abort(400, 'Collection does not exist')
-    else:
-        clean_collection = {}
-        for key, value in collection_json:
-            clean_collection[key]=value
-        collection_dao.update(collection_id, **clean_collection)
-        return collection
+# def update_collection(collection_id, collection_json):
+#     collection = collection_dao.get_collection(collection_id)
+#     if collection is None:
+#         abort(400, 'Collection does not exist')
+#     else:
+#         clean_collection = {}
+#         for key, value in collection_json:
+#             clean_collection[key]=value
+#         collection_dao.update(collection_id, **clean_collection)
+#         return collection
 
 
 def delete_collection(collection_id):
@@ -72,23 +77,23 @@ def delete_collection(collection_id):
 
 def add_book_to_collection_id(collection_id, book_id):
     a_collection = BookCollection.query.get(collection_id)
-    a_book = book_dao.query_by_id(book_id)
+    a_book = BookDao.get_book_object(book_id)
     if a_collection is None:
         abort(404, 'Collection is empty')
     elif a_book is None:
         abort(404, 'This book does not exist in the collection.')
     else:
-        updated_collection = collection_dao.insert_book(a_book)
+        updated_collection = collection_dao.append_collection(collection_id, a_book)
         return updated_collection
 
 
 def delete_book_from_collection_id(collection_id, book_id):
     a_collection = BookCollection.query.get(collection_id)
-    a_book = book_dao.query_by_id(book_id)
+    a_book = BookDao.get_book_object(book_id)
     if a_collection is None:
         abort(404, 'Cannot remove a book from empty collection.')
     elif a_book is None:
         abort(404, 'This book does not exist in the collection.')
     else:
-        collection_dao.insert_book(a_book)
-        return a_collection
+        updated_collection = collection_dao.delete_book(collection_id, book_id)
+        return updated_collection

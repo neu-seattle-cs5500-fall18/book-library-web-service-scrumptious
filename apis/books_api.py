@@ -233,6 +233,7 @@ class BookNotes(Resource):
         """
         Delete a specific note for a book.
         :param book_id: Record for a book.
+        :param note_title: Record for a note.
         :return: null.
         """
         print('Received DELETE on resource /books/<book_id>/notes/<note_title>')
