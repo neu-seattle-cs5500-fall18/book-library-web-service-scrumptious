@@ -13,16 +13,20 @@ book_title_marshaller = ns.model('BookTitleMarshaller',{
 collection_marshaller = ns.model('BookCollections', {
     'collection_id': fields.Integer('The collection record'),
     'book_ids': fields.List(fields.Nested(book_title_marshaller), description='The book IDs and title'),
-    'title': fields.String('The book title.')
+    'title': fields.String('The collection title.')
 })
 
+new_collection_marshaller = ns.model('NewBookCollections', {
+    'book_ids': fields.List(fields.Integer, required=True, description='The book IDs'),
+    'title': fields.String(required=True, description='The collection title.')
+})
 
 @ns.route('', endpoint='collections')
 @ns.response(200, 'Success')
 @ns.response(400, 'Validation Error')
 class BookCollections(Resource):
 
-    @ns.expect(collection_marshaller, validate=True)
+    @ns.expect(new_collection_marshaller, validate=True)
     @ns.response(201, 'Created')
     def post(self):
         """
@@ -33,7 +37,7 @@ class BookCollections(Resource):
         request_body = request.get_json()
         print(request_body)
         collection_id = collection_checker.create_collection(request_body)
-        return collection_id
+        return collection_id, 201
 
 
 @ns.route('/<collection_id>')
@@ -71,14 +75,13 @@ class CollectionRecord(Resource):
 @ns.response(200, 'Success')
 @ns.response(400, 'Validation Error')
 class BookCollections(Resource):
-    @ns.expect(collection_marshaller, validate=True)
     @ns.marshal_with(collection_marshaller, code=200)
     def put(self, collection_id, book_id):
         """
         Updates an existing record  based on collection_id and book_id.
         :param collection_id: Record number to be updated.
         :param book_id: Record number to be added.
-        :return: collection_id of updated record.
+        :return: JSON of updated record.
         """
         print('Received PUT on resource /collections/<collection_id>/books/<book_id>')
 
