@@ -49,14 +49,21 @@ def delete_book(collection_id, a_book_id):
     :param a_book_id: ID of book to be removed.
     :return: Dictionary object of updated collection.
     """
+    print('delete book from list')
     collection = BookCollection.query.get(collection_id)
     books = collection.book_ids
+    print(books)
+    print(type(books))
     ind = 0
+
     for i, book in enumerate(books):
+
         if book.book_id == a_book_id:
             ind = i
-    new_list = books.pop(ind)
-    collection.book_ids = new_list
+
+    del books[ind]
+
+    collection.book_ids = books
     db.session.commit()
     return collection.to_dict()
 
