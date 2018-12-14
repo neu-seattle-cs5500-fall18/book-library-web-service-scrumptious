@@ -1,6 +1,7 @@
 from data_access_layer.user_dao import UserDao
 from flask_restplus import abort
 
+
 def email_exists(email):
     """
     Helper function to see if DAO has a record with the same email.

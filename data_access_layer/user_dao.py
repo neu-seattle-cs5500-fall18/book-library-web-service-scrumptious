@@ -1,6 +1,7 @@
 from model import db
 from model.user import User
 
+
 class UserDao:
     @staticmethod
     def contains(user_id):

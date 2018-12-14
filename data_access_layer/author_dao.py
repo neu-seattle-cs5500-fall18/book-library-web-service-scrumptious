@@ -23,7 +23,7 @@ class AuthorDao:
     def contains_author(author_dict):
         """
         Method to determine if an author exists based on parameters.
-        :param author_json: json of Author parameters and values (first_name, last_name, middle_name).
+        :param author_dict: json of Author parameters and values (first_name, last_name, middle_name).
         :return: True if database contains a record that matches, false otherwise.
         """
         print('AuthorDao.contains_author()')
