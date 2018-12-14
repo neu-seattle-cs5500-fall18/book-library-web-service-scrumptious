@@ -1,20 +1,14 @@
 from model.collection import BookCollection
-from model.book import Book
 from flask_restplus import abort
 from model import db
 
 
-# def query_by_id(collections_id):
-#     a_collection = BookCollection.query.get(collections_id)
-#     return a_collection.to_dict()
-
-
-# def query_by_title(title):
-#     a_collection = BookCollection.query.filter_by(title=title)
-#     return a_collection.to_dict
-
-
 def contains(collection_id):
+    """
+    Checks if a collection is present in the database using ID.
+    :param collection_id: ID of the collection being searched for.
+    :return: Boolean True or False.
+    """
     result = BookCollection.query.get(collection_id)
     if result is None:
         return False
@@ -23,9 +17,9 @@ def contains(collection_id):
 
 def create_collection(collection_title):
     """
-    Instantiates a BookCollectiona and creates new record in database to attribute books to
+    Instantiates a BookCollectiona and creates new record in database to attribute books to.
     :param collection_title: The title of the collection.
-    :return: Id of the created book collection
+    :return: ID of the created book collection.
     """
     print('CollectionDao.create_collection')
     collection = BookCollection(title=collection_title)
@@ -36,9 +30,9 @@ def create_collection(collection_title):
 
 def append_collection(collection_id, book):
     """
-    Appends a book to a collection
-    :param collection_id: id of collection to update
-    :param book: instance of Book class to add to collection
+    Appends a book to a collection.
+    :param collection_id: ID of collection to update.
+    :param book: instance of Book class to add to collection.
     :return: dict of collection.
     """
 
@@ -48,30 +42,13 @@ def append_collection(collection_id, book):
     return collection
 
 
-# def create(collection_dict):
-#     print("collection_dao.create()")
-#     new_collection = BookCollection(**collection_dict)
-#     db.session.add(new_collection)
-#     print("collection_dao.create() ==> Complete")
-#     db.session.commit()
-#     return new_collection
-
-
-# def update(collection_id, **kwargs):
-#     collection = BookCollection.query.get(collection_id)
-#     collection.update(**kwargs)
-#     db.session.commit()
-#     return collection
-
-
-# def insert_book(collection_id, a_book):
-#     collection = BookCollection.query.get(collection_id)
-#     collection.books.append(a_book)
-#     db.session.commit()
-#     return collection.to_dict()
-
-
 def delete_book(collection_id, a_book_id):
+    """
+    Deletes a book from a collection by ID name.
+    :param collection_id: ID of collection.
+    :param a_book_id: ID of book to be removed.
+    :return: Dictionary object of updated collection.
+    """
     collection = BookCollection.query.get(collection_id)
     books = collection.book_ids
     ind = 0
@@ -85,6 +62,11 @@ def delete_book(collection_id, a_book_id):
 
 
 def get_collection(collection_id):
+    """
+    Gets a collection by ID name.
+    :param collection_id: ID of collection.
+    :return: Dictionary object of the collection.
+    """
     print('Get collection')
 
     a_collection = BookCollection.query.get(collection_id)
@@ -96,6 +78,11 @@ def get_collection(collection_id):
 
 
 def delete_collection(collection_id):
+    """
+    Deletes a collection by ID name.
+    :param collection_id: ID of collection.
+    :return: None.
+    """
     print('Delete collection')
     a_collection = BookCollection.query.get(collection_id)
     a_collection.book_ids = []

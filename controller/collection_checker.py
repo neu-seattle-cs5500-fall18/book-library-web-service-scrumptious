@@ -4,17 +4,12 @@ from flask_restplus import abort
 from model.collection import BookCollection
 
 
-# def get_collections(**query_params):
-#     list_collections = []
-#     results = collection_dao.query_collections(**query_params)
-#     for collection in results:
-#         list_collections.append(collection.to_dict())
-#
-#     return list_collections
-
-
-### Updated
 def create_collection(collection_json):
+    """
+    Function to create a collection from collection Json object.
+    :param collection_json: Json collection object.
+    :return: the new collection ID
+    """
     print("collection_checker.create_collection()")
     title = collection_json['title']
     collection_id = collection_dao.create_collection(title)
@@ -37,15 +32,12 @@ def create_collection(collection_json):
     return collection_dao.get_collection(collection_id)
 
 
-    # #a_collection = {'title': title, 'collection_id': collection_id, 'book_ids': book_ids}
-    # a_collection = {'title': title, 'book_ids': book_ids}
-    # new_collection = collection_dao.create(a_collection)
-    # print("collection_checker.create_collection() ==> Complete")
-    # print(new_collection)
-    # return new_collection.to_dict()
-
-
 def get_collection(collection_id):
+    """
+    Gets a collection by ID.
+    :param collection_id: ID of collection.
+    :return: The collection.
+    """
     print('collection_checker.get_collection()')
     collection = collection_dao.get_collection(collection_id)
     if collection is None:
@@ -56,19 +48,12 @@ def get_collection(collection_id):
         return collection
 
 
-# def update_collection(collection_id, collection_json):
-#     collection = collection_dao.get_collection(collection_id)
-#     if collection is None:
-#         abort(400, 'Collection does not exist')
-#     else:
-#         clean_collection = {}
-#         for key, value in collection_json:
-#             clean_collection[key]=value
-#         collection_dao.update(collection_id, **clean_collection)
-#         return collection
-
-
 def delete_collection(collection_id):
+    """
+    Deletes a collection by ID.
+    :param collection_id: ID of collection.
+    :return: None.
+    """
     if collection_dao.contains(collection_id):
         return collection_dao.delete_collection(collection_id)
     else:
@@ -76,6 +61,12 @@ def delete_collection(collection_id):
 
 
 def add_book_to_collection_id(collection_id, book_id):
+    """
+    Adds a book to a collection by ID name.
+    :param collection_id: ID of collection.
+    :param book_id: ID of book to be added.
+    :return: The updated collection.
+    """
     a_collection = BookCollection.query.get(collection_id)
     a_book = BookDao.get_book_object(book_id)
     if a_collection is None:
@@ -88,6 +79,12 @@ def add_book_to_collection_id(collection_id, book_id):
 
 
 def delete_book_from_collection_id(collection_id, book_id):
+    """
+    Deletes a book from a collection by ID name.
+    :param collection_id: ID of collection.
+    :param book_id: ID of book to be removed.
+    :return: The updated collection.
+    """
     a_collection = BookCollection.query.get(collection_id)
     a_book = BookDao.get_book_object(book_id)
     if a_collection is None:

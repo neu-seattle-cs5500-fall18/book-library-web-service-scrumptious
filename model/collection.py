@@ -1,6 +1,9 @@
 from model import db
 from model.book import Book
 
+"""
+Helper table to define relationships between books and collections.
+"""
 collection_table = db.Table('collections',
                             db.Column('book_id', db.Integer, db.ForeignKey('book.book_id'), primary_key=True),
                             db.Column('collection_id', db.Integer, db.ForeignKey('book_collection.collection_id'), primary_key=True))
@@ -15,6 +18,10 @@ class BookCollection(db.Model):
                                % (self.collection_id, self.book.ids,self.title)
 
     def to_dict(self):
+        """
+        Method to transform BookCollection to a dictionary object.
+        :return: dictionary object.
+        """
         print('Book collections to_dict')
         list_of_books = []
         for book in self.book_ids:
@@ -29,5 +36,10 @@ class BookCollection(db.Model):
         return collection_dict
 
     def update(self, **kwargs):
+        """
+        Method to update a BookCollection's attributes
+        :param kwargs: Given a dictionary of valid key value pairs
+        :return: None
+        """
         for key, value in kwargs:
             self[key] = value
