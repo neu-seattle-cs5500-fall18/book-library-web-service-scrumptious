@@ -8,7 +8,7 @@ from controller.note_checker import NoteChecker
 ns = Namespace('books', description='Book operations')
 
 note_marshaller = ns.model('Note', {
-    'note_title': fields.String(required=True, description = 'Unique title of note'),
+    'note_title': fields.String(required=True, description='Unique title of note'),
     'note': fields.String(required=True, description='Note about a book.')
 })
 
@@ -36,7 +36,7 @@ new_author_marshaller = ns.model('NewAuthor', {
 book_copies_marshaller = ns.model('BookCopies', {
     'book_copy_id': fields.Integer(required=True, description='Id for a book copy'),
     'book_id': fields.Integer(required=True, description='Id for a book'),
-    'is_checked_out' : fields.Boolean(required=True, description= 'Indicates whether a copy of a book is checked out'),
+    'is_checked_out' : fields.Boolean(required=True, description='Indicates whether a copy of a book is checked out'),
 })
 
 book_marshaller = ns.model('Book', {
@@ -54,7 +54,7 @@ new_book_marshaller = ns.model('NewBook', {
     'publish_date': fields.Date(required=True, description='The publish year of a book.'),
     'subject': fields.String(required=True, description='Subject for a book, such as "science", "Reference", "Non-Fiction"'),
     'genre': fields.String(required=True, description='Genre classification for a fiction book (i.e. horror, science fiction'),
-    'notes': fields.List(fields.Nested(note_marshaller), description = 'List of notes for a book'),
+    'notes': fields.List(fields.Nested(note_marshaller), description='List of notes for a book'),
     'authors': fields.List(fields.Nested(new_author_marshaller), required=True, description='List of authors for a book')
 })
 
@@ -101,8 +101,7 @@ class Books(Resource):
         list_of_books = BookChecker.get_books(args)
         return list_of_books, 200
 
-
-    @ns.response(201, 'Created')
+    @ns.response(201,'Created')
     @ns.expect(new_book_marshaller, validate=True)
     @ns.marshal_with(full_book_marshaller, code=201)
     def post(self):

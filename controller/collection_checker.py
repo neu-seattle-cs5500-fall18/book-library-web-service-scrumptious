@@ -1,4 +1,4 @@
-from data_access_layer import book_dao, collection_dao
+from data_access_layer import collection_dao
 from data_access_layer.book_dao import BookDao
 from flask_restplus import abort
 from model.collection import BookCollection
@@ -14,10 +14,6 @@ def create_collection(collection_json):
     title = collection_json['title']
     collection_id = collection_dao.create_collection(title)
 
-    #
-    # Need a check on each book id here to make sure its valid first.  Use BookDao.contains(book_id).
-    # if not present then throw a 404 with a message that makes sense.
-    #
     list_book_ids = collection_json['book_ids']
     for book_id in list_book_ids:
         if BookDao.contains(book_id):
@@ -25,7 +21,6 @@ def create_collection(collection_json):
         else:
             abort(404, 'Invalid book ID')
 
-    # this iterates through each book id, gets the Book of the id and appends it to the collections db.
     for book_id in list_book_ids:
         book = BookDao.get_book_object(book_id)
         collection_dao.append_collection(collection_id, book)
