@@ -91,9 +91,11 @@ class Books(Resource):
     @ns.marshal_with(book_marshaller, code=200)
     def get(self):
         """
-        Queries the books resource based on URL query string parameters. Valid query arguments are:
-        title, first_name, last_name, middle_name, publish_date_start, publish_date_end, subject, genre.
+        Queries the books resource based on URL query string parameters.
         If no query string is provided all books are returned.
+        Valid query arguments are:
+        title, (author) first_name, (author) last_name, (author) middle_name, publish_date_start, publish_date_end,
+        subject, genre.
         :return: JSON List of books that match query parameters, in the format according to the book_marshaller.
         """
         print('Received GET on resource /books')
