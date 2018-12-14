@@ -53,7 +53,7 @@ def delete_book(collection_id, a_book_id):
     books = collection.book_ids
     ind = 0
     for i, book in enumerate(books):
-        if book['book_id'] == a_book_id:
+        if book.book_id == a_book_id:
             ind = i
     new_list = books.pop(ind)
     collection.book_ids = new_list
