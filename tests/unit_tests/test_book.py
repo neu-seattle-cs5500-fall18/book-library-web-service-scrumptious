@@ -45,9 +45,9 @@ def test_self_update(new_book1):
     :param new_book1: fixture from conftest
     :return: true if tests pass
     """
-    kwargs = {'title':'The Old Man and the Sea',
+    kwargs = {'title': 'The Old Man and the Sea',
               'publish_date': 1981,
-              'genre' : 'Literature',
+              'genre': 'Literature',
               'subject': 'Still Fiction'}
 
     new_book1.update(**kwargs)

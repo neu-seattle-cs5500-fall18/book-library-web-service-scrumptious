@@ -15,7 +15,7 @@ class BookCollection(db.Model):
     title = db.Column(db.String, nullable=False, unique=True)
 
     def __repr__(self): return "<Collection(collection_id='%s',books='%s',title='%s'>" \
-                               % (self.collection_id, self.book.ids,self.title)
+                               % (self.collection_id, self.book.ids, self.title)
 
     def to_dict(self):
         """
