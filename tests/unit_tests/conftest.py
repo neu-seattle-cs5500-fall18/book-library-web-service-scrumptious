@@ -15,15 +15,14 @@ book_global = Book(book_id=1, title='The Old Man and the Sea', publish_date='198
                  authors=[], notes=[], copies=[])
 
 
-
 @pytest.fixture(scope='module')
 def book1_dict():
-    book = dict(book_id=1,title='Old Man', publish_date='1980', subject='Fiction', genre='Novel')
+    book = dict(book_id=1, title='Old Man', publish_date='1980', subject='Fiction', genre='Novel')
     return book
 
 
 def book2_dict():
-    book = dict(book_id=2,title='The Left Hand of Darkness', publish_date='1975', subject='Fiction', genre='Science Fiction')
+    book = dict(book_id=2, title='The Left Hand of Darkness', publish_date='1975', subject='Fiction', genre='Science Fiction')
     return book
 
 
@@ -136,7 +135,7 @@ def new_book_copy_dao():
     return book_copy_dao
 
 
-@pytest.fixture(scope = 'module')
+@pytest.fixture(scope='module')
 def new_collection():
-    collection = BookCollection(collection_id=1, book_ids= [book_global], title='New collection')
+    collection = BookCollection(collection_id=1, book_ids=[1], title='New collection')
     return collection
